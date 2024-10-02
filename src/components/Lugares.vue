@@ -18,15 +18,9 @@
       <div class="sala-box">
         <h2 class="sala-titulo">Escolha o seu lugar</h2>
         <div class="sala">
-          <div
-            v-for="lugar in lugares"
-            :key="lugar.id"
-            class="lugar"
-            :class="{ selecionado: lugar.selecionado }"
-            :data-index="lugar.id"
-            @click="toggleSelecao(lugar.id)"
-            :style="{ gridColumn: lugar.coluna, gridRow: lugar.fileira }"
-          >
+          <div v-for="lugar in lugares" :key="lugar.id" class="lugar" :class="{ selecionado: lugar.selecionado }"
+            :data-index="lugar.id" @click="toggleSelecao(lugar.id)"
+            :style="{ gridColumn: lugar.coluna, gridRow: lugar.fileira }">
             {{ lugar.fileira }}-{{ lugar.coluna }}
           </div>
         </div>
@@ -52,7 +46,7 @@ export default {
     inicializarLugares() {
       const numFileiras = 7; // Total de fileiras
       const numLugaresPorFileira = [1, 7, 7, 7, 7, 7, 7, 7]; // Lugares por fileira
-  
+
       // Criar a estrutura de lugares
       this.lugares = [];
       numLugaresPorFileira.forEach((numLugares, i) => {
@@ -86,7 +80,7 @@ export default {
     },
     confirmarSelecao() {
       const lugarSelecionado = this.lugares.find(lugar => lugar.selecionado);
-      
+
       if (lugarSelecionado) {
         // Exibe o SweetAlert informando o sucesso da seleção
         Swal.fire({
@@ -116,7 +110,8 @@ export default {
 
 <style scoped>
 /* Reset básico */
-body, html {
+body,
+html {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -169,7 +164,8 @@ body, html {
 /* Sala de seleção - grid */
 .sala {
   display: grid;
-  grid-template-columns: repeat(7, 50px); /* Ajustado para 7 colunas */
+  grid-template-columns: repeat(7, 50px);
+  /* Ajustado para 7 colunas */
   gap: 10px;
   margin-bottom: 20px;
 }
@@ -283,6 +279,7 @@ body, html {
     transform: translateY(0) scale(1);
     opacity: 1;
   }
+
   100% {
     transform: translateY(-1000px) scale(0);
     opacity: 0;

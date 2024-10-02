@@ -76,18 +76,18 @@ export default {
           Swal.fire({
             icon: 'success',
             title: 'Login de Admin!',
-            text: 'Redirecionando para o chamados...',
+            text: 'Redirecionando para a abrir chamados...',
             confirmButtonText: 'OK',
           }).then(() => {
             this.$router.push('/openticketpage'); // Redireciona para a tela de Kanban
           });
           return;
         }
-        if (this.usuario === 'admin' && this.password === '123456') {
+        if (this.usuario === 'noa' && this.password === '123456') {
           Swal.fire({
             icon: 'success',
             title: 'Login de Admin!',
-            text: 'Redirecionando para o chamados...',
+            text: 'Redirecionando para o kanban...',
             confirmButtonText: 'OK',
           }).then(() => {
             this.$router.push('/sidebar'); // Redireciona para a tela de Kanban

@@ -27,7 +27,7 @@
             <a class="nav-link text-white" @click="mostrarCategoria('Concluído')" href="#">Concluídos</a>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link text-white" href="#">Home</router-link>
+            <router-link class="nav-link text-white" @click="mostrarHome" to="#">Home</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link text-white" href="#">Cadastra aluno</router-link>
@@ -37,22 +37,30 @@
 
       <!-- Kanban Board -->
       <div class="kanban-board d-flex justify-content-around flex-grow-1 p-3">
-        <!-- Coluna Pendente -->
-        <div
-          v-show="mostrarTodosChamados || categoriaVisivel === 'Pendente'"
-          id="pendente"
-          class="kanban-column"
-          @drop="drop($event)"
-          @dragover="allowDrop($event)"
-        >
+        <!-- Formulário para cadastrar novo aluno -->
+        <div v-if="mostrarFormulario" class="form-container">
+          <h2>Cadastrar Novo Aluno</h2>
+          <form @submit.prevent="cadastrarAluno">
+            <div class="form-group">
+              <label for="nome">Nome:</label>
+              <input type="text" id="nome" v-model="novoAluno.nome" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email:</label>
+              <input type="email" id="email" v-model="novoAluno.email" required>
+            </div>
+            <div class="form-group">
+              <label for="telefone">Telefone:</label>
+              <input type="tel" id="telefone" v-model="novoAluno.telefone" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Cadastrar</button>
+          </form>
+        </div>
+
+        <!-- Colunas do Kanban -->
+        <div v-show="mostrarTodosChamados || categoriaVisivel === 'Pendente'" id="pendente" class="kanban-column" @drop="drop($event)" @dragover="allowDrop($event)">
           <h3 class="kanban-header bg-danger text-white p-2 text-center">Pendente</h3>
-          <div
-            v-for="chamado in chamadosPendentes"
-            :key="chamado.id"
-            class="kanban-item bg-light p-3 my-2"
-            draggable="true"
-            @dragstart="drag($event, chamado)"
-          >
+          <div v-for="chamado in chamadosPendentes" :key="chamado.id" class="kanban-item bg-light p-3 my-2" draggable="true" @dragstart="drag($event, chamado)">
             <p><strong>{{ chamado.assunto }}</strong></p>
             <p><em>Responsável: {{ chamado.responsavel }}</em></p>
             <div class="tags">
@@ -74,22 +82,9 @@
           </div>
         </div>
 
-        <!-- Coluna Andamento -->
-        <div
-          v-show="mostrarTodosChamados || categoriaVisivel === 'Andamento'"
-          id="andamento"
-          class="kanban-column"
-          @drop="drop($event)"
-          @dragover="allowDrop($event)"
-        >
+        <div v-show="mostrarTodosChamados || categoriaVisivel === 'Andamento'" id="andamento" class="kanban-column" @drop="drop($event)" @dragover="allowDrop($event)">
           <h3 class="kanban-header bg-primary text-white p-2 text-center">Andamento</h3>
-          <div
-            v-for="chamado in chamadosAndamento"
-            :key="chamado.id"
-            class="kanban-item bg-light p-3 my-2"
-            draggable="true"
-            @dragstart="drag($event, chamado)"
-          >
+          <div v-for="chamado in chamadosAndamento" :key="chamado.id" class="kanban-item bg-light p-3 my-2" draggable="true" @dragstart="drag($event, chamado)">
             <p><strong>{{ chamado.assunto }}</strong></p>
             <p><em>Responsável: {{ chamado.responsavel }}</em></p>
             <div class="tags">
@@ -111,22 +106,9 @@
           </div>
         </div>
 
-        <!-- Coluna Concluído -->
-        <div
-          v-show="mostrarTodosChamados || categoriaVisivel === 'Concluído'"
-          id="concluido"
-          class="kanban-column"
-          @drop="drop($event)"
-          @dragover="allowDrop($event)"
-        >
+        <div v-show="mostrarTodosChamados || categoriaVisivel === 'Concluído'" id="concluido" class="kanban-column" @drop="drop($event)" @dragover="allowDrop($event)">
           <h3 class="kanban-header bg-success text-white p-2 text-center">Concluído</h3>
-          <div
-            v-for="chamado in chamadosConcluidos"
-            :key="chamado.id"
-            class="kanban-item bg-light p-3 my-2"
-            draggable="true"
-            @dragstart="drag($event, chamado)"
-          >
+          <div v-for="chamado in chamadosConcluidos" :key="chamado.id" class="kanban-item bg-light p-3 my-2" draggable="true" @dragstart="drag($event, chamado)">
             <p><strong>{{ chamado.assunto }}</strong></p>
             <p><em>Responsável: {{ chamado.responsavel }}</em></p>
             <div class="tags">
@@ -159,7 +141,13 @@ export default {
       chamados: [],
       categoriaVisivel: null,
       mostrarTodosChamados: true,
+      mostrarFormulario: false, // Controla a exibição do formulário
       novoComentario: '',
+      novoAluno: {
+        nome: '',
+        email: '',
+        telefone: ''
+      }
     };
   },
   computed: {
@@ -182,10 +170,17 @@ export default {
     mostrarTodos() {
       this.categoriaVisivel = null;
       this.mostrarTodosChamados = true;
+      this.mostrarFormulario = false; // Esconde o formulário
     },
     mostrarCategoria(categoria) {
       this.categoriaVisivel = categoria;
       this.mostrarTodosChamados = false;
+      this.mostrarFormulario = false; // Esconde o formulário
+    },
+    mostrarHome() {
+      this.mostrarFormulario = true; // Mostra o formulário
+      this.categoriaVisivel = null; // Reseta a categoria visível
+      this.mostrarTodosChamados = false; // Esconde todos os itens
     },
     allowDrop(event) {
       event.preventDefault();
@@ -203,6 +198,13 @@ export default {
         chamado.comentarios.push(this.novoComentario);
         this.novoComentario = '';
       }
+    },
+    cadastrarAluno() {
+      // Implementar lógica para cadastrar aluno
+      console.log("Novo Aluno Cadastrado:", this.novoAluno);
+      // Resetar o formulário
+      this.novoAluno = { nome: '', email: '', telefone: '' };
+      this.mostrarFormulario = false; // Esconder formulário após cadastro
     }
   },
   mounted() {
@@ -214,95 +216,95 @@ export default {
 <style scoped>
 /* Reset básico */
 body, html {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: Arial, sans-serif;
 }
 
 /* Cabeçalho */
 header {
-    width: 100%;
-    background: #0575E6;
-    display: flex;
-    align-items: center; /* Alinha a imagem e o texto verticalmente */
-    padding: 10px; /* Adiciona algum espaço interno */
-    box-sizing: border-box; /* Inclui o padding e border na largura e altura */
+  width: 100%;
+  background: #0575E6;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
 /* Contêiner para a imagem e o texto */
 .header-content {
-    display: flex;
-    align-items: center; /* Alinha a imagem e o texto verticalmente no centro */
+  display: flex;
+  align-items: center;
 }
 
 /* Ajuste da imagem no cabeçalho */
 .imagem-ajustada {
-    width: 90px; /* Ajuste o tamanho conforme necessário */
-    height: auto; /* Mantém a proporção da imagem */
-    margin-right: 10px; /* Espaço entre a imagem e o texto */
+  width: 90px;
+  height: auto;
+  margin-right: 10px;
 }
 
 /* Estilo do título no cabeçalho */
 header h1 {
-    color: white; /* Define a cor do texto */
-    margin: 0; /* Remove a margem padrão */
-    font-size: 1.5rem; /* Ajuste o tamanho da fonte conforme necessário */
+  color: white;
+  margin: 0;
+  font-size: 1.5rem;
 }
 
 /* Sidebar (Dashboard) */
 .sidebar {
-    width: 250px;
-    min-height: 100vh;
-    background: linear-gradient(to bottom, #0575E6, #02298A, #021B79);
+  width: 250px;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #0575E6, #02298A, #021B79);
 }
 
 /* Kanban Board */
 .kanban-board {
-    display: flex;
-    flex-grow: 1;
-    gap: 20px;
+  display: flex;
+  flex-grow: 1;
+  gap: 20px;
 }
 
 /* Kanban Column */
 .kanban-column {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Kanban Header */
 .kanban-header {
-    width: 100%;
-    font-size: 1.5rem;
-    text-align: center;
-    border-radius: 8px;
+  width: 100%;
+  font-size: 1.5rem;
+  text-align: center;
+  border-radius: 8px;
 }
 
 /* Kanban Item */
 .kanban-item {
-    width: 100%;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
+  width: 100%;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
+
 /* Efeito hover para links na sidebar */
 .sidebar .nav-link {
-    transition: background-color 0.3s, color 0.3s; /* Transição suave para as propriedades */
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .sidebar .nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.2); /* Cor de fundo ao passar o mouse */
-    color: #fff; /* Cor do texto ao passar o mouse */
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
 }
+
 /* Estilo para o link ativo */
 .sidebar .nav-link.active {
-    background-color: rgba(255, 255, 255, 0.4); /* Cor de fundo para o link ativo */
-    color: #fff; /* Cor do texto para o link ativo */
+  background-color: rgba(255, 255, 255, 0.4);
+  color: #fff;
 }
-
-
 </style>
