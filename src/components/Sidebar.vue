@@ -27,10 +27,10 @@
             <a class="nav-link text-white" @click="mostrarCategoria('Concluído')" href="#">Concluídos</a>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link text-white" @click="mostrarHome" to="#">Home</router-link>
+            <router-link class="nav-link text-white" @click="mostrarCadastro" to="#">Cadastro</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link text-white" href="#">Cadastra aluno</router-link>
+            <router-link class="nav-link text-white" href="#"></router-link>
           </li>
         </ul>
       </div>
@@ -177,7 +177,7 @@ export default {
       this.mostrarTodosChamados = false;
       this.mostrarFormulario = false; // Esconde o formulário
     },
-    mostrarHome() {
+    mostrarCadastro() {
       this.mostrarFormulario = true; // Mostra o formulário
       this.categoriaVisivel = null; // Reseta a categoria visível
       this.mostrarTodosChamados = false; // Esconde todos os itens
