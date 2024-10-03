@@ -14,13 +14,16 @@
     "bootstrap-icons": "^1.11.3",
     "bootstrap-vue-3": "^0.5.1",
     "chart.js": "^4.4.4",
+    "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.3",
     "maska": "^3.0.2",
     "primevue": "^4.0.7",
     "sweetalert2": "^11.12.4",
     "v-mask": "^2.3.0",
     "vue": "^3.4.29",
     "vue-chartjs": "^5.3.1",
-    "vue-router": "^4.1.6"
+    "vue-router": "^4.1.6",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.5",

@@ -39,7 +39,7 @@
       <div class="kanban-board d-flex justify-content-around flex-grow-1 p-3">
         <!-- Formulário para cadastrar novo aluno -->
         <div v-if="mostrarFormulario" class="form-container">
-          <h2>Cadastrar Novo Aluno</h2>
+          <h2>Cadastrar usuario</h2>
           <form @submit.prevent="cadastrarAluno">
             <div class="form-group">
               <label for="nome">Nome:</label>
@@ -53,14 +53,26 @@
               <label for="telefone">Telefone:</label>
               <input type="tel" id="telefone" v-model="novoAluno.telefone" required>
             </div>
+            <div class="form-group">
+              <label>Tipo de Usuário:</label>
+              <div class="radio-group">
+                <input type="radio" id="estudante" value="Estudante" v-model="novoAluno.tipoUsuario">
+                <label for="estudante">Estudante</label>
+
+                <input type="radio" id="tecnico" value="Técnico de TI" v-model="novoAluno.tipoUsuario">
+                <label for="tecnico">Técnico de TI</label>
+              </div>
+            </div>
+
             <button type="submit" class="btn btn-primary">Cadastrar</button>
           </form>
         </div>
-
         <!-- Colunas do Kanban -->
-        <div v-show="mostrarTodosChamados || categoriaVisivel === 'Pendente'" id="pendente" class="kanban-column" @drop="drop($event)" @dragover="allowDrop($event)">
+        <div v-show="mostrarTodosChamados || categoriaVisivel === 'Pendente'" id="pendente" class="kanban-column"
+          @drop="drop($event)" @dragover="allowDrop($event)">
           <h3 class="kanban-header bg-danger text-white p-2 text-center">Pendente</h3>
-          <div v-for="chamado in chamadosPendentes" :key="chamado.id" class="kanban-item bg-light p-3 my-2" draggable="true" @dragstart="drag($event, chamado)">
+          <div v-for="chamado in chamadosPendentes" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
+            draggable="true" @dragstart="drag($event, chamado)">
             <p><strong>{{ chamado.assunto }}</strong></p>
             <p><em>Responsável: {{ chamado.responsavel }}</em></p>
             <div class="tags">
@@ -77,14 +89,17 @@
               <ul>
                 <li v-for="comentario in chamado.comentarios" :key="comentario">{{ comentario }}</li>
               </ul>
-              <input type="text" v-model="novoComentario" placeholder="Adicionar comentário" @keyup.enter="adicionarComentario(chamado)">
+              <input type="text" v-model="novoComentario" placeholder="Adicionar comentário"
+                @keyup.enter="adicionarComentario(chamado)">
             </div>
           </div>
         </div>
 
-        <div v-show="mostrarTodosChamados || categoriaVisivel === 'Andamento'" id="andamento" class="kanban-column" @drop="drop($event)" @dragover="allowDrop($event)">
+        <div v-show="mostrarTodosChamados || categoriaVisivel === 'Andamento'" id="andamento" class="kanban-column"
+          @drop="drop($event)" @dragover="allowDrop($event)">
           <h3 class="kanban-header bg-primary text-white p-2 text-center">Andamento</h3>
-          <div v-for="chamado in chamadosAndamento" :key="chamado.id" class="kanban-item bg-light p-3 my-2" draggable="true" @dragstart="drag($event, chamado)">
+          <div v-for="chamado in chamadosAndamento" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
+            draggable="true" @dragstart="drag($event, chamado)">
             <p><strong>{{ chamado.assunto }}</strong></p>
             <p><em>Responsável: {{ chamado.responsavel }}</em></p>
             <div class="tags">
@@ -101,14 +116,17 @@
               <ul>
                 <li v-for="comentario in chamado.comentarios" :key="comentario">{{ comentario }}</li>
               </ul>
-              <input type="text" v-model="novoComentario" placeholder="Adicionar comentário" @keyup.enter="adicionarComentario(chamado)">
+              <input type="text" v-model="novoComentario" placeholder="Adicionar comentário"
+                @keyup.enter="adicionarComentario(chamado)">
             </div>
           </div>
         </div>
 
-        <div v-show="mostrarTodosChamados || categoriaVisivel === 'Concluído'" id="concluido" class="kanban-column" @drop="drop($event)" @dragover="allowDrop($event)">
+        <div v-show="mostrarTodosChamados || categoriaVisivel === 'Concluído'" id="concluido" class="kanban-column"
+          @drop="drop($event)" @dragover="allowDrop($event)">
           <h3 class="kanban-header bg-success text-white p-2 text-center">Concluído</h3>
-          <div v-for="chamado in chamadosConcluidos" :key="chamado.id" class="kanban-item bg-light p-3 my-2" draggable="true" @dragstart="drag($event, chamado)">
+          <div v-for="chamado in chamadosConcluidos" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
+            draggable="true" @dragstart="drag($event, chamado)">
             <p><strong>{{ chamado.assunto }}</strong></p>
             <p><em>Responsável: {{ chamado.responsavel }}</em></p>
             <div class="tags">
@@ -125,7 +143,8 @@
               <ul>
                 <li v-for="comentario in chamado.comentarios" :key="comentario">{{ comentario }}</li>
               </ul>
-              <input type="text" v-model="novoComentario" placeholder="Adicionar comentário" @keyup.enter="adicionarComentario(chamado)">
+              <input type="text" v-model="novoComentario" placeholder="Adicionar comentário"
+                @keyup.enter="adicionarComentario(chamado)">
             </div>
           </div>
         </div>
@@ -135,6 +154,7 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
@@ -146,7 +166,8 @@ export default {
       novoAluno: {
         nome: '',
         email: '',
-        telefone: ''
+        telefone: '',
+        tipoUsuario: ''
       }
     };
   },
@@ -179,7 +200,7 @@ export default {
     },
     mostrarCadastro() {
       this.mostrarFormulario = true; // Mostra o formulário
-      this.categoriaVisivel = null; // Reseta a categoria visível
+      this.categoriaVisivel = false; // Reseta a categoria visível
       this.mostrarTodosChamados = false; // Esconde todos os itens
     },
     allowDrop(event) {
@@ -203,8 +224,8 @@ export default {
       // Implementar lógica para cadastrar aluno
       console.log("Novo Aluno Cadastrado:", this.novoAluno);
       // Resetar o formulário
-      this.novoAluno = { nome: '', email: '', telefone: '' };
-      this.mostrarFormulario = false; // Esconder formulário após cadastro
+      this.novoAluno = { nome: '', email: '', telefone: '', tipoUsuario: '' };
+      this.mostrarFormulario = true; // Esconder formulário após cadastro
     }
   },
   mounted() {
@@ -215,7 +236,8 @@ export default {
 
 <style scoped>
 /* Reset básico */
-body, html {
+body,
+html {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -307,4 +329,85 @@ header h1 {
   background-color: rgba(255, 255, 255, 0.4);
   color: #fff;
 }
+
+/* Form container, same as login box */
+.form-container {
+  max-width: 900px;
+  margin: 100px auto;
+  padding: 200px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Form headings */
+.form-container h2 {
+  margin-bottom: 50px;
+  height: 2px;
+  color: #333;
+}
+
+/* Input fields */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  font-weight: bold;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+/* Button */
+.btn-primary {
+  width: 100%;
+  padding: 10px;
+  background-color: #0575E6;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #045bb5;
+}
+
+/* Error message styling (for invalid email or short password) */
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+/* Basic body reset */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background-color: #ffffff;
+  /* Match the background with login page */
+}
+/* Aligning and styling the radio buttons */
+.radio-group {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Space between the radio buttons */
+}
+
+.radio-group input[type="radio"] {
+  margin-right: 5px; /* Space between radio button and its label */
+}
+
 </style>
