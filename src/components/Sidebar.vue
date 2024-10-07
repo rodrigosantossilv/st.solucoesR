@@ -4,7 +4,6 @@
     <header class="bg-primary text-white p-3">
       <div class="header-content">
         <img src="/images/ST.KABAN.png" class="imagem-ajustada" alt="Descrição da Imagem">
-        <h1 class="text-center">Dashboard</h1>
       </div>
     </header>
 
@@ -15,19 +14,16 @@
         <h2>Opções</h2>
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link text-white" @click="mostrarTodos" href="#">Todos</a>
+            <a class="nav-link text-white" @click="chamadosTi" href="#">Chamados Ti</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white" @click="mostrarCategoria('Pendente')" href="#">Pendentes</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-white" @click="mostrarCategoria('Andamento')" href="#">Andamentos</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-white" @click="mostrarCategoria('Concluído')" href="#">Concluídos</a>
+            <a class="nav-link text-white" @click="chamadosManuntencao" href="#">Chamados Manuntencao</a>
           </li>
           <li class="nav-item">
             <router-link class="nav-link text-white" @click="mostrarCadastro" to="#">Cadastro</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link text-white" @click="tabelaCadastro" to="#">Tabela Cadastro</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link text-white" href="#"></router-link>
@@ -39,7 +35,7 @@
       <div class="kanban-board d-flex justify-content-around flex-grow-1 p-3">
         <!-- Formulário para cadastrar novo aluno -->
         <div v-if="mostrarFormulario" class="form-container">
-          <h2>Cadastrar usuario</h2>
+          <h2>Cadastrar usuário</h2>
           <form @submit.prevent="cadastrarAluno">
             <div class="form-group">
               <label for="nome">Nome:</label>
@@ -50,8 +46,16 @@
               <input type="email" id="email" v-model="novoAluno.email" required>
             </div>
             <div class="form-group">
-              <label for="telefone">Telefone:</label>
-              <input type="tel" id="telefone" v-model="novoAluno.telefone" required>
+              <label for="email">Confirmar Email:</label>
+              <input type="email" id="email" v-model="novoAluno.email" required>
+            </div>
+            <div class="form-group">
+              <label for="senha">Senha:</label>
+              <input type="senha" id="semha" v-model="novoAluno.senha" required>
+            </div>
+            <div class="form-group">
+              <label for="senha"> Confirmar Senha:</label>
+              <input type="senha" id="semha" v-model="novoAluno.senha" required>
             </div>
             <div class="form-group">
               <label>Tipo de Usuário:</label>
@@ -61,6 +65,10 @@
 
                 <input type="radio" id="tecnico" value="Técnico de TI" v-model="novoAluno.tipoUsuario">
                 <label for="tecnico">Técnico de TI</label>
+                
+                <input type="radio" id="tecnico" value="Técnico de Manuteção" v-model="novoAluno.tipoUsuario">
+                <label for="tecnico">Técnico de Manuteção</label>
+                
               </div>
             </div>
 
@@ -161,7 +169,7 @@ export default {
       chamados: [],
       categoriaVisivel: null,
       mostrarTodosChamados: true,
-      mostrarFormulario: false, // Controla a exibição do formulário
+      mostrarFormulario: false, 
       novoComentario: '',
       novoAluno: {
         nome: '',
@@ -171,31 +179,20 @@ export default {
       }
     };
   },
-  computed: {
-    chamadosPendentes() {
-      return this.chamados.filter(chamado => chamado.status === 'Pendente');
-    },
-    chamadosAndamento() {
-      return this.chamados.filter(chamado => chamado.status === 'Andamento');
-    },
-    chamadosConcluidos() {
-      return this.chamados.filter(chamado => chamado.status === 'Concluído');
-    }
-  },
   methods: {
     async carregarChamados() {
       // Simulação de chamada a uma API
       const resposta = await fetch('URL_DA_API'); // Substitua pela URL da sua API
       this.chamados = await resposta.json();
     },
-    mostrarTodos() {
+    chamadosTi() {
       this.categoriaVisivel = null;
       this.mostrarTodosChamados = true;
       this.mostrarFormulario = false; // Esconde o formulário
     },
-    mostrarCategoria(categoria) {
-      this.categoriaVisivel = categoria;
-      this.mostrarTodosChamados = false;
+    chamadosManuntencao() {
+      this.categoriaVisivel = null;
+      this.mostrarTodosChamados = true;
       this.mostrarFormulario = false; // Esconde o formulário
     },
     mostrarCadastro() {
