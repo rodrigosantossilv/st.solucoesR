@@ -1,4 +1,5 @@
 <template>
+  
   <div class="login-container">
     <div class="left-side">
       <div class="bubbles">
