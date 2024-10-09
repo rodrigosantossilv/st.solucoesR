@@ -14,6 +14,9 @@
         <h2>Opções</h2>
         <ul class="nav flex-column">
           <li class="nav-item">
+            <a class="nav-link text-white"  @click="home" href="#">Home </a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link text-white" @click="chamadosTi" href="#">Chamados Ti</a>
           </li>
           <li class="nav-item">
@@ -22,12 +25,7 @@
           <li class="nav-item">
             <router-link class="nav-link text-white" @click="mostrarCadastro" to="#">Cadastro</router-link>
           </li>
-          <li class="nav-item">
-            <router-link class="nav-link text-white" @click="tabelaCadastro" to="#">Tabela Cadastro</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link text-white" href="#"></router-link>
-          </li>
+        
         </ul>
       </div>
 

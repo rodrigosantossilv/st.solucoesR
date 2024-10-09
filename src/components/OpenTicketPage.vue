@@ -16,41 +16,32 @@
       <div class="login-box">
         <h2>Olá, Informe seu problema</h2>
 
-      <!-- Modificação na parte do problema -->
-<b-form-group label="Problema*" label-for="problema">
-  <b-form-select v-model="problema" id="problema">
-    <option value="" disabled>Selecione o seu problema:</option>
-    <option value="Arcondicionado">Ar condicionado</option>
-    <option value="Projetores">Projetores</option>
-    <option value="CaixadeSom">Caixa de som</option>
-    <option value="Iluminaçãodoambiente">Iluminação do ambiente</option>
-    <option value="Mobiliário">Mobiliário</option>
-    <option value="ComputadoresePerifericos">Computadores e periféricos</option> <!-- Adicionada esta opção -->
-    <option value="SoftwareseProgramasEspecíficos">Softwares e programas específicos</option>
-    <option value="DisposiçãoDosEquipamentosnoAmbiente">Disposição dos equipamentos no ambiente</option>
-    <option value="Internet">Internet</option>
-    <option value="Outro">Outro</option>
-  </b-form-select>
-</b-form-group>
+        <b-form-group label="Problema*" label-for="problema">
+          <b-form-select v-model="problema" id="problema">
+            <option value="" disabled>Selecione o seu problema:</option>
+            <option value="Arcondicionado">Ar condicionado</option>
+            <option value="Projetores">Projetores</option>
+            <option value="CaixadeSom">Caixa de som</option>
+            <option value="Iluminaçãodoambiente">Iluminação do ambiente</option>
+            <option value="Mobiliário">Mobiliário</option>
+            <option value="ComputadoresePerifericos">Computadores e periféricos</option>
+            <option value="SoftwareseProgramasEspecíficos">Softwares e programas específicos</option>
+            <option value="DisposiçãoDosEquipamentosnoAmbiente">Disposição dos equipamentos no ambiente</option>
+            <option value="Internet">Internet</option>
+            <option value="Outro">Outro</option>
+          </b-form-select>
+        </b-form-group>
 
-<!-- Lógica para selecionar Máquina -->
-<b-form-group v-if="problema === 'Computadoresdolaboratório' || problema === 'ComputadoresePerifericos'" label="Selecionar Máquina" label-for="SelecionarMaquina">
-  <b-button id="SelecionarMaquina" variant="primary" @click="navigateToLugar">
-    Selecionar Máquina
-  </b-button>
-</b-form-group>
+        <b-form-group v-if="problema === 'Computadoresdolaboratório' || problema === 'ComputadoresePerifericos'" label="Selecionar Máquina" label-for="SelecionarMaquina">
+          <b-button id="SelecionarMaquina" variant="primary" @click="navigateToLugar">
+            Selecionar Máquina
+          </b-button>
+        </b-form-group>
 
         <b-form-group label="Bloco da sala*" label-for="blocodasala">
           <b-form-select v-model="blocodaSala" id="blocodasala" @change="updateSalas">
             <option value="" disabled>Selecione um Bloco da sala</option>
-            <option value="BlocoA">Bloco A</option>
-            <option value="BlocoB">Bloco B</option>
-            <option value="BlocoC">Bloco C</option>
-            <option value="BlocoD">Bloco D</option>
-            <option value="BlocoE">Bloco E</option>
-            <option value="BlocoF">Bloco F</option>
-            <option value="BlocoG">Bloco G</option>
-            <option value="BlocoH">Bloco H</option>
+            <option v-for="bloco in Object.keys(blocos)" :key="bloco" :value="bloco">{{ bloco }}</option>
           </b-form-select>
         </b-form-group>
 
@@ -75,97 +66,46 @@
 
 <script>
 import Swal from 'sweetalert2';
-import { BForm, BFormGroup, BFormTextarea, BFormSelect, BButton } from 'bootstrap-vue-3';
+import { BForm, BFormGroup, BFormSelect, BButton } from 'bootstrap-vue-3';
+import axios from 'axios';
 
 export default {
   components: {
     BForm,
     BFormGroup,
-    BFormTextarea,
     BFormSelect,
     BButton,
   },
   data() {
     return {
       problema: '',
-      Outro: '',
       blocodaSala: '',
       numerodaSala: '',
       salas: [],
-      numeroComputadorSelecionado: null, // Valor para armazenar o número do computador
-      blocos: {
-        BlocoA: [
-          "Lab. de acionamento mezanino - Térreo",
-          "Eletrotécnica - Térreo",
-          "Hidráulica e pneumática - Térreo",
-          "Automação industrial - Térreo",
-          "Automação predial - Térreo",
-        ],
-        BlocoB: ["Lab. Química - Térreo"],
-        BlocoC: [
-          "Lab. Mecânica industrial - Térreo",
-          "Lab. de Hidráulica e Pneumática - Térreo",
-          "Lab. Torno - Térreo",
-        ],
-        BlocoD: [
-          "Laboratório - Térreo",
-          "Sala 01 - Térreo",
-          "Lab Maker - Térreo",
-        ],
-        BlocoE: [
-          "Sala 01 - Térreo",
-          "Sala 1.1 - Térreo",
-          "Sala 1.2 - Térreo",
-          "Sala 02 - Térreo",
-          "Sala 03 - Térreo",
-          "Sala 04 - Térreo",
-          "Sala 05 - Térreo",
-          "Sala 06 - Térreo",
-          "Sala 6.1 - Térreo",
-          "Sala 07 - Térreo",
-          "Sala 08 - Térreo",
-          "Predial (S.9) - Térreo",
-          "Sala 10 - Térreo",
-        ],
-        BlocoF: [
-          "Sala 01 - 1° Andar",
-          "Sala 02 - 1° Andar",
-          "Sala 03 - 1° Andar",
-          "Sala 04 - 1° Andar",
-          "Sala 05 - 1° Andar",
-          "Sala 06 - 1° Andar",
-          "Sala 07 - 1° Andar",
-          "Sala 08 - 1° Andar",
-          "Sala 09 - 1° Andar",
-          "Sala 10 - 1° Andar",
-          "Sala 11 - 2° Andar",
-          "Sala 12 - 2° Andar",
-          "Sala 13 - 2° Andar",
-          "Sala 14 - 2° Andar",
-          "Sala 15 - 2° Andar",
-          "Sala 16 - 2° Andar",
-          "Sala 17 - 2° Andar",
-          "Sala 18 - 2° Andar",
-          "Sala 19 - 2° Andar",
-          "Sala 20 - 2° Andar",
-        ],
-        BlocoG: ["Mecânica automotiva - Térreo"],
-        BlocoH: [
-          "Setor teórica de Empilhadeira - Térreo",
-          "Sala de Planta EMI - Térreo",
-          "Planta de processamento de cereais, raízes e derivados - Térreo",
-        ],
-      },
+      blocos: {},
     };
   },
   mounted() {
-    // Recebe o número do computador pela rota
-    const numeroComputador = this.$route.params.numeroComputador;
-    if (numeroComputador) {
-      this.numeroComputadorSelecionado = numeroComputador;
-    }
+    // Chama a função para buscar dados ao montar o componente
+    this.fetchData();
   },
   methods: {
+    fetchData() {
+      const apiEndpoints = [
+        'http://localhost:3000/blocos', // Assumindo que você está começando com blocos
+        // Adicione mais APIs aqui se necessário
+      ];
+
+      axios.get(apiEndpoints[0]) // Apenas um exemplo, você pode modificar conforme necessário
+        .then(response => {
+          this.blocos = response.data; // Ajuste de acordo com a estrutura de dados
+          console.log('Blocos carregados:', this.blocos);
+        })
+        .catch(error => {
+          console.error('Erro ao carregar blocos:', error);
+          Swal.fire('Erro', 'Não foi possível carregar os blocos.', 'error');
+        });
+    },
     updateSalas(value) {
       this.salas = this.blocos[value] || [];
       this.numerodaSala = '';
