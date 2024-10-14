@@ -40,6 +40,10 @@
               <input type="text" id="nome" v-model="novoAluno.nome" required>
             </div>
             <div class="form-group">
+              <label for="email">Telefone:</label>
+              <input type="text	" id="telefone" v-model="novoAluno.telefone" required>
+            </div>
+            <div class="form-group">
               <label for="email">Email:</label>
               <input type="email" id="email" v-model="novoAluno.email" required>
             </div>
@@ -73,6 +77,14 @@
             <button type="submit" class="btn btn-primary">Cadastrar</button>
           </form>
         </div>
+
+
+
+
+
+
+
+
         <!-- Colunas do Kanban -->
         <div v-show="mostrarTodosChamados || categoriaVisivel === 'Pendente'" id="pendente" class="kanban-column"
           @drop="drop($event)" @dragover="allowDrop($event)">
@@ -159,8 +171,8 @@
   </div>
 </template>
 
-<script>
-
+<script >
+import axios from 'axios';
 export default {
   data() {
     return {
@@ -170,6 +182,7 @@ export default {
       mostrarFormulario: false, 
       novoComentario: '',
       novoAluno: {
+        senha : '',	
         nome: '',
         email: '',
         telefone: '',
@@ -215,18 +228,42 @@ export default {
         this.novoComentario = '';
       }
     },
-    cadastrarAluno() {
-      // Implementar lógica para cadastrar aluno
-      console.log("Novo Aluno Cadastrado:", this.novoAluno);
+
+
+    async cadastrarAluno() {
       // Resetar o formulário
-      this.novoAluno = { nome: '', email: '', telefone: '', tipoUsuario: '' };
-      this.mostrarFormulario = true; // Esconder formulário após cadastro
+      const dadosUsuario = ({
+         nome_completo:this.novoAluno.nome,
+         senha:this.novoAluno.senha,
+         email:this.novoAluno.email,
+         telefone:this.novoAluno.telefone,
+         setor_id:this.novoAluno.setor_id,
+         instituicao:'Senai',	
+         ocupacao:this.novoAluno.tipoUsuario,
+         
+        });
+
+  
+  
+      const resposta = await axios.post('http://localhost:3000/register', dadosUsuario)
+      this.novoAluno = { nome: '', email: '', telefone: '', tipoUsuario: '', senha: '' };
+      this.mostrarFormulario = true; 
+
+      if (resposta.status === 201  && this.carregarChamados){
+        alert('Aluno cadastrado com sucesso!');
+      }
+      else{
+        alert('Erro ao cadastrar o aluno');
+      }
+
     }
   },
+
   mounted() {
     this.carregarChamados();
   }
 };
+
 </script>
 
 <style scoped>
