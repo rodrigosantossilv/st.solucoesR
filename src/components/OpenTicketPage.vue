@@ -239,6 +239,8 @@ body, html {
   flex: 1;
   background: linear-gradient(to bottom, #0575E6, #02298A, #021B79);
   display: flex;
+  position: relative;
+
   justify-content: center;
   align-items: center;
   position: fixed; /* Permite que acompanhe a rolagem da página */
@@ -262,7 +264,7 @@ body, html {
 /* Caixa de registro */
 .login-box {
   width: 85%;
-  max-width: 600px;
+  max-width: 400px;
   padding: 40px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -351,6 +353,75 @@ body, html {
 
   .login-box {
     width: 90%;
+  }
+}
+
+/* Bubbles Animation */
+.bubbles {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  animation: bubble 5s infinite;
+}
+
+.bubble:nth-child(1) {
+  width: 60px;
+  height: 60px;
+  left: 10%;
+  bottom: -100px;
+  animation-duration: 7s;
+}
+
+.bubble:nth-child(2) {
+  width: 100px;
+  height: 100px;
+  left: 30%;
+  bottom: -150px;
+  animation-duration: 9s;
+}
+
+.bubble:nth-child(3) {
+  width: 80px;
+  height: 80px;
+  left: 50%;
+  bottom: -200px;
+  animation-duration: 6s;
+}
+
+.bubble:nth-child(4) {
+  width: 120px;
+  height: 120px;
+  left: 70%;
+  bottom: -250px;
+  animation-duration: 8s;
+}
+
+.bubble:nth-child(5) {
+  width: 90px;
+  height: 90px;
+  left: 80%;
+  bottom: -300px;
+  animation-duration: 10s;
+}
+
+@keyframes bubble {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-1000px) scale(0);
+    opacity: 0;
   }
 }
 </style>

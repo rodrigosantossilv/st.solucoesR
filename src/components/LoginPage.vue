@@ -45,7 +45,8 @@
 </template>
 
 <script>
-import Swal from 'sweetalert2';
+import axios from 'axios'; // Certifique-se de que o axios está importado
+import Swal from 'sweetalert2'; // Mantenha a importação do SweetAlert2
 
 export default {
   data() {
@@ -73,27 +74,14 @@ export default {
       try {
         // Verifica se é admin com senha 123456
         if (this.usuario === 'user' && this.password === '123456') {
-          Swal.fire({
-            icon: 'success',
-            title: 'Login de Admin!',
-            text: 'Redirecionando para a abrir chamados...',
-            confirmButtonText: 'OK',
-          }).then(() => {
-            this.$router.push('/openticketpage'); // Redireciona para a tela de Kanban
-          });
+          this.$router.push('/openticketpage'); // Redireciona para a tela de Kanban
           return;
         }
         if (this.usuario === 'noa' && this.password === '123456') {
-          Swal.fire({
-            icon: 'success',
-            title: 'Login de Admin!',
-            text: 'Redirecionando para o kanban...',
-            confirmButtonText: 'OK',
-          }).then(() => {
-            this.$router.push('/sidebar'); // Redireciona para a tela de Kanban
-          });
+          this.$router.push('/sidebar'); // Redireciona para a tela de Kanban
           return;
         }
+        
         // Se não for admin, continua com a chamada normal à API
         const response = await axios.post('/usuarios/login', {
           usuario: this.usuario,
@@ -101,14 +89,7 @@ export default {
         });
 
         if (response.data.success) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Bem-vindo!',
-            html: `Bem-vindo, ${this.usuario}!<br>Para o andamento do chamado, por favor, preencha as informações a seguir.`,
-            confirmButtonText: 'Continuar',
-          }).then(() => {
-            this.$router.push('/openticketpage');
-          });
+          this.$router.push('/openticketpage'); // Redireciona para a tela de Kanban
         } else {
           this.senhaInvalida = true;
         }
@@ -125,7 +106,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 /* Reset básico */
