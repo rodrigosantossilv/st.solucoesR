@@ -1,5 +1,4 @@
 <template>
-  
   <div class="login-container">
     <div class="left-side">
       <div class="bubbles">
@@ -33,8 +32,8 @@
           </b-form-select>
         </b-form-group>
 
-        <b-form-group v-if="problema === 'Computadoresdolaboratório' || problema === 'ComputadoresePerifericos'" label="Selecionar Máquina" label-for="SelecionarMaquina">
-          <b-button id="SelecionarMaquina" variant="primary" @click="navigateToLugar">
+        <b-form-group v-if="problema === 'ComputadoresePerifericos'" label="Selecionar Máquina" label-for="SelecionarMaquina">
+          <b-button id="SelecionarMaquina" variant="primary" @click="openLugarSelection">
             Selecionar Máquina
           </b-button>
         </b-form-group>
@@ -61,6 +60,33 @@
           <router-link to="/" class="btn btn-link">Voltar à página inicial</router-link>
         </div>
       </div>
+
+      <!-- Box para mostrar os dados selecionados -->
+      <div class="selected-report">
+        <h3>Relatório Selecionado</h3>
+        <p><strong>Problema:</strong> {{ problema }}</p>
+        <p><strong>Bloco da Sala:</strong> {{ blocodaSala }}</p>
+        <p><strong>Número da Sala:</strong> {{ numerodaSala }}</p>
+        <p v-if="problema === 'ComputadoresePerifericos'"><strong>Lugar Selecionado:</strong> {{ lugarSelecionado }}</p>
+      </div>
+
+      <!-- Componente de seleção de lugares -->
+      <div v-if="mostrarSelecionarLugar" class="lugar-selection">
+        <h2>Escolha o seu lugar</h2>
+        <div class="sala">
+          <div 
+            v-for="lugar in lugares" 
+            :key="lugar.id" 
+            class="lugar" 
+            :class="{ selecionado: lugar.selecionado }"
+            @click="toggleSelecao(lugar.id)"
+            :style="{ gridColumn: lugar.coluna, gridRow: lugar.fileira }"
+          >
+            {{ lugar.fileira }}-{{ lugar.coluna }}
+          </div>
+        </div>
+        <button class="btn-submit" @click="confirmarSelecao">Confirmar Seleção</button>
+      </div>
     </div>
   </div>
 </template>
@@ -82,24 +108,25 @@ export default {
       problema: '',
       blocodaSala: '',
       numerodaSala: '',
+      lugarSelecionado: '',
+      mostrarSelecionarLugar: false,
+      lugares: [],
       salas: [],
       blocos: {},
     };
   },
   mounted() {
-    // Chama a função para buscar dados ao montar o componente
     this.fetchData();
   },
   methods: {
     fetchData() {
       const apiEndpoints = [
-        'http://localhost:3000/blocos', // Assumindo que você está começando com blocos
-        // Adicione mais APIs aqui se necessário
+        'http://localhost:3000/blocos',
       ];
 
-      axios.get(apiEndpoints[0]) // Apenas um exemplo, você pode modificar conforme necessário
+      axios.get(apiEndpoints[0])
         .then(response => {
-          this.blocos = response.data; // Ajuste de acordo com a estrutura de dados
+          this.blocos = response.data;
           console.log('Blocos carregados:', this.blocos);
         })
         .catch(error => {
@@ -111,12 +138,50 @@ export default {
       this.salas = this.blocos[value] || [];
       this.numerodaSala = '';
     },
-    navigateToLugar() {
-      this.$router.push('/lugar'); // Navegar para a página Lugares.vue
+    openLugarSelection() {
+      this.mostrarSelecionarLugar = true;
+      this.inicializarLugares();
+    },
+    inicializarLugares() {
+      const numFileiras = 7;
+      const numLugaresPorFileira = [1, 7, 7, 7, 7, 7, 7];
+
+      this.lugares = [];
+      numLugaresPorFileira.forEach((numLugares, i) => {
+        for (let j = 0; j < numLugares; j++) {
+          this.lugares.push({
+            id: `${i}-${j}`,
+            fileira: i + 1,
+            coluna: j + 1,
+            selecionado: false,
+          });
+        }
+      });
+    },
+    toggleSelecao(id) {
+      const lugar = this.lugares.find(l => l.id === id);
+      if (lugar) {
+        // Desmarcar todos os outros lugares antes de selecionar um novo
+        this.lugares.forEach(l => l.selecionado = false);
+        lugar.selecionado = true;
+      }
+    },
+    confirmarSelecao() {
+      const selecionados = this.lugares.filter(l => l.selecionado);
+      if (selecionados.length === 0) {
+        Swal.fire('Erro', 'Por favor, selecione um lugar.', 'error');
+        return;
+      }
+      const lugaresSelecionados = selecionados.map(l => `${l.fileira}-${l.coluna}`).join(', ');
+      this.lugarSelecionado = lugaresSelecionados;
+      this.mostrarSelecionarLugar = false; // Feche a seleção
     },
     reportProblem() {
       if (this.blocodaSala && this.numerodaSala && this.problema) {
-        // Lógica para enviar o problema
+        if (this.problema === 'ComputadoresePerifericos' && !this.lugarSelecionado) {
+          Swal.fire('Erro', 'Selecione um lugar para continuar.', 'error');
+          return;
+        }
         Swal.fire('Problema Relatado', 'Seu problema foi relatado com sucesso!', 'success');
       } else {
         Swal.fire('Erro', 'Preencha todos os campos obrigatórios.', 'error');
@@ -136,7 +201,32 @@ body, html {
   height: 100%;
   font-family: Arial, sans-serif;
 }
+.lugar-selection {
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin-top: 20px;
+}
 
+.sala {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.lugar {
+  border: 1px solid #000;
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.lugar.selecionado {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-submit {
+  margin-top: 10px;
+}
 /* Container de registro */
 .login-container {
   display: flex;
@@ -151,15 +241,19 @@ body, html {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
+  position: fixed; /* Permite que acompanhe a rolagem da página */
+  height: 100%; /* Faz com que ocupe 100% da altura da tela */
   overflow: hidden; /* Garante que as bolhas fiquem dentro do lado esquerdo */
+  z-index: 1; /* Mantém a camada do lado esquerdo acima do conteúdo da direita */
 }
+
 
 /* Lado direito - Formulário de registro */
 .right-side {
   flex: 2;
   background-color: white;
   display: flex;
+  flex-direction: column; /* Adiciona flex-direction para empilhar elementos verticalmente */
   justify-content: center;
   align-items: center;
   position: relative;
@@ -198,7 +292,7 @@ body, html {
 .login-box button {
   width: 100%;
   padding: 11px;
-  background-color:  #02298A;
+  background-color: #02298A;
   color: white;
   border: none;
   border-radius: 10px;
@@ -221,6 +315,17 @@ body, html {
   text-decoration: underline;
 }
 
+/* Estilo da caixa de relatório selecionado */
+.selected-report {
+  width: 85%;
+  max-width: 600px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  margin-top: 20px;
+}
+
 /* Imagem no canto */
 .corner-img {
   position: absolute;
@@ -237,86 +342,15 @@ body, html {
   }
 
   .left-side {
-    display: none;
+    height: 30vh;
   }
 
   .right-side {
-    flex: 1;
+    height: auto;
   }
 
-  .corner-img {
-    display: none;
+  .login-box {
+    width: 90%;
   }
 }
-
-/* Animação das bolhas no lado esquerdo */
-.bubbles {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  overflow: hidden;
-  z-index: 1; /* Garante que as bolhas fiquem atrás do conteúdo principal */
-}
-
-.bubble {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2); /* Cor sutil para as bolhas */
-  animation: bubble 5s infinite; /* Animação contínua */
-}
-
-/* Ajuste das bolhas no lado esquerdo */
-.left-side .bubbles .bubble:nth-child(1) {
-  width: 60px;
-  height: 60px;
-  left: 10%;
-  bottom: -100px;
-  animation-duration: 7s;
-}
-
-.left-side .bubbles .bubble:nth-child(2) {
-  width: 100px;
-  height: 100px;
-  left: 30%;
-  bottom: -150px;
-  animation-duration: 9s;
-}
-
-.left-side .bubbles .bubble:nth-child(3) {
-  width: 80px;
-  height: 80px;
-  left: 50%;
-  bottom: -200px;
-  animation-duration: 6s;
-}
-
-.left-side .bubbles .bubble:nth-child(4) {
-  width: 120px;
-  height: 120px;
-  left: 70%;
-  bottom: -250px;
-  animation-duration: 8s;
-}
-
-.left-side .bubbles .bubble:nth-child(5) {
-  width: 90px;
-  height: 90px;
-  left: 80%;
-  bottom: -300px;
-  animation-duration: 10s;
-}
-
-@keyframes bubble {
-  0% {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-1000px) scale(0);
-    opacity: 0;
-  }
-}
-
 </style>
