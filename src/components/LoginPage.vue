@@ -5,7 +5,7 @@
       <div class="left-side">
         <img src="/images/ST.png" alt="Logotipo" />
         <img src="/images/circulos.png" alt="Circles" class="corner-img" />
-        
+
         <!-- Bubbles Animation (opcional) -->
         <div class="bubbles">
           <div class="bubble"></div>
@@ -19,16 +19,34 @@
       <div class="right-side">
         <div class="login-box">
           <h2>Bem-vindo!</h2>
-          <input type="text" placeholder="Usuário" v-model="usuario" aria-label="Usuário" />
+          <input
+            type="text"
+            placeholder="Usuário"
+            v-model="gmail"
+            aria-label="Usuário"
+          />
           <p v-if="usuarioInvalido" class="error-text">Usuário inválido!</p>
           <div class="password-container">
-            <input :type="passwordFieldType" placeholder="Senha" v-model="password" aria-label="Senha" />
+            <input
+              :type="passwordFieldType"
+              placeholder="Senha"
+              v-model="password"
+              aria-label="Senha"
+            />
             <i @click="togglePasswordVisibility" class="password-icon">
               <span v-if="passwordFieldType === 'password'">
-                <img src="/images/olho.png" alt="Olho" class="eye-icon" />
+                <img
+                  src="/images/olho.png"
+                  alt="Mostrar senha"
+                  class="eye-icon"
+                />
               </span>
               <span v-else>
-                <img src="/images/fechado.png" alt="Fechado" class="eye-icon" />
+                <img
+                  src="/images/fechado.png"
+                  alt="Ocultar senha"
+                  class="eye-icon"
+                />
               </span>
             </i>
           </div>
@@ -37,7 +55,6 @@
             <span v-if="isLoading">Carregando...</span>
             <span v-else>Login</span>
           </button>
-        
         </div>
       </div>
     </div>
@@ -45,26 +62,27 @@
 </template>
 
 <script>
-import axios from 'axios'; // Certifique-se de que o axios está importado
-import Swal from 'sweetalert2'; // Mantenha a importação do SweetAlert2
+import axios from "axios";
+import Swal from "sweetalert2";
 
 export default {
   data() {
     return {
-      usuario: '',
-      password: '',
+      gmail: "",
+      password: "",
       usuarioInvalido: false,
       senhaInvalida: false,
-      passwordFieldType: 'password',
+      passwordFieldType: "password",
       isLoading: false,
     };
   },
   methods: {
     togglePasswordVisibility() {
-      this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
+      this.passwordFieldType =
+        this.passwordFieldType === "password" ? "text" : "password";
     },
     async login() {
-      this.usuarioInvalido = !this.usuario.trim();
+      this.usuarioInvalido = !this.gmail.trim();
       this.senhaInvalida = !this.password.trim();
 
       if (this.usuarioInvalido || this.senhaInvalida) return;
@@ -72,32 +90,42 @@ export default {
       this.isLoading = true;
 
       try {
-        // Verifica se é admin com senha 123456
-        if (this.usuario === 'user' && this.password === '123456') {
-          this.$router.push('/openticketpage'); // Redireciona para a tela de Kanban
-          return;
-        }
-        if (this.usuario === 'noa' && this.password === '123456') {
-          this.$router.push('/sidebar'); // Redireciona para a tela de Kanban
-          return;
-        }
-        
-        // Se não for admin, continua com a chamada normal à API
-        const response = await axios.post('/usuarios/login', {
-          usuario: this.usuario,
-          password: this.password,
-        });
+        const response = await axios.post(
+          "http://localhost:3000/auth/login",
+          {
+            email: this.gmail,
+            senha: this.password,
+          });
 
-        if (response.data.success) {
-          this.$router.push('/openticketpage'); // Redireciona para a tela de Kanban
+        if (response.status === 200) {
+          localStorage.setItem("token",response.data.token)
+          const userEmail = this.gmail;
+          debugger
+          if (
+            response.data.ocupacao.endsWith("ESTUDANTE") ||
+            response.data.ocupacao.endsWith("DOCENTE")
+          ) {
+            this.$router.push("/openticketpage");
+          } else if (
+            response.data.ocupacao.endsWith("MANUTENCAO") ||
+            response.data.ocupacao.endsWith("TI")
+          ) {
+            this.$router.push("/sidebar");
+          } else if (response.data.ocupacao.endsWith("NOA")) {
+            this.$router.push("/sidebar");
+          } else {
+            // Caso padrão, se necessário
+          }
         } else {
           this.senhaInvalida = true;
         }
       } catch (error) {
         Swal.fire({
-          icon: 'error',
-          title: 'Erro!',
-          text: error.response ? error.response.data.message || 'Usuário ou senha inválidos!' : 'Erro de conexão. Tente novamente mais tarde.',
+          icon: "error",
+          title: "Erro!",
+          text: error.response
+            ? error.response.data.message || "Usuário ou senha inválidos!"
+            : "Erro de conexão. Tente novamente mais tarde.",
         });
       } finally {
         this.isLoading = false;
@@ -107,9 +135,15 @@ export default {
 };
 </script>
 
+
+
+
+
+
 <style scoped>
 /* Reset básico */
-body, html {
+body,
+html {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -127,7 +161,7 @@ body, html {
 /* Lado esquerdo - Imagem com gradiente */
 .left-side {
   flex: 1;
-  background: linear-gradient(to bottom, #0575E6, #02298A, #021B79);
+  background: linear-gradient(to bottom, #0575e6, #02298a, #021b79);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -180,7 +214,7 @@ body, html {
 .login-box button {
   width: 100%;
   padding: 11px;
-  background-color: #02298A;
+  background-color: #02298a;
   color: rgb(255, 255, 255);
   border: none;
   border-radius: 10px;
@@ -193,16 +227,6 @@ body, html {
   background-color: #2059ea;
 }
 
-/* Estilo do link */
-.login-box .btn-link {
-  color: rgb(8, 91, 143);
-  text-decoration: none;
-}
-
-.login-box .btn-link:hover {
-  text-decoration: underline;
-}
-
 /* Imagem no canto */
 .corner-img {
   position: absolute;
@@ -211,12 +235,13 @@ body, html {
   width: 750px;
   height: auto;
 }
+
+/* Ícone do olho */
 .eye-icon {
-  width: 20px; /* Ajuste para um tamanho menor */
-  height: 20px; /* Ajuste para um tamanho menor */
+  width: 20px;
+  height: 20px;
   cursor: pointer;
 }
-
 
 /* Responsividade */
 @media (max-width: 768px) {
