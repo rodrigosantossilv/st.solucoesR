@@ -62,13 +62,15 @@
             <div class="form-group">
               <label>Tipo de Usuário:</label>
               <div class="radio-group">
-                <input type="radio" id="estudante" value="Estudante" v-model="novoAluno.tipoUsuario">
+                <input type="radio" id="estudante" value="ESTUDANTE" v-model="novoAluno.tipoUsuario">
                 <label for="estudante">Estudante</label>
-
-                <input type="radio" id="tecnico" value="Técnico de TI" v-model="novoAluno.tipoUsuario">
-                <label for="tecnico">Técnico de TI</label>
                 
-                <input type="radio" id="tecnico" value="Técnico de Manuteção" v-model="novoAluno.tipoUsuario">
+
+                <input type="radio" id="tecnico" value="TI" v-model="novoAluno.tipoUsuario">
+                <label for="tecnico">Técnico de TI</label>
+                <input type="radio" id="Docente" value="DOCENTE" v-model="novoAluno.tipoUsuario">
+                <label for="tecnico">Docente</label>
+                <input type="radio" id="tecnico" value="MANUTENCAO" v-model="novoAluno.tipoUsuario">
                 <label for="tecnico">Técnico de Manuteção</label>
                 
               </div>
@@ -242,12 +244,23 @@ export default {
          ocupacao:this.novoAluno.tipoUsuario,
          
         });
+        const token = localStorage.getItem("token")
 
   
   
-      const resposta = await axios.post('http://localhost:3000/register', dadosUsuario)
-      this.novoAluno = { nome: '', email: '', telefone: '', tipoUsuario: '', senha: '' };
+      const resposta = await axios.post('http://localhost:3000/auth/register', dadosUsuario, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          } )
+      
+      
+      this.novoAluno = { nome: '', email: '', telefone: '', tipoUsuario: '', senha: ''
+       };
       this.mostrarFormulario = true; 
+
+
 
       if (resposta.status === 201  && this.carregarChamados){
         alert('Aluno cadastrado com sucesso!');
