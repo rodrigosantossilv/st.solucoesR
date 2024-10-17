@@ -38,11 +38,7 @@
         </b-form-group>
 
         <!-- Botão de seleção de máquina unificado -->
-        <b-form-group v-if="problema === 'ComputadoresePerifericos' || problema === 'SoftwareseProgramasEspecíficos'" label="Selecionar Máquina" label-for="SelecionarMaquina">
-          <b-button id="SelecionarMaquina" variant="primary" @click="openLugarSelection">
-            Selecionar Máquina
-          </b-button>
-        </b-form-group>
+    
 
         <b-form-group label="Bloco da sala*" label-for="blocodasala">
           <b-form-select v-model="blocodaSala" id="blocodasala" @change="updateSalas">
@@ -120,11 +116,20 @@ export default {
       lugares: [],
       salas: [],
       blocos: {},
-      descricaoProblema: '', // Adicionado para armazenar a descrição do problema
+      descricaoProblema: '',
     };
   },
   mounted() {
     this.fetchData();
+  },
+  watch: {
+    problema(newValue) {
+      if (newValue === 'ComputadoresePerifericos' || newValue === 'SoftwareseProgramasEspecíficos') {
+        this.openLugarSelection();
+      } else {
+        this.mostrarSelecionarLugar = false; // Esconde a seleção de lugares se for outro problema
+      }
+    }
   },
   methods: {
     fetchData() {
@@ -169,7 +174,6 @@ export default {
     toggleSelecao(id) {
       const lugar = this.lugares.find(l => l.id === id);
       if (lugar) {
-        // Desmarcar todos os outros lugares antes de selecionar um novo
         this.lugares.forEach(l => l.selecionado = false);
         lugar.selecionado = true;
       }
@@ -190,7 +194,6 @@ export default {
           Swal.fire('Erro', 'Por favor, selecione um lugar.', 'error');
           return;
         }
-        // Aqui você pode fazer o que quiser com os dados
         Swal.fire('Problema Reportado', 'Obrigado por reportar o problema!', 'success');
       } else {
         Swal.fire('Erro', 'Por favor, preencha todos os campos obrigatórios.', 'error');
