@@ -63,15 +63,6 @@
         </div>
       </div>
 
-      <!-- Box para mostrar os dados selecionados -->
-      <div class="selected-report">
-        <h3>Relatório Selecionado</h3>
-        <p><strong>Problema:</strong> {{ problema }}</p>
-        <p><strong>Bloco da Sala:</strong> {{ blocodaSala }}</p>
-        <p><strong>Número da Sala:</strong> {{ numerodaSala }}</p>
-        <p v-if="problema === 'ComputadoresePerifericos'"><strong>Lugar Selecionado:</strong> {{ lugarSelecionado }}</p>
-        <p v-if="problema === 'SoftwareseProgramasEspecíficos' || problema === 'Outro'"><strong>Descrição do Problema:</strong> {{ descricaoProblema }}</p>
-      </div>
 
       <!-- Componente de seleção de lugares -->
       <div v-if="mostrarSelecionarLugar" class="lugar-selection">
@@ -89,6 +80,15 @@
           </div>
         </div>
         <button class="btn-submit" @click="confirmarSelecao">Confirmar Seleção</button>
+      </div>
+       <!-- Box para mostrar os dados selecionados -->
+       <div class="selected-report">
+        <h3>Relatório Selecionado</h3>
+        <p><strong>Problema:</strong> {{ problema }}</p>
+        <p><strong>Bloco da Sala:</strong> {{ blocodaSala }}</p>
+        <p><strong>Número da Sala:</strong> {{ numerodaSala }}</p>
+        <p v-if="problema === 'ComputadoresePerifericos'"><strong>Lugar Selecionado:</strong> {{ lugarSelecionado }}</p>
+        <p v-if="problema === 'SoftwareseProgramasEspecíficos' || problema === 'Outro'"><strong>Descrição do Problema:</strong> {{ descricaoProblema }}</p>
       </div>
     </div>
   </div>
@@ -214,8 +214,9 @@ body, html {
 }
 .lugar-selection {
   border: 1px solid #ccc;
-  padding: 20px;
+  padding: 45px;
   margin-top: 20px;
+  border-radius: 10px;
 }
 
 .sala {
@@ -330,7 +331,7 @@ body, html {
 
 /* Estilo da caixa de relatório selecionado */
 .selected-report {
-  width: 85%;
+  width: 22%;
   max-width: 600px;
   padding: 20px;
   border: 1px solid #ccc;
