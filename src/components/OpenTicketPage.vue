@@ -32,7 +32,13 @@
           </b-form-select>
         </b-form-group>
 
-        <b-form-group v-if="problema === 'ComputadoresePerifericos'" label="Selecionar Máquina" label-for="SelecionarMaquina">
+        <!-- Campo de texto para 'Softwares e programas específicos' ou 'Outro' -->
+        <b-form-group v-if="problema === 'SoftwareseProgramasEspecíficos' || problema === 'Outro'" label="Descreva o problema específico" label-for="descricaoProblema">
+          <b-form-input v-model="descricaoProblema" id="descricaoProblema" placeholder="Digite mais detalhes sobre o problema"></b-form-input>
+        </b-form-group>
+
+        <!-- Botão de seleção de máquina unificado -->
+        <b-form-group v-if="problema === 'ComputadoresePerifericos' || problema === 'SoftwareseProgramasEspecíficos'" label="Selecionar Máquina" label-for="SelecionarMaquina">
           <b-button id="SelecionarMaquina" variant="primary" @click="openLugarSelection">
             Selecionar Máquina
           </b-button>
@@ -68,6 +74,7 @@
         <p><strong>Bloco da Sala:</strong> {{ blocodaSala }}</p>
         <p><strong>Número da Sala:</strong> {{ numerodaSala }}</p>
         <p v-if="problema === 'ComputadoresePerifericos'"><strong>Lugar Selecionado:</strong> {{ lugarSelecionado }}</p>
+        <p v-if="problema === 'SoftwareseProgramasEspecíficos' || problema === 'Outro'"><strong>Descrição do Problema:</strong> {{ descricaoProblema }}</p>
       </div>
 
       <!-- Componente de seleção de lugares -->
@@ -113,6 +120,7 @@ export default {
       lugares: [],
       salas: [],
       blocos: {},
+      descricaoProblema: '', // Adicionado para armazenar a descrição do problema
     };
   },
   mounted() {
@@ -179,18 +187,18 @@ export default {
     reportProblem() {
       if (this.blocodaSala && this.numerodaSala && this.problema) {
         if (this.problema === 'ComputadoresePerifericos' && !this.lugarSelecionado) {
-          Swal.fire('Erro', 'Selecione um lugar para continuar.', 'error');
+          Swal.fire('Erro', 'Por favor, selecione um lugar.', 'error');
           return;
         }
-        Swal.fire('Problema Relatado', 'Seu problema foi relatado com sucesso!', 'success');
+        // Aqui você pode fazer o que quiser com os dados
+        Swal.fire('Problema Reportado', 'Obrigado por reportar o problema!', 'success');
       } else {
-        Swal.fire('Erro', 'Preencha todos os campos obrigatórios.', 'error');
+        Swal.fire('Erro', 'Por favor, preencha todos os campos obrigatórios.', 'error');
       }
     },
   },
 };
 </script>
-
 
 <style scoped>
 /* Reset básico */
