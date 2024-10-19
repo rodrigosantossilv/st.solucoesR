@@ -79,8 +79,32 @@
             <button type="submit" class="btn btn-primary">Cadastrar</button>
           </form>
         </div>
-
-
+        <div v-show="mostrarTodosChamados || categoriaVisivel === 'Analise'" id="Analise" class="kanban-column"
+  @drop="drop($event)" @dragover="allowDrop($event)">
+  <h3 class="kanban-header bg-secondary text-white p-2 text-center">Analise</h3>
+  <div v-for="chamado in chamadosAndamento" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
+    draggable="true" @dragstart="drag($event, chamado)">
+    <p><strong>{{ chamado.assunto }}</strong></p>
+    <p><em>Responsável: {{ chamado.responsavel }}</em></p>
+    <div class="tags">
+      <span v-for="etiqueta in chamado.etiquetas" :key="etiqueta" class="badge badge-info">{{ etiqueta }}</span>
+    </div>
+    <div v-if="chamado.relacionados.length" class="related">
+      <p><strong>Chamados Relacionados:</strong></p>
+      <ul>
+        <li v-for="relacionado in chamado.relacionados" :key="relacionado">{{ relacionado }}</li>
+      </ul>
+    </div>
+    <div class="comments mt-3">
+      <p><strong>Comentários:</strong></p>
+      <ul>
+        <li v-for="comentario in chamado.comentarios" :key="comentario">{{ comentario }}</li>
+      </ul>
+      <input type="text" v-model="novoComentario" placeholder="Adicionar comentário"
+        @keyup.enter="adicionarComentario(chamado)">
+    </div>
+  </div>
+</div>
 
 
 
