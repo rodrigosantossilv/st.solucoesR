@@ -24,33 +24,65 @@
             <option value="CaixadeSom">Caixa de som</option>
             <option value="Iluminaçãodoambiente">Iluminação do ambiente</option>
             <option value="Mobiliário">Mobiliário</option>
-            <option value="ComputadoresePerifericos">Computadores e periféricos</option>
-            <option value="SoftwareseProgramasEspecíficos">Softwares e programas específicos</option>
-            <option value="DisposiçãoDosEquipamentosnoAmbiente">Disposição dos equipamentos no ambiente</option>
+            <option value="ComputadoresePerifericos">
+              Computadores e periféricos
+            </option>
+            <option value="SoftwareseProgramasEspecíficos">
+              Softwares e programas específicos
+            </option>
+            <option value="DisposiçãoDosEquipamentosnoAmbiente">
+              Disposição dos equipamentos no ambiente
+            </option>
             <option value="Internet">Internet</option>
             <option value="Outro">Outro</option>
           </b-form-select>
         </b-form-group>
 
         <!-- Campo de texto para 'Softwares e programas específicos' ou 'Outro' -->
-        <b-form-group v-if="problema === 'SoftwareseProgramasEspecíficos' || problema === 'Outro'" label="Descreva o problema específico" label-for="descricaoProblema">
-          <b-form-input v-model="descricaoProblema" id="descricaoProblema" placeholder="Digite mais detalhes sobre o problema"></b-form-input>
+        <b-form-group
+          v-if="
+            problema === 'SoftwareseProgramasEspecíficos' ||
+            problema === 'Outro'
+          "
+          label="Descreva o problema específico"
+          label-for="descricaoProblema"
+        >
+          <b-form-input
+            v-model="descricaoProblema"
+            id="descricaoProblema"
+            placeholder="Digite mais detalhes sobre o problema"
+          ></b-form-input>
         </b-form-group>
 
         <!-- Botão de seleção de máquina unificado -->
-    
 
         <b-form-group label="Bloco da sala*" label-for="blocodasala">
-          <b-form-select v-model="blocodaSala" id="blocodasala" @change="updateSalas">
+          <b-form-select
+            v-model="blocodaSala"
+            id="blocodasala"
+            @change="updateSalas"
+          >
             <option value="" disabled>Selecione um Bloco da sala</option>
-            <option v-for="bloco in Object.keys(blocos)" :key="bloco" :value="bloco">{{ bloco }}</option>
+            <option
+              v-for="bloco in Object.keys(blocos)"
+              :key="bloco"
+              :value="bloco"
+            >
+              {{ bloco }}
+            </option>
           </b-form-select>
         </b-form-group>
 
-        <b-form-group v-if="blocodaSala" label="Selecionar sala*" label-for="sala">
+        <b-form-group
+          v-if="blocodaSala"
+          label="Selecionar sala*"
+          label-for="sala"
+        >
           <b-form-select v-model="numerodaSala" id="sala">
             <option value="" disabled>Selecione a Sala</option>
-            <option v-for="sala in salas" :key="sala" :value="sala">{{ sala }}</option>
+            <option v-for="sala in salas" :key="sala" :value="sala">
+              {{ sala }}
+            </option>
           </b-form-select>
         </b-form-group>
 
@@ -59,19 +91,20 @@
         </b-button>
 
         <div class="text-center mt-3">
-          <router-link to="/" class="btn btn-link">Voltar à página inicial</router-link>
+          <router-link to="/" class="btn btn-link"
+            >Voltar à página inicial</router-link
+          >
         </div>
       </div>
-
 
       <!-- Componente de seleção de lugares -->
       <div v-if="mostrarSelecionarLugar" class="lugar-selection">
         <h2>Escolha o seu lugar</h2>
         <div class="sala">
-          <div 
-            v-for="lugar in lugares" 
-            :key="lugar.id" 
-            class="lugar" 
+          <div
+            v-for="lugar in lugares"
+            :key="lugar.id"
+            class="lugar"
             :class="{ selecionado: lugar.selecionado }"
             @click="toggleSelecao(lugar.id)"
             :style="{ gridColumn: lugar.coluna, gridRow: lugar.fileira }"
@@ -79,25 +112,36 @@
             {{ lugar.fileira }}-{{ lugar.coluna }}
           </div>
         </div>
-        <button class="btn-submit" @click="confirmarSelecao">Confirmar Seleção</button>
+        <button class="btn-submit" @click="confirmarSelecao">
+          Confirmar Seleção
+        </button>
       </div>
-       <!-- Box para mostrar os dados selecionados -->
-       <div class="selected-report">
+      <!-- Box para mostrar os dados selecionados -->
+      <div class="selected-report">
         <h3>Relatório Selecionado</h3>
         <p><strong>Problema:</strong> {{ problema }}</p>
         <p><strong>Bloco da Sala:</strong> {{ blocodaSala }}</p>
         <p><strong>Número da Sala:</strong> {{ numerodaSala }}</p>
-        <p v-if="problema === 'ComputadoresePerifericos'"><strong>Lugar Selecionado:</strong> {{ lugarSelecionado }}</p>
-        <p v-if="problema === 'SoftwareseProgramasEspecíficos' || problema === 'Outro'"><strong>Descrição do Problema:</strong> {{ descricaoProblema }}</p>
+        <p v-if="problema === 'ComputadoresePerifericos'">
+        <strong>Lugar Selecionado:</strong> {{ lugarSelecionado }}
+        </p>
+        <p
+          v-if="
+            problema === 'SoftwareseProgramasEspecíficos' ||
+            problema === 'Outro'
+          "
+        >
+          <strong>Descrição do Problema:</strong> {{ descricaoProblema }}
+        </p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Swal from 'sweetalert2';
-import { BForm, BFormGroup, BFormSelect, BButton } from 'bootstrap-vue-3';
-import axios from 'axios';
+import Swal from "sweetalert2";
+import { BForm, BFormGroup, BFormSelect, BButton } from "bootstrap-vue-3";
+import axios from "axios";
 
 export default {
   components: {
@@ -108,15 +152,15 @@ export default {
   },
   data() {
     return {
-      problema: '',
-      blocodaSala: '',
-      numerodaSala: '',
-      lugarSelecionado: '',
+      problema: "",
+      blocodaSala: "",
+      numerodaSala: "",
+      lugarSelecionado: "",
       mostrarSelecionarLugar: false,
       lugares: [],
       salas: [],
       blocos: {},
-      descricaoProblema: '',
+      descricaoProblema: "",
     };
   },
   mounted() {
@@ -124,32 +168,39 @@ export default {
   },
   watch: {
     problema(newValue) {
-      if (newValue === 'ComputadoresePerifericos' || newValue === 'SoftwareseProgramasEspecíficos') {
+      if (
+        newValue === "ComputadoresePerifericos" ||
+        newValue === "SoftwareseProgramasEspecíficos"
+      ) {
         this.openLugarSelection();
       } else {
         this.mostrarSelecionarLugar = false; // Esconde a seleção de lugares se for outro problema
       }
-    }
+    },
   },
   methods: {
     fetchData() {
-      const apiEndpoints = [
-        'http://localhost:3000/blocos',
-      ];
-
-      axios.get(apiEndpoints[0])
-        .then(response => {
-          this.blocos = response.data;
-          console.log('Blocos carregados:', this.blocos);
+      const apiEndpoints = ["http://localhost:3000/blocos"];
+      const token = localStorage.getItem("token");
+      axios
+        .get(apiEndpoints[0], {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         })
-        .catch(error => {
-          console.error('Erro ao carregar blocos:', error);
-          Swal.fire('Erro', 'Não foi possível carregar os blocos.', 'error');
+
+        .then((response) => {
+          this.blocos = response.data;
+          console.log("Blocos carregados:", this.blocos);
+        })
+        .catch((error) => {
+          console.error("Erro ao carregar blocos:", error);
+          Swal.fire("Erro", "Não foi possível carregar os blocos.", "error");
         });
     },
     updateSalas(value) {
       this.salas = this.blocos[value] || [];
-      this.numerodaSala = '';
+      this.numerodaSala = "";
     },
     openLugarSelection() {
       this.mostrarSelecionarLugar = true;
@@ -172,40 +223,83 @@ export default {
       });
     },
     toggleSelecao(id) {
-      const lugar = this.lugares.find(l => l.id === id);
+      const lugar = this.lugares.find((l) => l.id === id);
       if (lugar) {
-        this.lugares.forEach(l => l.selecionado = false);
+        this.lugares.forEach((l) => (l.selecionado = false));
         lugar.selecionado = true;
       }
     },
     confirmarSelecao() {
-      const selecionados = this.lugares.filter(l => l.selecionado);
+      const selecionados = this.lugares.filter((l) => l.selecionado);
       if (selecionados.length === 0) {
-        Swal.fire('Erro', 'Por favor, selecione um lugar.', 'error');
+        Swal.fire("Erro", "Por favor, selecione um lugar.", "error");
         return;
       }
-      const lugaresSelecionados = selecionados.map(l => `${l.fileira}-${l.coluna}`).join(', ');
+      const lugaresSelecionados = selecionados
+        .map((l) => `${l.fileira}-${l.coluna}`)
+        .join(", ");
       this.lugarSelecionado = lugaresSelecionados;
       this.mostrarSelecionarLugar = false; // Feche a seleção
     },
     reportProblem() {
       if (this.blocodaSala && this.numerodaSala && this.problema) {
-        if (this.problema === 'ComputadoresePerifericos' && !this.lugarSelecionado) {
-          Swal.fire('Erro', 'Por favor, selecione um lugar.', 'error');
+        if (
+          this.problema === "ComputadoresePerifericos" &&
+          !this.lugarSelecionado
+        ) {
+          Swal.fire("Erro", "Por favor, selecione um lugar.", "error");
           return;
         }
-        Swal.fire('Problema Reportado', 'Obrigado por reportar o problema!', 'success');
+        // Chama a função para cadastrar o chamado
+        this.cadastrarChamado();
       } else {
-        Swal.fire('Erro', 'Por favor, preencha todos os campos obrigatórios.', 'error');
+        Swal.fire(
+          "Erro",
+          "Por favor, preencha todos os campos obrigatórios.",
+          "error"
+        );
       }
     },
+    async cadastrarChamado() {
+    const chamado = {
+      problemas: this.problema,
+      blocos: this.blocodaSala,
+      salas: this.numerodaSala,
+      maquinas: this.lugarSelecionado,
+      chamados: this.descricaoProblema,
+    };
+
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/chamados",
+        chamado,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Chamado cadastrado:", response.data);
+      Swal.fire("Sucesso", "Chamado cadastrado com sucesso!", "success");
+    } catch (error) {
+      console.error("Erro ao cadastrar chamado:", error);
+      Swal.fire("Erro", "Não foi possível cadastrar o chamado.", "error");
+    }
   },
-};
+},
+}
+
+    
+
+  
 </script>
 
 <style scoped>
 /* Reset básico */
-body, html {
+body,
+html {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -249,7 +343,7 @@ body, html {
 /* Lado esquerdo - Imagem com gradiente e bolhas */
 .left-side {
   flex: 1;
-  background: linear-gradient(to bottom, #0575E6, #02298A, #021B79);
+  background: linear-gradient(to bottom, #0575e6, #02298a, #021b79);
   display: flex;
   position: relative;
 
@@ -260,7 +354,6 @@ body, html {
   overflow: hidden; /* Garante que as bolhas fiquem dentro do lado esquerdo */
   z-index: 1; /* Mantém a camada do lado esquerdo acima do conteúdo da direita */
 }
-
 
 /* Lado direito - Formulário de registro */
 .right-side {
@@ -306,7 +399,7 @@ body, html {
 .login-box button {
   width: 100%;
   padding: 11px;
-  background-color: #02298A;
+  background-color: #02298a;
   color: white;
   border: none;
   border-radius: 10px;
