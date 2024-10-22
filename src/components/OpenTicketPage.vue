@@ -182,8 +182,7 @@ export default {
     fetchData() {
       const apiEndpoints = ["http://localhost:3000/blocos"];
       const token = localStorage.getItem("token");
-      axios
-        .get(apiEndpoints[0], {
+      axios.get(apiEndpoints[0], {
           headers: {
             Authorization: `Bearer ${token}`,
           },
