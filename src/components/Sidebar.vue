@@ -25,12 +25,18 @@
           <li class="nav-item">
             <router-link class="nav-link text-white" @click="mostrarCadastro" to="#">Cadastro</router-link>
           </li>
+          <li class="nav-item">
+            <router-link class="nav-link text-white" @click="tabela" to="#">Tabela</router-link>
+          </li>
+        
         
         </ul>
       </div>
 
       <!-- Kanban Board -->
       <div class="kanban-board d-flex justify-content-around flex-grow-1 p-3">
+
+        
         <!-- Formulário para cadastrar novo aluno -->
         <div v-if="mostrarFormulario" class="form-container">
           <h2>Cadastrar usuário</h2>
@@ -79,6 +85,10 @@
             <button type="submit" class="btn btn-primary">Cadastrar</button>
           </form>
         </div>
+
+
+
+          <!-- TABELAS DO KANBAN-->
         <div v-show="mostrarTodosChamados || categoriaVisivel === 'Analise'" id="Analise" class="kanban-column"
   @drop="drop($event)" @dragover="allowDrop($event)">
   <h3 class="kanban-header bg-secondary text-white p-2 text-center">Analise</h3>
@@ -106,12 +116,6 @@
   </div>
 </div>
 
-
-
-
-
-
-        <!-- Colunas do Kanban -->
         <div v-show="mostrarTodosChamados || categoriaVisivel === 'Pendente'" id="pendente" class="kanban-column"
           @drop="drop($event)" @dragover="allowDrop($event)">
           <h3 class="kanban-header bg-danger text-white p-2 text-center">Pendente</h3>
@@ -192,9 +196,12 @@
             </div>
           </div>
         </div>
+
       </div>
     </div>
-  </div>
+
+  </div>         <!-- Ultima div (Templete)-->
+
 </template>
 
 <script >
@@ -259,14 +266,14 @@ export default {
     async cadastrarAluno() {
       // Resetar o formulário
       const dadosUsuario = ({
-         nome_completo:this.novoAluno.nome,
-         senha:this.novoAluno.senha,
-         email:this.novoAluno.email,
-         telefone:this.novoAluno.telefone,
-         setor_id:this.novoAluno.setor_id,
-         instituicao:'Senai',	
-         ocupacao:this.novoAluno.tipoUsuario,
-         
+        nome_completo:this.novoAluno.nome,
+        senha:this.novoAluno.senha,
+        email:this.novoAluno.email,
+        telefone:this.novoAluno.telefone,
+        setor_id:this.novoAluno.setor_id,
+        instituicao:'Senai',	
+        ocupacao:this.novoAluno.tipoUsuario,
+        
         });
         const token = localStorage.getItem("token")
 
@@ -281,7 +288,7 @@ export default {
       
       
       this.novoAluno = { nome: '', email: '', telefone: '', tipoUsuario: '', senha: ''
-       };
+      };
       this.mostrarFormulario = true; 
 
 
