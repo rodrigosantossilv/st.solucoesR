@@ -32,15 +32,16 @@
           </b-form-select>
         </b-form-group>
 
+
         <b-form-group v-if="problema === 'SoftwareseProgramasEspecíficos' || problema === 'Outro'" label="Descreva o problema específico" label-for="descricaoProblema">
           <b-form-input v-model="descricaoProblema" id="descricaoProblema" placeholder="Digite mais detalhes sobre o problema"></b-form-input>
         </b-form-group>
 
         <b-form-group label="Bloco da sala*" label-for="blocodasala">
-          <b-form-select v-model="blocodaSala" id="blocodasala" @change="updateSalas">
+          <b-form-select v-model="blocodaSala" id="blocodasala" @change="updateSalas($event)">
             <option value="" disabled>Selecione um Bloco da sala</option>
             <option v-for="(bloco, index) in blocos" :key="index" :value="bloco.id">
-              {{ bloco.nome }}
+              {{ bloco.nome_bloco }}
             </option>
           </b-form-select>
         </b-form-group>
@@ -90,6 +91,7 @@
 <script>
 import Swal from "sweetalert2";
 import axios from "axios";
+import e from "cors";
 
 export default {
   data() {
@@ -110,7 +112,7 @@ export default {
   },
   methods: {
     fetchBlocos() {
-      const apiEndpointBlocos = "http://localhost:3000/blocos";
+      const apiEndpointBlocos = "http://localhost:3000/blocos/com/salas";
       const token = localStorage.getItem("token");
       axios
         .get(apiEndpointBlocos, {
@@ -120,7 +122,6 @@ export default {
         })
         .then((response) => {
           this.blocos = response.data;
-          console.log("Blocos carregados:", this.blocos);
         })
         .catch((error) => {
           console.error("Erro ao carregar blocos:", error);
@@ -128,26 +129,14 @@ export default {
         });
     },
 
-    updateSalas() {
-      const apiEndpointSalas = `http://localhost:3000/salas?blocoId=${this.blocodaSala}`;
-      const token = localStorage.getItem("token");
-
-      axios
-        .get(apiEndpointSalas, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((response) => {
-          this.salas = response.data;
-          this.numerodaSala = ""; // Limpa a seleção anterior de sala
-          console.log("Salas carregadas:", this.salas);
-        })
-        .catch((error) => {
-          console.error("Erro ao carregar salas:", error);
-          Swal.fire("Erro", "Não foi possível carregar as salas.", "error");
-        });
-    },
+    updateSalas(value) {
+      const blocodaSala = value;
+      const bloco = this.blocos.find((bloco) => bloco.id === blocodaSala);
+      this.salas = bloco.salas;
+      this.numerodaSala = "";
+     },
+     
+    
 
     reportProblem() {
       if (this.blocodaSala && this.numerodaSala && this.problema) {
@@ -157,10 +146,37 @@ export default {
       }
     },
 
+    async cadastrarProblema() {
+      const problema = {
+        descricao: this.problema,
+      }
+
+      try {
+        const response = await axios.post("http://localhost:3000/problemas", problema, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        })
+        return response.data
+      } catch (error) {
+        console.error("Erro ao cadastrar problema:", error);
+        Swal.fire("Erro", "Não foi possível cadastrar o problema.", "error");
+
+      }
+    },
+
+
+
+
+
+
     async cadastrarChamado() {
+     const {id:idProblema}= await this.cadastrarProblema();
       const chamado = {
-        problema: this.problema,
-        blocoId: this.blocodaSala,
+        //[usuario_id, problema_id, descricao]
+
+        problema_id: idProblema,
+        descricao: this.blocodaSala,
         salaId: this.numerodaSala,
       };
 
@@ -189,6 +205,7 @@ export default {
     },
   },
 };
+  
 </script>
 
 <style scoped>
