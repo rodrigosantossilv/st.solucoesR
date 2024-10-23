@@ -112,7 +112,6 @@ export default {
     fetchBlocos() {
       const apiEndpointBlocos = "http://localhost:3000/blocos";
       const token = localStorage.getItem("token");
-
       axios
         .get(apiEndpointBlocos, {
           headers: {
