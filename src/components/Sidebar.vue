@@ -26,18 +26,16 @@
             <router-link class="nav-link text-white" @click="mostrarCadastro" to="#">Cadastro</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link text-white" @click="tabela" href="#">Tabela</router-link>
-          </li>
-        
-        
+  <a class="nav-link text-white" @click="mostrarTabela" href="#">Tabela</a>
+</li>
+
         </ul>
       </div>
 
       <!-- Kanban Board -->
       <div class="kanban-board d-flex justify-content-around flex-grow-1 p-3">
 
-
-      <!-- Tabela de usuários cadastrados -->
+<!-- Tabela de usuários cadastrados -->
 <div v-if="mostrarTabela" class="tabela-container">
   <h2>Tabela de Usuários</h2>
   <table class="table table-bordered">
@@ -60,6 +58,7 @@
     </tbody>
   </table>
 </div>
+
 
         
         <!-- Formulário para cadastrar novo aluno -->
@@ -231,6 +230,7 @@
 
 <script>
 import axios from 'axios';
+import { RouterLink } from 'vue-router';
 export default {
   data() {
     return {
@@ -239,6 +239,7 @@ export default {
       mostrarTodosChamados: true,
       mostrarFormulario: false,
       mostrarTabela: false, // Controla a visibilidade da tabela
+
       novoAluno: {
         senha: '',
         nome: '',
@@ -253,17 +254,25 @@ export default {
   methods: {
     async carregarChamados() {
       // Simulação de chamada a uma API
+            try {
+
       const resposta = await fetch('URL_DA_API'); // Substitua pela URL da sua API
       this.chamados = await resposta.json();
+    } catch (erro) {
+        console.error('Erro ao carregar os chamados:', erro);
+      }
     },
+    
     chamadosTi() {
       this.categoriaVisivel = null;
+      this.mostrarTabela = false; // Esconder a tabela
       this.mostrarTodosChamados = true;
       this.mostrarFormulario = false; // Esconde o formulário
       this.mostrarTabela = false; // Esconde a tabela
     },
     chamadosManuntencao() {
       this.categoriaVisivel = null;
+      this.mostrarTabela = false; // Esconder a tabela
       this.mostrarTodosChamados = true;
       this.mostrarFormulario = false; // Esconde o formulário
       this.mostrarTabela = false; // Esconde a tabela
@@ -274,10 +283,11 @@ export default {
       this.mostrarTodosChamados = false; // Esconde todos os itens
       this.mostrarTabela = false; // Esconde a tabela
     },
-    tabela() {
+    mostrarTabela() {
     this.mostrarTabela = true; // Mostra a tabela
     this.mostrarFormulario = false; // Esconde o formulário
     this.categoriaVisivel = null; // Reseta a categoria visível, se necessário
+    this.mostrarTodosChamados = false;
   },
     cadastrarAluno() {
       // Lógica para cadastrar o aluno
