@@ -16,19 +16,12 @@
       <div class="login-box">
         <h2>Olá, Informe seu problema</h2>
 
-        <b-form-group label="Problema*" label-for="problema">
-          <b-form-select v-model="problema" id="problema">
-            <option value="" disabled>Selecione o seu problema:</option>
-            <option value="Arcondicionado">Ar condicionado</option>
-            <option value="Projetores">Projetores</option>
-            <option value="CaixadeSom">Caixa de som</option>
-            <option value="Iluminaçãodoambiente">Iluminação do ambiente</option>
-            <option value="Mobiliário">Mobiliário</option>
-            <option value="ComputadoresePerifericos">Computadores e periféricos</option>
-            <option value="SoftwareseProgramasEspecíficos">Softwares e programas específicos</option>
-            <option value="DisposiçãoDosEquipamentosnoAmbiente">Disposição dos equipamentos no ambiente</option>
-            <option value="Internet">Internet</option>
-            <option value="Outro">Outro</option>
+        <b-form-group label="Problema*" label-for="Problema">
+          <b-form-select v-model="problema" id="problema" @change="updateProblemas($event)">
+            <option value="" disabled>Selecione um problema</option>
+            <option v-for="(problema, index) in blocos" :key="index" :value="problema.id">
+              {{ problema.descricao }}
+            </option>
           </b-form-select>
         </b-form-group>
 
@@ -107,15 +100,16 @@ export default {
       lugarSelecionado: "", // Armazena o lugar selecionado
     };
   },
+
   mounted() {
     this.fetchBlocos();
+
   },
   methods: {
   fetchBlocos() {
     const apiEndpointBlocos = "http://localhost:3000/blocos/com/salas";
     const token = localStorage.getItem("token");
-    axios
-      .get(apiEndpointBlocos, {
+    axios.get(apiEndpointBlocos, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -129,6 +123,37 @@ export default {
       });
   },
 
+
+  async cadastrarProblema() {
+      const token = localStorage.getItem("token");
+      const problema = {
+        descricao: this.problema,
+      };
+
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/problemas",
+          problema,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        return response.data;
+      } catch (error) {
+        console.error("Erro ao cadastrar problema:", error);
+        Swal.fire("Erro", "Não foi possível cadastrar o problema.", "error");
+      }
+    },
+    updateProblemas(value){
+      const problema = value;
+      this.descricao = "";
+    
+
+  },
+
   updateSalas(value) {
     const blocodaSala = value;
     const bloco = this.blocos.find((bloco) => bloco.id === blocodaSala);
@@ -136,7 +161,7 @@ export default {
     this.numerodaSala = "";
   },
 
-  async cadastrarProblema() {
+  async exibirProblema() {
     const token = localStorage.getItem("token");
     const problema = {
       descricao: this.problema,
@@ -158,10 +183,6 @@ export default {
 
   async cadastrarChamado() {
     const token = localStorage.getItem("token");
-
-    const problemaCadastrado = await this.cadastrarProblema();
-    if (!problemaCadastrado) return; 
-
     const chamado = {
       problema_id: problemaCadastrado.id,
       blocoId: this.blocodaSala,
