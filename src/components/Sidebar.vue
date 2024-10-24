@@ -26,7 +26,7 @@
             <a class="nav-link text-white" @click="mostrarCadastro" to="#">Cadastro</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white" @click="mostrarTabela" href="#">Tabela</a>
+            <a class="nav-link text-white" @click="mostrarLista" to="#">Tabela</a>
           </li>
 
         </ul>
@@ -219,6 +219,119 @@
           </div>
         </div>
 
+
+          <!-- TABELAS DO KANBAN mostrarChamadosManutençao  -->
+        
+          <div v-show="mostrarChamadosManutençao  || categoriaVisivel === 'Analise'" id="Analise" class="kanban-column"
+  @drop="drop($event)" @dragover="allowDrop($event)">
+  <h3 class="kanban-header bg-secondary text-white p-2 text-center">Analise</h3>
+  <div v-for="chamado in chamadosAndamento" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
+    draggable="true" @dragstart="drag($event, chamado)">
+    <p><strong>{{ chamado.assunto }}</strong></p>
+    <p><em>Responsável: {{ chamado.responsavel }}</em></p>
+    <div class="tags">
+      <span v-for="etiqueta in chamado.etiquetas" :key="etiqueta" class="badge badge-info">{{ etiqueta }}</span>
+    </div>
+    <div v-if="chamado.relacionados.length" class="related">
+      <p><strong>Chamados Relacionados:</strong></p>
+      <ul>
+        <li v-for="relacionado in chamado.relacionados" :key="relacionado">{{ relacionado }}</li>
+      </ul>
+    </div>
+    <div class="comments mt-3">
+      <p><strong>Comentários:</strong></p>
+      <ul>
+        <li v-for="comentario in chamado.comentarios" :key="comentario">{{ comentario }}</li>
+      </ul>
+      <input type="text" v-model="novoComentario" placeholder="Adicionar comentário"
+        @keyup.enter="adicionarComentario(chamado)">
+    </div>
+  </div>
+</div>
+
+        <div v-show="mostrarChamadosManutençao   || categoriaVisivel === 'Pendente'" id="pendente" class="kanban-column"
+          @drop="drop($event)" @dragover="allowDrop($event)">
+          <h3 class="kanban-header bg-danger text-white p-2 text-center">Pendente</h3>
+          <div v-for="chamado in chamadosPendentes" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
+            draggable="true" @dragstart="drag($event, chamado)">
+            <p><strong>{{ chamado.assunto }}</strong></p>
+            <p><em>Responsável: {{ chamado.responsavel }}</em></p>
+            <div class="tags">
+              <span v-for="etiqueta in chamado.etiquetas" :key="etiqueta" class="badge badge-info">{{ etiqueta }}</span>
+            </div>
+            <div v-if="chamado.relacionados.length" class="related">
+              <p><strong>Chamados Relacionados:</strong></p>
+              <ul>
+                <li v-for="relacionado in chamado.relacionados" :key="relacionado">{{ relacionado }}</li>
+              </ul>
+            </div>
+            <div class="comments mt-3">
+              <p><strong>Comentários:</strong></p>
+              <ul>
+                <li v-for="comentario in chamado.comentarios" :key="comentario">{{ comentario }}</li>
+              </ul>
+              <input type="text" v-model="novoComentario" placeholder="Adicionar comentário"
+                @keyup.enter="adicionarComentario(chamado)">
+            </div>
+          </div>
+        </div>
+
+        <div v-show="mostrarChamadosManutençao   || categoriaVisivel === 'Andamento'" id="andamento" class="kanban-column"
+          @drop="drop($event)" @dragover="allowDrop($event)">
+          <h3 class="kanban-header bg-primary text-white p-2 text-center">Andamento</h3>
+          <div v-for="chamado in chamadosAndamento" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
+            draggable="true" @dragstart="drag($event, chamado)">
+            <p><strong>{{ chamado.assunto }}</strong></p>
+            <p><em>Responsável: {{ chamado.responsavel }}</em></p>
+            <div class="tags">
+              <span v-for="etiqueta in chamado.etiquetas" :key="etiqueta" class="badge badge-info">{{ etiqueta }}</span>
+            </div>
+            <div v-if="chamado.relacionados.length" class="related">
+              <p><strong>Chamados Relacionados:</strong></p>
+              <ul>
+                <li v-for="relacionado in chamado.relacionados" :key="relacionado">{{ relacionado }}</li>
+              </ul>
+            </div>
+            <div class="comments mt-3">
+              <p><strong>Comentários:</strong></p>
+              <ul>
+                <li v-for="comentario in chamado.comentarios" :key="comentario">{{ comentario }}</li>
+              </ul>
+              <input type="text" v-model="novoComentario" placeholder="Adicionar comentário"
+                @keyup.enter="adicionarComentario(chamado)">
+            </div>
+          </div>
+        </div>
+
+        <div v-show="mostrarChamadosManutençao  || categoriaVisivel === 'Concluído'" id="concluido" class="kanban-column"
+          @drop="drop($event)" @dragover="allowDrop($event)">
+          <h3 class="kanban-header bg-success text-white p-2 text-center">Concluído</h3>
+          <div v-for="chamado in chamadosConcluidos" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
+            draggable="true" @dragstart="drag($event, chamado)">
+            <p><strong>{{ chamado.assunto }}</strong></p>
+            <p><em>Responsável: {{ chamado.responsavel }}</em></p>
+            <div class="tags">
+              <span v-for="etiqueta in chamado.etiquetas" :key="etiqueta" class="badge badge-info">{{ etiqueta }}</span>
+            </div>
+            <div v-if="chamado.relacionados.length" class="related">
+              <p><strong>Chamados Relacionados:</strong></p>
+              <ul>
+                <li v-for="relacionado in chamado.relacionados" :key="relacionado">{{ relacionado }}</li>
+              </ul>
+            </div>
+            <div class="comments mt-3">
+              <p><strong>Comentários:</strong></p>
+              <ul>
+                <li v-for="comentario in chamado.comentarios" :key="comentario">{{ comentario }}</li>
+              </ul>
+              <input type="text" v-model="novoComentario" placeholder="Adicionar comentário"
+                @keyup.enter="adicionarComentario(chamado)">
+            </div>
+          </div>
+        </div>
+
+
+
       </div>
     </div>
 
@@ -228,7 +341,6 @@
 
 <script>
 import axios from 'axios';
-import { RouterLink } from 'vue-router';
 export default {
   data() {
     return {
@@ -236,7 +348,8 @@ export default {
       categoriaVisivel: null,
       mostrarTodosChamados: true,
       mostrarFormulario: false,
-      mostrarTrue: false, // Controla a visibilidade da tabela
+      mostrarTabela: false, // Controla a visibilidade da tabela
+      mostrarChamadosManutençao : false,
 
       novoAluno: {
         senha: '',
@@ -266,26 +379,28 @@ export default {
       this.mostrarTabela = false; // Esconder a tabela
       this.mostrarTodosChamados = true;
       this.mostrarFormulario = false; // Esconde o formulário
-      this.mostrarTabela = false; // Esconde a tabela
+      this.mostrarChamadosManutençao = false
     },
     chamadosManuntencao() {
       this.categoriaVisivel = null;
-      this.mostrarTabela = false; // Esconder a tabela
-      this.mostrarTodosChamados = true;
+      this.mostrarTodosChamados = false;
+      this.mostrarChamadosManutençao = true
       this.mostrarFormulario = false; // Esconde o formulário
       this.mostrarTabela = false; // Esconde a tabela
     },
     mostrarCadastro() {
       this.mostrarFormulario = true; // Mostra o formulário
-      this.categoriaVisivel = false; // Reseta a categoria visível
+      this.categoriaVisivel = null; // Reseta a categoria visível
       this.mostrarTodosChamados = false; // Esconde todos os itens
       this.mostrarTabela = false; // Esconde a tabela
+      this.mostrarChamadosManutençao = false
     },
-    mostrarTabela() {
+    mostrarLista() {
       this.mostrarTabela = true; // Mostra a tabela
       this.mostrarFormulario = false; // Esconde o formulário
       this.categoriaVisivel = null; // Reseta a categoria visível
       this.mostrarTodosChamados = false; // Atualiza se necessário
+      this.mostrarChamadosManutençao = false
     },
     cadastrarAluno() {
       // Lógica para cadastrar o aluno
