@@ -26,7 +26,7 @@
             <a class="nav-link text-white" @click="mostrarCadastro" to="#">Cadastro</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white" @click="mostrarLista" href="#">Tabela</a>
+            <a class="nav-link text-white" @click="mostrarTabela" href="#">Tabela</a>
           </li>
 
         </ul>
@@ -35,7 +35,7 @@
       <!-- Kanban Board -->
       <div class="kanban-board d-flex justify-content-around flex-grow-1 p-3">
 
-<!-- Tabela de usuários cadastrados -->
+        <!-- Tabela de usuários cadastrados -->
 <div v-if="mostrarTabela" class="tabela-container">
   <h2>Tabela de Usuários</h2>
   <table class="table table-bordered">
@@ -58,8 +58,6 @@
     </tbody>
   </table>
 </div>
-
-
         
         <!-- Formulário para cadastrar novo aluno -->
         <div v-if="mostrarFormulario" class="form-container">
@@ -238,7 +236,7 @@ export default {
       categoriaVisivel: null,
       mostrarTodosChamados: true,
       mostrarFormulario: false,
-      mostrarLista: false, // Controla a visibilidade da tabela
+      mostrarTrue: false, // Controla a visibilidade da tabela
 
       novoAluno: {
         senha: '',
@@ -283,12 +281,12 @@ export default {
       this.mostrarTodosChamados = false; // Esconde todos os itens
       this.mostrarTabela = false; // Esconde a tabela
     },
-    mostrarLista() {
-    this.mostrarTabela = true; // Mostra a tabela
-    this.mostrarFormulario = false; // Esconde o formulário
-    this.categoriaVisivel = null; // Reseta a categoria visível, se necessário
-    this.mostrarTodosChamados = false;
-  },
+    mostrarTabela() {
+      this.mostrarTabela = true; // Mostra a tabela
+      this.mostrarFormulario = false; // Esconde o formulário
+      this.categoriaVisivel = null; // Reseta a categoria visível
+      this.mostrarTodosChamados = false; // Atualiza se necessário
+    },
     cadastrarAluno() {
       // Lógica para cadastrar o aluno
       this.chamados.push({ ...this.novoAluno, id: this.chamados.length + 1 }); // Simulação
