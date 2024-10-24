@@ -26,7 +26,7 @@
             <router-link class="nav-link text-white" @click="mostrarCadastro" to="#">Cadastro</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link text-white" @click="tabela" to="#">Tabela</router-link>
+            <router-link class="nav-link text-white" @click="tabela" href="#">Tabela</router-link>
           </li>
         
         
@@ -35,6 +35,31 @@
 
       <!-- Kanban Board -->
       <div class="kanban-board d-flex justify-content-around flex-grow-1 p-3">
+
+
+      <!-- Tabela de usuários cadastrados -->
+<div v-if="mostrarTabela" class="tabela-container">
+  <h2>Tabela de Usuários</h2>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="aluno in chamados" :key="aluno.id">
+        <td>{{ aluno.nome }}</td>
+        <td>{{ aluno.email }}</td>
+        <td>
+          <button @click="editarAluno(aluno.id)" class="btn btn-warning">Editar</button>
+          <button @click="removerAluno(aluno.id)" class="btn btn-danger">Remover</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
         
         <!-- Formulário para cadastrar novo aluno -->
@@ -204,7 +229,7 @@
 
 </template>
 
-<script >
+<script>
 import axios from 'axios';
 export default {
   data() {
@@ -212,16 +237,77 @@ export default {
       chamados: [],
       categoriaVisivel: null,
       mostrarTodosChamados: true,
-      mostrarFormulario: false, 
-      novoComentario: '',
+      mostrarFormulario: false,
+      mostrarTabela: false, // Controla a visibilidade da tabela
       novoAluno: {
-        senha : '',	
+        senha: '',
         nome: '',
         email: '',
         telefone: '',
+        confirmarEmail: '',
+        confirmarSenha: '',
         tipoUsuario: ''
       }
     };
+  },
+  methods: {
+    async carregarChamados() {
+      // Simulação de chamada a uma API
+      const resposta = await fetch('URL_DA_API'); // Substitua pela URL da sua API
+      this.chamados = await resposta.json();
+    },
+    chamadosTi() {
+      this.categoriaVisivel = null;
+      this.mostrarTodosChamados = true;
+      this.mostrarFormulario = false; // Esconde o formulário
+      this.mostrarTabela = false; // Esconde a tabela
+    },
+    chamadosManuntencao() {
+      this.categoriaVisivel = null;
+      this.mostrarTodosChamados = true;
+      this.mostrarFormulario = false; // Esconde o formulário
+      this.mostrarTabela = false; // Esconde a tabela
+    },
+    mostrarCadastro() {
+      this.mostrarFormulario = true; // Mostra o formulário
+      this.categoriaVisivel = false; // Reseta a categoria visível
+      this.mostrarTodosChamados = false; // Esconde todos os itens
+      this.mostrarTabela = false; // Esconde a tabela
+    },
+    tabela() {
+    this.mostrarTabela = true; // Mostra a tabela
+    this.mostrarFormulario = false; // Esconde o formulário
+    this.categoriaVisivel = null; // Reseta a categoria visível, se necessário
+  },
+    cadastrarAluno() {
+      // Lógica para cadastrar o aluno
+      this.chamados.push({ ...this.novoAluno, id: this.chamados.length + 1 }); // Simulação
+      this.novoAluno = { senha: '', nome: '', email: '', telefone: '', confirmarEmail: '', confirmarSenha: '' };
+    },
+    editarAluno(id) {
+      // Lógica para editar o aluno
+      console.log('Editar aluno com ID:', id);
+    },
+    removerAluno(id) {
+      this.chamados = this.chamados.filter(aluno => aluno.id !== id);
+    },
+    allowDrop(event) {
+      event.preventDefault();
+    },
+    drag(event, chamado) {
+      event.dataTransfer.setData('chamado', JSON.stringify(chamado));
+    },
+    drop(event) {
+      event.preventDefault();
+      const chamado = JSON.parse(event.dataTransfer.getData('chamado'));
+      // Lógica para manipular o chamado após o drop
+    },
+    adicionarComentario(chamado) {
+      if (this.novoComentario.trim()) {
+        chamado.comentarios.push(this.novoComentario);
+        this.novoComentario = '';
+      }
+    }
   },
   methods: {
     async carregarChamados() {
@@ -330,7 +416,9 @@ header {
   padding: 10px;
   box-sizing: border-box;
 }
-
+.tabela-container {
+  width: 100%;
+}
 /* Contêiner para a imagem e o texto */
 .header-content {
   display: flex;
