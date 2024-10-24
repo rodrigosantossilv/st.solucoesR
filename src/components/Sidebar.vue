@@ -23,11 +23,11 @@
             <a class="nav-link text-white" @click="chamadosManuntencao" href="#">Chamados Manuntencao</a>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link text-white" @click="mostrarCadastro" to="#">Cadastro</router-link>
+            <a class="nav-link text-white" @click="mostrarCadastro" to="#">Cadastro</a>
           </li>
           <li class="nav-item">
-  <a class="nav-link text-white" @click="mostrarTabela" href="#">Tabela</a>
-</li>
+            <a class="nav-link text-white" @click="mostrarLista" href="#">Tabela</a>
+          </li>
 
         </ul>
       </div>
@@ -238,7 +238,7 @@ export default {
       categoriaVisivel: null,
       mostrarTodosChamados: true,
       mostrarFormulario: false,
-      mostrarTabela: false, // Controla a visibilidade da tabela
+      mostrarLista: false, // Controla a visibilidade da tabela
 
       novoAluno: {
         senha: '',
@@ -283,7 +283,7 @@ export default {
       this.mostrarTodosChamados = false; // Esconde todos os itens
       this.mostrarTabela = false; // Esconde a tabela
     },
-    mostrarTabela() {
+    mostrarLista() {
     this.mostrarTabela = true; // Mostra a tabela
     this.mostrarFormulario = false; // Esconde o formulário
     this.categoriaVisivel = null; // Reseta a categoria visível, se necessário
