@@ -111,99 +111,88 @@ export default {
     this.fetchBlocos();
   },
   methods: {
-    fetchBlocos() {
-      const apiEndpointBlocos = "http://localhost:3000/blocos/com/salas";
-      const token = localStorage.getItem("token");
-      axios
-        .get(apiEndpointBlocos, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((response) => {
-          this.blocos = response.data;
-        })
-        .catch((error) => {
-          console.error("Erro ao carregar blocos:", error);
-          Swal.fire("Erro", "Não foi possível carregar os blocos.", "error");
-        });
-    },
-
-    updateSalas(value) {
-      const blocodaSala = value;
-      const bloco = this.blocos.find((bloco) => bloco.id === blocodaSala);
-      this.salas = bloco.salas;
-      this.numerodaSala = "";
-     },
-     
-    
-
-    reportProblem() {
-      if (this.blocodaSala && this.numerodaSala && this.problema) {
-        this.cadastrarChamado();
-      } else {
-        Swal.fire("Erro", "Por favor, preencha todos os campos obrigatórios.", "error");
-      }
-    },
-
-    async cadastrarProblema() {
-      const problema = {
-        descricao: this.problema,
-      }
-
-      try {
-        const response = await axios.post("http://localhost:3000/problemas", problema, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        })
-        return response.data
-      } catch (error) {
-        console.error("Erro ao cadastrar problema:", error);
-        Swal.fire("Erro", "Não foi possível cadastrar o problema.", "error");
-
-      }
-    },
-
-
-
-
-
-
-    async cadastrarChamado() {
-     const {id:idProblema}= await this.cadastrarProblema();
-      const chamado = {
-        //[usuario_id, problema_id, descricao]
-
-        problema_id: idProblema,
-        descricao: this.blocodaSala,
-        salaId: this.numerodaSala,
-      };
-
-      const token = localStorage.getItem("token");
-
-      try {
-        const response = await axios.post("http://localhost:3000/chamados", chamado, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        console.log("Chamado cadastrado:", response.data);
-        Swal.fire("Sucesso", "Chamado cadastrado com sucesso!", "success");
-      } catch (error) {
-        console.error("Erro ao cadastrar chamado:", error);
-        Swal.fire("Erro", "Não foi possível cadastrar o chamado.", "error");
-      }
-    },
-
-    toggleSelecao(id) {
-      // Adicione a lógica para selecionar/deselecionar lugares
-    },
-
-    confirmarSelecao() {
-      // Adicione a lógica para confirmar a seleção de lugares
-    },
+  fetchBlocos() {
+    const apiEndpointBlocos = "http://localhost:3000/blocos/com/salas";
+    const token = localStorage.getItem("token");
+    axios
+      .get(apiEndpointBlocos, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        this.blocos = response.data;
+      })
+      .catch((error) => {
+        console.error("Erro ao carregar blocos:", error);
+        Swal.fire("Erro", "Não foi possível carregar os blocos.", "error");
+      });
   },
+
+  updateSalas(value) {
+    const blocodaSala = value;
+    const bloco = this.blocos.find((bloco) => bloco.id === blocodaSala);
+    this.salas = bloco.salas;
+    this.numerodaSala = "";
+  },
+
+  async cadastrarProblema() {
+    const token = localStorage.getItem("token");
+    const problema = {
+      descricao: this.problema,
+    };
+
+    try {
+      const response = await axios.post("http://localhost:3000/problemas", problema, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Erro ao cadastrar problema:", error);
+      Swal.fire("Erro", "Não foi possível cadastrar o problema.", "error");
+    }
+  },
+
+  async cadastrarChamado() {
+    const token = localStorage.getItem("token");
+
+    const problemaCadastrado = await this.cadastrarProblema();
+    if (!problemaCadastrado) return; 
+
+    const chamado = {
+      problema_id: problemaCadastrado.id,
+      blocoId: this.blocodaSala,
+      salaId: this.numerodaSala,
+      descricao: this.descricaoProblema,
+      status: "analise",
+    };
+
+    try {
+      const response = await axios.post("http://localhost:3000/chamados", chamado, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("Chamado cadastrado:", response.data);
+      Swal.fire("Sucesso", "Chamado cadastrado com sucesso!", "success");
+    } catch (error) {
+      console.error("Erro ao cadastrar chamado:", error);
+      Swal.fire("Erro", "Não foi possível cadastrar o chamado.", "error");
+    }
+  },
+
+  reportProblem() {
+    if (this.blocodaSala && this.numerodaSala && this.problema) {
+      this.cadastrarChamado();
+    } else {
+      Swal.fire("Erro", "Por favor, preencha todos os campos obrigatórios.", "error");
+    }
+  },
+},
+
 };
   
 </script>

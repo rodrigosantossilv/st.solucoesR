@@ -270,15 +270,14 @@ export default {
         });
         const token = localStorage.getItem("token")
 
-  
-  
-      const resposta = await axios.post('http://localhost:3000/auth/register', dadosUsuario, {
+       const resposta = await axios.post('http://localhost:3000/auth/register', dadosUsuario, {
+       
             headers: {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
           } )
-      
+       
       
       this.novoAluno = { nome: '', email: '', telefone: '', tipoUsuario: '', senha: ''
        };
