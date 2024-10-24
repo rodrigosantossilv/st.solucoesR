@@ -19,19 +19,23 @@
       <div class="right-side">
         <div class="login-box">
           <h2>Bem-vindo!</h2>
+
           <input
             type="text"
             placeholder="Usuário"
             v-model="gmail"
             aria-label="Usuário"
+            @keyup.enter="login"
           />
           <p v-if="usuarioInvalido" class="error-text">Usuário inválido!</p>
+
           <div class="password-container">
             <input
               :type="passwordFieldType"
               placeholder="Senha"
               v-model="password"
               aria-label="Senha"
+              @keyup.enter="login"
             />
             <i @click="togglePasswordVisibility" class="password-icon">
               <span v-if="passwordFieldType === 'password'">
@@ -51,6 +55,7 @@
             </i>
           </div>
           <p v-if="senhaInvalida" class="error-text">Senha inválida!</p>
+
           <button @click="login" :disabled="isLoading">
             <span v-if="isLoading">Carregando...</span>
             <span v-else>Login</span>
@@ -95,12 +100,12 @@ export default {
           {
             email: this.gmail,
             senha: this.password,
-          });
+          }
+        );
 
         if (response.status === 200) {
-          localStorage.setItem("token",response.data.token)
-          const userEmail = this.gmail;
-          debugger
+          localStorage.setItem("token", response.data.token);
+
           if (
             response.data.ocupacao.endsWith("ESTUDANTE") ||
             response.data.ocupacao.endsWith("DOCENTE")
@@ -113,8 +118,6 @@ export default {
             this.$router.push("/sidebar");
           } else if (response.data.ocupacao.endsWith("NOA")) {
             this.$router.push("/sidebar");
-          } else {
-            // Caso padrão, se necessário
           }
         } else {
           this.senhaInvalida = true;
@@ -134,8 +137,6 @@ export default {
   },
 };
 </script>
-
-
 
 
 

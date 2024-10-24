@@ -23,14 +23,42 @@
             <a class="nav-link text-white" @click="chamadosManuntencao" href="#">Chamados Manuntencao</a>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link text-white" @click="mostrarCadastro" to="#">Cadastro</router-link>
+            <a class="nav-link text-white" @click="mostrarCadastro" to="#">Cadastro</a>
           </li>
-        
+          <li class="nav-item">
+            <a class="nav-link text-white" @click="mostrarTabela" href="#">Tabela</a>
+          </li>
+
         </ul>
       </div>
 
       <!-- Kanban Board -->
       <div class="kanban-board d-flex justify-content-around flex-grow-1 p-3">
+
+        <!-- Tabela de usuários cadastrados -->
+<div v-if="mostrarTabela" class="tabela-container">
+  <h2>Tabela de Usuários</h2>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="aluno in chamados" :key="aluno.id">
+        <td>{{ aluno.nome }}</td>
+        <td>{{ aluno.email }}</td>
+        <td>
+          <button @click="editarAluno(aluno.id)" class="btn btn-warning">Editar</button>
+          <button @click="removerAluno(aluno.id)" class="btn btn-danger">Remover</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+        
         <!-- Formulário para cadastrar novo aluno -->
         <div v-if="mostrarFormulario" class="form-container">
           <h2>Cadastrar usuário</h2>
@@ -79,6 +107,10 @@
             <button type="submit" class="btn btn-primary">Cadastrar</button>
           </form>
         </div>
+
+
+
+          <!-- TABELAS DO KANBAN-->
         <div v-show="mostrarTodosChamados || categoriaVisivel === 'Analise'" id="Analise" class="kanban-column"
   @drop="drop($event)" @dragover="allowDrop($event)">
   <h3 class="kanban-header bg-secondary text-white p-2 text-center">Analise</h3>
@@ -106,12 +138,6 @@
   </div>
 </div>
 
-
-
-
-
-
-        <!-- Colunas do Kanban -->
         <div v-show="mostrarTodosChamados || categoriaVisivel === 'Pendente'" id="pendente" class="kanban-column"
           @drop="drop($event)" @dragover="allowDrop($event)">
           <h3 class="kanban-header bg-danger text-white p-2 text-center">Pendente</h3>
@@ -192,29 +218,104 @@
             </div>
           </div>
         </div>
+
       </div>
     </div>
-  </div>
+
+  </div>         <!-- Ultima div (Templete)-->
+
 </template>
 
-<script >
+<script>
 import axios from 'axios';
+import { RouterLink } from 'vue-router';
 export default {
   data() {
     return {
       chamados: [],
       categoriaVisivel: null,
       mostrarTodosChamados: true,
-      mostrarFormulario: false, 
-      novoComentario: '',
+      mostrarFormulario: false,
+      mostrarTrue: false, // Controla a visibilidade da tabela
+
       novoAluno: {
-        senha : '',	
+        senha: '',
         nome: '',
         email: '',
         telefone: '',
+        confirmarEmail: '',
+        confirmarSenha: '',
         tipoUsuario: ''
       }
     };
+  },
+  methods: {
+    async carregarChamados() {
+      // Simulação de chamada a uma API
+            try {
+
+      const resposta = await fetch('URL_DA_API'); // Substitua pela URL da sua API
+      this.chamados = await resposta.json();
+    } catch (erro) {
+        console.error('Erro ao carregar os chamados:', erro);
+      }
+    },
+    
+    chamadosTi() {
+      this.categoriaVisivel = null;
+      this.mostrarTabela = false; // Esconder a tabela
+      this.mostrarTodosChamados = true;
+      this.mostrarFormulario = false; // Esconde o formulário
+      this.mostrarTabela = false; // Esconde a tabela
+    },
+    chamadosManuntencao() {
+      this.categoriaVisivel = null;
+      this.mostrarTabela = false; // Esconder a tabela
+      this.mostrarTodosChamados = true;
+      this.mostrarFormulario = false; // Esconde o formulário
+      this.mostrarTabela = false; // Esconde a tabela
+    },
+    mostrarCadastro() {
+      this.mostrarFormulario = true; // Mostra o formulário
+      this.categoriaVisivel = false; // Reseta a categoria visível
+      this.mostrarTodosChamados = false; // Esconde todos os itens
+      this.mostrarTabela = false; // Esconde a tabela
+    },
+    mostrarTabela() {
+      this.mostrarTabela = true; // Mostra a tabela
+      this.mostrarFormulario = false; // Esconde o formulário
+      this.categoriaVisivel = null; // Reseta a categoria visível
+      this.mostrarTodosChamados = false; // Atualiza se necessário
+    },
+    cadastrarAluno() {
+      // Lógica para cadastrar o aluno
+      this.chamados.push({ ...this.novoAluno, id: this.chamados.length + 1 }); // Simulação
+      this.novoAluno = { senha: '', nome: '', email: '', telefone: '', confirmarEmail: '', confirmarSenha: '' };
+    },
+    editarAluno(id) {
+      // Lógica para editar o aluno
+      console.log('Editar aluno com ID:', id);
+    },
+    removerAluno(id) {
+      this.chamados = this.chamados.filter(aluno => aluno.id !== id);
+    },
+    allowDrop(event) {
+      event.preventDefault();
+    },
+    drag(event, chamado) {
+      event.dataTransfer.setData('chamado', JSON.stringify(chamado));
+    },
+    drop(event) {
+      event.preventDefault();
+      const chamado = JSON.parse(event.dataTransfer.getData('chamado'));
+      // Lógica para manipular o chamado após o drop
+    },
+    adicionarComentario(chamado) {
+      if (this.novoComentario.trim()) {
+        chamado.comentarios.push(this.novoComentario);
+        this.novoComentario = '';
+      }
+    }
   },
   methods: {
     async carregarChamados() {
@@ -259,14 +360,14 @@ export default {
     async cadastrarAluno() {
       // Resetar o formulário
       const dadosUsuario = ({
-         nome_completo:this.novoAluno.nome,
-         senha:this.novoAluno.senha,
-         email:this.novoAluno.email,
-         telefone:this.novoAluno.telefone,
-         setor_id:this.novoAluno.setor_id,
-         instituicao:'Senai',	
-         ocupacao:this.novoAluno.tipoUsuario,
-         
+        nome_completo:this.novoAluno.nome,
+        senha:this.novoAluno.senha,
+        email:this.novoAluno.email,
+        telefone:this.novoAluno.telefone,
+        setor_id:this.novoAluno.setor_id,
+        instituicao:'Senai',	
+        ocupacao:this.novoAluno.tipoUsuario,
+        
         });
         const token = localStorage.getItem("token")
 
@@ -280,7 +381,7 @@ export default {
        
       
       this.novoAluno = { nome: '', email: '', telefone: '', tipoUsuario: '', senha: ''
-       };
+      };
       this.mostrarFormulario = true; 
 
 
@@ -322,7 +423,9 @@ header {
   padding: 10px;
   box-sizing: border-box;
 }
-
+.tabela-container {
+  width: 100%;
+}
 /* Contêiner para a imagem e o texto */
 .header-content {
   display: flex;
