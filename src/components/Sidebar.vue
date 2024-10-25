@@ -36,48 +36,50 @@
             >
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white" @click="mostrarLista" to="#"
+            <a class="nav-link text-white" @click="mostrarTabela" href="#"
               >Tabela</a
             >
           </li>
         </ul>
       </div>
+      
+      <div v-if="mostrarTabelaExibida" class="table-container p-3">
+  <h2>Tabela de Usuários</h2>
 
-      <!-- Kanban Board -->
-      <div class="kanban-board d-flex justify-content-around flex-grow-1 p-3">
-        <!-- Tabela de usuários cadastrados -->
-        <div v-if="mostrarTabela" class="tabela-container">
-          <h2>Tabela de Usuários</h2>
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Email</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="aluno in chamados" :key="aluno.id">
-                <td>{{ aluno.nome }}</td>
-                <td>{{ aluno.email }}</td>
-                <td>
-                  <button
-                    @click="editarAluno(aluno.id)"
-                    class="btn btn-warning"
-                  >
-                    Editar
-                  </button>
-                  <button
-                    @click="removerAluno(aluno.id)"
-                    class="btn btn-danger"
-                  >
-                    Remover
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+  <input
+    type="text"
+    v-model="searchQuery"
+    placeholder="Pesquisa por nome ou email"
+    class="form-control mb-3"
+  />
+
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Email</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="aluno in chamados" :key="aluno.id">
+          <td>{{ aluno.nome }}</td>
+          <td>{{ aluno.email }}</td>
+          <td>
+            <button @click="editarAluno(aluno.id)" class="btn btn-warning">
+              Editar
+            </button>
+            <button @click="removerAluno(aluno.id)" class="btn btn-danger">
+              Remover
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
 
         <!-- Formulário para cadastrar novo aluno -->
         <div v-if="mostrarFormulario" class="form-container">
@@ -385,7 +387,8 @@
         </div>
       </div>
     </div>
-  </div>
+
+
   <!-- Ultima div (Templete)-->
 </template>
 
@@ -405,8 +408,8 @@ export default {
       categoriaVisivel: null,
       mostrarTodosChamados: true,
       mostrarFormulario: false,
-      mostrarTabela: false, // Controla a visibilidade da tabela
       mostrarChamadosManutençao: false,
+      mostrarTabelaExibida: false, 
 
       novoAluno: {
         senha: "",
@@ -451,33 +454,36 @@ export default {
     },
 
     chamadosTi() {
-      this.categoriaVisivel = null;
-      this.mostrarTabela = false; // Esconder a tabela
-      this.mostrarTodosChamados = true;
-      this.mostrarFormulario = false; // Esconde o formulário
-      this.mostrarChamadosManutençao = false;
-    },
-    chamadosManuntencao() {
-      this.categoriaVisivel = null;
-      this.mostrarTodosChamados = false;
-      this.mostrarChamadosManutençao = true;
-      this.mostrarFormulario = false; // Esconde o formulário
-      this.mostrarTabela = false; // Esconde a tabela
-    },
-    mostrarCadastro() {
-      this.mostrarFormulario = true; // Mostra o formulário
-      this.categoriaVisivel = null; // Reseta a categoria visível
-      this.mostrarTodosChamados = false; // Esconde todos os itens
-      this.mostrarTabela = false; // Esconde a tabela
-      this.mostrarChamadosManutençao = false;
-    },
-    mostrarLista() {
-      this.mostrarTabela = true; // Mostra a tabela
-      this.mostrarFormulario = false; // Esconde o formulário
-      this.categoriaVisivel = null; // Reseta a categoria visível
-      this.mostrarTodosChamados = false; // Atualiza se necessário
-      this.mostrarChamadosManutençao = false;
-    },
+  this.categoriaVisivel = null;
+  this.mostrarTabelaExibida = false;
+  this.mostrarTodosChamados = true;
+  this.mostrarFormulario = false;
+  this.mostrarChamadosManutençao = false;
+},
+
+chamadosManuntencao() {
+  this.categoriaVisivel = null;
+  this.mostrarTodosChamados = false;
+  this.mostrarChamadosManutençao = true;
+  this.mostrarFormulario = false;
+  this.mostrarTabelaExibida = false;
+},
+
+mostrarCadastro() {
+  this.mostrarFormulario = true;
+  this.categoriaVisivel = null;
+  this.mostrarTodosChamados = false;
+  this.mostrarTabelaExibida = false;
+  this.mostrarChamadosManutençao = false;
+},
+
+mostrarTabela() {
+  this.categoriaVisivel = null;
+  this.mostrarTabelaExibida = true;
+  this.mostrarChamadosManutençao = false;
+  this.mostrarTodosChamados = false;
+  this.mostrarFormulario = false;
+},
 
     editarAluno(id) {
       // Lógica para editar o aluno
@@ -527,17 +533,24 @@ export default {
       this.categoriaVisivel = null;
       this.mostrarTodosChamados = true;
       this.mostrarFormulario = false; // Esconde o formulário
+      this.mostrarTabelaExibida = false;
+
     },
     chamadosManuntencao() {
       this.categoriaVisivel = null;
       this.mostrarTodosChamados = true;
       this.mostrarFormulario = false; // Esconde o formulário
+      this.mostrarTabelaExibida = false;
+
     },
     mostrarCadastro() {
       this.mostrarFormulario = true; // Mostra o formulário
       this.categoriaVisivel = false; // Reseta a categoria visível
       this.mostrarTodosChamados = false; // Esconde todos os itens
+      this.mostrarTabelaExibida = false;
+
     },
+    
     allowDrop(event) {
       event.preventDefault();
     },
@@ -775,4 +788,93 @@ html {
 .radio-group input[type="radio"] {
   margin-right: 5px; /* Space between radio button and its label */
 }
+
+/* css da tabela */
+* {
+  margin: 0;
+  padding: 0;
+  font-size: 100%;
+  border: none;
+  outline: none;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Estilo geral da tabela */
+.table-container {
+  padding: 3rem;
+  max-width: 1200px; /* Define a largura máxima da tabela */
+  margin: 0 auto; /* Centraliza a tabela na página */
+}
+
+h2 {
+  font-size: 2.5rem; /* Aumenta o tamanho do título */
+  margin-bottom: 1.5rem; /* Espaço abaixo do título */
+  text-align: center; /* Centraliza o título */
+}
+
+/* Estilo da barra de pesquisa */
+.form-control {
+  width: 100%; /* Barra de pesquisa ocupa toda a largura */
+  padding: 15px 20px; /* Aumenta o padding para maior área clicável */
+  margin-bottom: 20px; /* Espaço abaixo da barra de pesquisa */
+  border-radius: 5px; /* Bordas arredondadas */
+  border: 1px solid #d0d5d8; /* Borda da barra de pesquisa */
+  font-size: 1.5rem; /* Aumenta o tamanho da fonte */
+}
+
+/* Base da tabela */
+.table {
+  width: 100%; /* A tabela ocupa toda a largura */
+  margin-bottom: 20px; /* Espaço abaixo da tabela */
+}
+
+.table th,
+.table td {
+  padding: 20px; /* Aumenta o padding nas células da tabela */
+  text-align: center; /* Centraliza o conteúdo nas células */
+  font-size: 1.5rem; /* Aumenta o tamanho da fonte */
+}
+
+.table thead th {
+  background-color: #3498db; /* Cor de fundo do cabeçalho */
+  color: #fff; /* Cor do texto no cabeçalho */
+}
+
+.table tbody > tr:nth-child(odd) > td {
+  background-color: #f8f8f8; /* Cor de fundo para linhas ímpares */
+}
+
+/* Estilo das ações */
+.table .action-buttons {
+  display: flex; /* Flexbox para alinhar os botões */
+  gap: 15px; /* Espaçamento entre os botões */
+  justify-content: center; /* Centraliza os botões */
+}
+
+/* Botões */
+.btn {
+  padding: 10px 20px; /* Aumenta o padding dos botões */
+  font-size: 1.2rem; /* Aumenta o tamanho da fonte dos botões */
+  border-radius: 5px; /* Bordas arredondadas */
+  cursor: pointer; /* Muda o cursor para indicar que é clicável */
+}
+
+.btn-warning {
+  background-color: #ffc107; /* Cor de fundo do botão de editar */
+  color: #fff; /* Cor do texto do botão de editar */
+}
+
+.btn-danger {
+  background-color: #dc3545; /* Cor de fundo do botão de remover */
+  color: #fff; /* Cor do texto do botão de remover */
+}
+
+/* Tornando a tabela responsiva */
+.table-responsive {
+  overflow-x: auto; /* Adiciona rolagem horizontal, se necessário */
+  width: 100%; /* A largura da tabela responsiva */
+}
+
+
 </style>
