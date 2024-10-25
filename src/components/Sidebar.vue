@@ -42,7 +42,8 @@
           </li>
         </ul>
       </div>
-      <div class="table-container p-3">
+
+      <div v-if="mostrarTabelaExibida" class="table-container p-3">
     <h2>Tabela de Usuários</h2>
     <input 
         type="text" 
