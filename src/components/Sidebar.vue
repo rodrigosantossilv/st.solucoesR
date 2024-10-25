@@ -40,9 +40,20 @@
               >Tabela</a
             >
           </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" @click="mostrarSala" href="#"
+              >Adicionar Salas</a
+            >
+          </li>
         </ul>
       </div>
 
+        <!-- Tabela para cadastrar sala e mostra salas cadastradas-->
+
+
+
+        
+    <!-- Tabela Alunos-->
       <div v-if="mostrarTabelaExibida" class="table-container p-3">
     <h2>Tabela de Usuários</h2>
     <input 
@@ -76,7 +87,6 @@
                         <button>Remover</button>
                     </td>
                 </tr>
-                <!-- Adicione mais linhas conforme necessário -->
             </tbody>
         </table>
     </div>
@@ -84,6 +94,7 @@
 
 
         <!-- Formulário para cadastrar novo aluno -->
+      
         <div v-if="mostrarFormulario" class="form-container">
           <h2>Cadastrar usuário</h2>
           <form @submit.prevent="cadastrarAluno">
@@ -175,7 +186,9 @@
           </form>
         </div>
 
+
         <!-- TABELAS DO KANBAN-->
+
         <div
           v-show="mostrarTodosChamados || categoriaVisivel === 'Analise'"
           id="Análise"
@@ -412,6 +425,7 @@ export default {
       mostrarFormulario: false,
       mostrarChamadosManutençao: false,
       mostrarTabelaExibida: false, 
+      mostrarTabelaSala: false,
 
       novoAluno: {
         senha: "",
@@ -461,6 +475,7 @@ export default {
   this.mostrarTodosChamados = true;
   this.mostrarFormulario = false;
   this.mostrarChamadosManutençao = false;
+  this.mostrarTabelaSala = false;
 },
 
 chamadosManuntencao() {
@@ -469,6 +484,7 @@ chamadosManuntencao() {
   this.mostrarChamadosManutençao = true;
   this.mostrarFormulario = false;
   this.mostrarTabelaExibida = false;
+  this.mostrarTabelaSala = false;
 },
 
 mostrarCadastro() {
@@ -477,6 +493,7 @@ mostrarCadastro() {
   this.mostrarTodosChamados = false;
   this.mostrarTabelaExibida = false;
   this.mostrarChamadosManutençao = false;
+  this.mostrarTabelaSala = false;
 },
 
 mostrarTabela() {
@@ -485,8 +502,16 @@ mostrarTabela() {
   this.mostrarChamadosManutençao = false;
   this.mostrarTodosChamados = false;
   this.mostrarFormulario = false;
+  this.mostrarTabelaSala = false;
 },
-
+  mostrarSala(){
+    this.categoriaVisivel = null,
+    this.mostrarTabelaSala = true;
+    this.mostrarChamadosManutençao = false;
+    this.mostrarFormulario = false;
+    this.mostrarTodosChamados = false;
+    this.mostrarTabelaExibida = false;
+  },
     editarAluno(id) {
       // Lógica para editar o aluno
       console.log("Editar aluno com ID:", id);
@@ -536,6 +561,8 @@ mostrarTabela() {
       this.mostrarTodosChamados = true;
       this.mostrarFormulario = false; // Esconde o formulário
       this.mostrarTabelaExibida = false;
+      this.mostrarTabelaSala = false;
+
 
     },
     chamadosManuntencao() {
@@ -543,6 +570,8 @@ mostrarTabela() {
       this.mostrarTodosChamados = true;
       this.mostrarFormulario = false; // Esconde o formulário
       this.mostrarTabelaExibida = false;
+      this.mostrarTabelaSala = false;
+
 
     },
     mostrarCadastro() {
@@ -550,6 +579,8 @@ mostrarTabela() {
       this.categoriaVisivel = false; // Reseta a categoria visível
       this.mostrarTodosChamados = false; // Esconde todos os itens
       this.mostrarTabelaExibida = false;
+      this.mostrarTabelaSala = false;
+
 
     },
     
