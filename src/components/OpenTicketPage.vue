@@ -15,21 +15,21 @@
     <div class="right-side">
       <div class="login-box">
         <h2>Olá, Informe seu problema</h2>
-
-        <b-form-group label="Problema*" label-for="Problema">
+        <b-form-group   >
           <b-form-select v-model="problema" id="problema" @change="updateProblemas($event)">
             <option value="" disabled>Selecione um problema</option>
-            <option v-for="(problema, index) in blocos" :key="index" :value="problema.id">
+            <option v-for="(problema, index) in problemas" :key="index" :value="problema.id">
               {{ problema.descricao }}
             </option>
           </b-form-select>
         </b-form-group>
 
-
-        <b-form-group v-if="problema === 'SoftwareseProgramasEspecíficos' || problema === 'Outro'" label="Descreva o problema específico" label-for="descricaoProblema">
-          <b-form-input v-model="descricaoProblema" id="descricaoProblema" placeholder="Digite mais detalhes sobre o problema"></b-form-input>
+        <b-form-group v-if="
+          problemas.some((p) => p.descricao === 'outros'&& p.id === problema)	
+        " label="Descreva o problema específico" label-for="descricaoProblema">
+          <b-form-input v-model="descricaoProblema" id="descricaoProblema"
+            placeholder="Digite mais detalhes sobre o problema"></b-form-input>
         </b-form-group>
-
         <b-form-group label="Bloco da sala*" label-for="blocodasala">
           <b-form-select v-model="blocodaSala" id="blocodasala" @change="updateSalas($event)">
             <option value="" disabled>Selecione um Bloco da sala</option>
@@ -51,7 +51,6 @@
         <b-button type="submit" variant="primary" @click="reportProblem">
           Relatar Problema
         </b-button>
-
         <div class="text-center mt-3">
           <router-link to="/" class="btn btn-link">Voltar à página inicial</router-link>
         </div>
@@ -60,7 +59,8 @@
       <div v-if="mostrarSelecionarLugar" class="lugar-selection">
         <h2>Escolha o seu lugar</h2>
         <div class="sala">
-          <div v-for="lugar in lugares" :key="lugar.id" class="lugar" :class="{ selecionado: lugar.selecionado }" @click="toggleSelecao(lugar.id)" :style="{ gridColumn: lugar.coluna, gridRow: lugar.fileira }">
+          <div v-for="lugar in lugares" :key="lugar.id" class="lugar" :class="{ selecionado: lugar.selecionado }"
+            @click="toggleSelecao(lugar.id)" :style="{ gridColumn: lugar.coluna, gridRow: lugar.fileira }">
             {{ lugar.fileira }}-{{ lugar.coluna }}
           </div>
         </div>
@@ -69,14 +69,7 @@
         </button>
       </div>
 
-      <div class="selected-report">
-        <h3>Relatório Selecionado</h3>
-        <p><strong>Problema:</strong> {{ problema }}</p>
-        <p><strong>Bloco da Sala:</strong> {{ blocodaSala }}</p>
-        <p><strong>Número da Sala:</strong> {{ numerodaSala }}</p>
-        <p v-if="problema === 'ComputadoresePerifericos'"><strong>Lugar Selecionado:</strong> {{ lugarSelecionado }}</p>
-        <p v-if="problema === 'SoftwareseProgramasEspecíficos' || problema === 'Outro'"><strong>Descrição do Problema:</strong> {{ descricaoProblema }}</p>
-      </div>
+      
     </div>
   </div>
 </template>
@@ -84,12 +77,12 @@
 <script>
 import Swal from "sweetalert2";
 import axios from "axios";
-import e from "cors";
-
 export default {
   data() {
+
     return {
       problema: "",
+      problemas: [],
       blocodaSala: "",
       numerodaSala: "",
       salas: [],
@@ -100,123 +93,108 @@ export default {
       lugarSelecionado: "", // Armazena o lugar selecionado
     };
   },
-
   mounted() {
     this.fetchBlocos();
-
+    this.exibirProblema();
   },
+
   methods: {
-  fetchBlocos() {
-    const apiEndpointBlocos = "http://localhost:3000/blocos/com/salas";
-    const token = localStorage.getItem("token");
-    axios.get(apiEndpointBlocos, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        this.blocos = response.data;
-      })
-      .catch((error) => {
-        console.error("Erro ao carregar blocos:", error);
-        Swal.fire("Erro", "Não foi possível carregar os blocos.", "error");
-      });
-  },
-
-
-  async cadastrarProblema() {
+    fetchBlocos() {
+      const apiEndpointBlocos = "http://localhost:3000/blocos/com/salas";
       const token = localStorage.getItem("token");
-      const problema = {
-        descricao: this.problema,
+      axios
+        .get(apiEndpointBlocos, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Correção aqui
+          },
+        })
+        .then((response) => {
+          this.blocos = response.data;
+        })
+        .catch((error) => {
+          console.error("Erro ao carregar blocos:", error);
+          Swal.fire("Erro", "Não foi possível carregar os blocos.", "error");
+        });
+    },
+
+    async exibirProblema() {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await axios.get("http://localhost:3000/problemas",
+
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        this.problemas = response.data;
+        const problemasFiltrados = response.data.filter((p) =>
+          p.descricao.includes(this.problema)
+        );
+
+        return problemasFiltrados;
+      } catch (error) {
+        console.error("Erro ao exibir problema:", error);
+        Swal.fire("Erro", "Não foi possível exibir o problema.", "error");
+      }
+    },
+
+    updateSalas(value) {
+      const blocodaSala = value;
+      const bloco = this.blocos.find((bloco) => bloco.id === blocodaSala);
+      this.salas = bloco.salas;
+      this.numerodaSala = "";
+    },
+    updateProblemas(value) {
+      const problema = value;
+    },
+
+    async cadastrarChamado() {
+      const token = localStorage.getItem("token");
+      const chamado = {
+        problema_id: this.problema, 
+        bloco_id: this.blocodaSala,
+        sala_id: this.numerodaSala,
+        descricao: this.descricaoProblema,
       };
 
       try {
         const response = await axios.post(
-          "http://localhost:3000/problemas",
-          problema,
+          "http://localhost:3000/chamados",
+          chamado,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`, // Correção aqui
             },
           }
         );
-        return response.data;
+        console.log("Chamado cadastrado:", response.data);
+        Swal.fire("Sucesso", "Chamado cadastrado com sucesso!", "success");
       } catch (error) {
-        console.error("Erro ao cadastrar problema:", error);
-        Swal.fire("Erro", "Não foi possível cadastrar o problema.", "error");
+        console.error("Erro ao cadastrar chamado:", error);
+        Swal.fire("Erro", "Não foi possível cadastrar o chamado.", "error");
       }
     },
-    updateProblemas(value){
-      const problema = value;
-      this.descricao = "";
-    
 
+    reportProblem() {
+      if (this.blocodaSala && this.numerodaSala && this.problema) {
+        this.cadastrarChamado();
+      } else {
+        Swal.fire(
+          "Erro",
+          "Por favor, preencha todos os campos obrigatórios.",
+          "error"
+        );
+      }
+    },
   },
-
-  updateSalas(value) {
-    const blocodaSala = value;
-    const bloco = this.blocos.find((bloco) => bloco.id === blocodaSala);
-    this.salas = bloco.salas;
-    this.numerodaSala = "";
-  },
-
-  async exibirProblema() {
-    const token = localStorage.getItem("token");
-    const problema = {
-      descricao: this.problema,
-    };
-
-    try {
-      const response = await axios.post("http://localhost:3000/problemas", problema, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Erro ao cadastrar problema:", error);
-      Swal.fire("Erro", "Não foi possível cadastrar o problema.", "error");
-    }
-  },
-
-  async cadastrarChamado() {
-    const token = localStorage.getItem("token");
-    const chamado = {
-      problema_id: problemaCadastrado.id,
-      blocoId: this.blocodaSala,
-      salaId: this.numerodaSala,
-      descricao: this.descricaoProblema,
-      status: "analise",
-    };
-
-    try {
-      const response = await axios.post("http://localhost:3000/chamados", chamado, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log("Chamado cadastrado:", response.data);
-      Swal.fire("Sucesso", "Chamado cadastrado com sucesso!", "success");
-    } catch (error) {
-      console.error("Erro ao cadastrar chamado:", error);
-      Swal.fire("Erro", "Não foi possível cadastrar o chamado.", "error");
-    }
-  },
-
-  reportProblem() {
-    if (this.blocodaSala && this.numerodaSala && this.problema) {
-      this.cadastrarChamado();
-    } else {
-      Swal.fire("Erro", "Por favor, preencha todos os campos obrigatórios.", "error");
-    }
-  },
-},
-
 };
-  
 </script>
+
+
+
+
 
 <style scoped>
 /* Reset básico */
@@ -261,7 +239,8 @@ html {
 .login-container {
   display: flex;
   height: 100vh;
-  position: relative; /* Necessário para a posição absoluta das bolhas */
+  position: relative;
+  /* Necessário para a posição absoluta das bolhas */
 }
 
 /* Lado esquerdo - Imagem com gradiente e bolhas */
@@ -273,10 +252,14 @@ html {
 
   justify-content: center;
   align-items: center;
-  position: fixed; /* Permite que acompanhe a rolagem da página */
-  height: 100%; /* Faz com que ocupe 100% da altura da tela */
-  overflow: hidden; /* Garante que as bolhas fiquem dentro do lado esquerdo */
-  z-index: 1; /* Mantém a camada do lado esquerdo acima do conteúdo da direita */
+  position: fixed;
+  /* Permite que acompanhe a rolagem da página */
+  height: 100%;
+  /* Faz com que ocupe 100% da altura da tela */
+  overflow: hidden;
+  /* Garante que as bolhas fiquem dentro do lado esquerdo */
+  z-index: 1;
+  /* Mantém a camada do lado esquerdo acima do conteúdo da direita */
 }
 
 /* Lado direito - Formulário de registro */
@@ -284,7 +267,8 @@ html {
   flex: 2;
   background-color: white;
   display: flex;
-  flex-direction: column; /* Adiciona flex-direction para empilhar elementos verticalmente */
+  flex-direction: column;
+  /* Adiciona flex-direction para empilhar elementos verticalmente */
   justify-content: center;
   align-items: center;
   position: relative;
@@ -448,6 +432,7 @@ html {
     transform: translateY(0) scale(1);
     opacity: 1;
   }
+
   100% {
     transform: translateY(-1000px) scale(0);
     opacity: 0;
