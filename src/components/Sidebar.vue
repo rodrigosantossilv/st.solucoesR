@@ -36,50 +36,65 @@
             >
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white" @click="mostrarLista" to="#"
+            <a class="nav-link text-white" @click="mostrarTabela" href="#"
               >Tabela</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" @click="mostrarSala" href="#"
+              >Adicionar Salas</a
             >
           </li>
         </ul>
       </div>
 
-      <!-- Kanban Board -->
-      <div class="kanban-board d-flex justify-content-around flex-grow-1 p-3">
-        <!-- Tabela de usuários cadastrados -->
-        <div v-if="mostrarTabela" class="tabela-container">
-          <h2>Tabela de Usuários</h2>
-          <table class="table table-bordered">
+        <!-- Tabela para cadastrar sala e mostra salas cadastradas-->
+
+
+
+        
+    <!-- Tabela Alunos-->
+      <div v-if="mostrarTabelaExibida" class="table-container p-3">
+    <h2>Tabela de Usuários</h2>
+    <input 
+        type="text" 
+        placeholder="Pesquisa por nome ou email" 
+        class="form-control mb-3" 
+    />
+    <div class="table-responsive">
+        <table class="table table-striped">
             <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Email</th>
-                <th>Ações</th>
-              </tr>
+                <tr>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Ações</th>
+                </tr>
             </thead>
             <tbody>
-              <tr v-for="aluno in chamados" :key="aluno.id">
-                <td>{{ aluno.nome }}</td>
-                <td>{{ aluno.email }}</td>
-                <td>
-                  <button
-                    @click="editarAluno(aluno.id)"
-                    class="btn btn-warning"
-                  >
-                    Editar
-                  </button>
-                  <button
-                    @click="removerAluno(aluno.id)"
-                    class="btn btn-danger"
-                  >
-                    Remover
-                  </button>
-                </td>
-              </tr>
+                <tr>
+                    <td data-label="Nome">João Silva</td>
+                    <td data-label="Email">joao@example.com</td>
+                    <td data-label="Ações">
+                        <button>Editar</button>
+                        <button>Remover</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td data-label="Nome">Maria Oliveira</td>
+                    <td data-label="Email">maria@example.com</td>
+                    <td data-label="Ações">
+                        <button>Editar</button>
+                        <button>Remover</button>
+                    </td>
+                </tr>
             </tbody>
-          </table>
-        </div>
+        </table>
+    </div>
+</div>
+
 
         <!-- Formulário para cadastrar novo aluno -->
+      
         <div v-if="mostrarFormulario" class="form-container">
           <h2>Cadastrar usuário</h2>
           <form @submit.prevent="cadastrarAluno">
@@ -171,7 +186,9 @@
           </form>
         </div>
 
+
         <!-- TABELAS DO KANBAN-->
+
         <div
           v-show="mostrarTodosChamados || categoriaVisivel === 'Analise'"
           id="Análise"
@@ -385,7 +402,8 @@
         </div>
       </div>
     </div>
-  </div>
+
+
   <!-- Ultima div (Templete)-->
 </template>
 
@@ -405,8 +423,9 @@ export default {
       categoriaVisivel: null,
       mostrarTodosChamados: true,
       mostrarFormulario: false,
-      mostrarTabela: false, // Controla a visibilidade da tabela
       mostrarChamadosManutençao: false,
+      mostrarTabelaExibida: false, 
+      mostrarTabelaSala: false,
 
       novoAluno: {
         senha: "",
@@ -451,34 +470,48 @@ export default {
     },
 
     chamadosTi() {
-      this.categoriaVisivel = null;
-      this.mostrarTabela = false; // Esconder a tabela
-      this.mostrarTodosChamados = true;
-      this.mostrarFormulario = false; // Esconde o formulário
-      this.mostrarChamadosManutençao = false;
-    },
-    chamadosManuntencao() {
-      this.categoriaVisivel = null;
-      this.mostrarTodosChamados = false;
-      this.mostrarChamadosManutençao = true;
-      this.mostrarFormulario = false; // Esconde o formulário
-      this.mostrarTabela = false; // Esconde a tabela
-    },
-    mostrarCadastro() {
-      this.mostrarFormulario = true; // Mostra o formulário
-      this.categoriaVisivel = null; // Reseta a categoria visível
-      this.mostrarTodosChamados = false; // Esconde todos os itens
-      this.mostrarTabela = false; // Esconde a tabela
-      this.mostrarChamadosManutençao = false;
-    },
-    mostrarLista() {
-      this.mostrarTabela = true; // Mostra a tabela
-      this.mostrarFormulario = false; // Esconde o formulário
-      this.categoriaVisivel = null; // Reseta a categoria visível
-      this.mostrarTodosChamados = false; // Atualiza se necessário
-      this.mostrarChamadosManutençao = false;
-    },
+  this.categoriaVisivel = null;
+  this.mostrarTabelaExibida = false;
+  this.mostrarTodosChamados = true;
+  this.mostrarFormulario = false;
+  this.mostrarChamadosManutençao = false;
+  this.mostrarTabelaSala = false;
+},
 
+chamadosManuntencao() {
+  this.categoriaVisivel = null;
+  this.mostrarTodosChamados = false;
+  this.mostrarChamadosManutençao = true;
+  this.mostrarFormulario = false;
+  this.mostrarTabelaExibida = false;
+  this.mostrarTabelaSala = false;
+},
+
+mostrarCadastro() {
+  this.mostrarFormulario = true;
+  this.categoriaVisivel = null;
+  this.mostrarTodosChamados = false;
+  this.mostrarTabelaExibida = false;
+  this.mostrarChamadosManutençao = false;
+  this.mostrarTabelaSala = false;
+},
+
+mostrarTabela() {
+  this.categoriaVisivel = null;
+  this.mostrarTabelaExibida = true;
+  this.mostrarChamadosManutençao = false;
+  this.mostrarTodosChamados = false;
+  this.mostrarFormulario = false;
+  this.mostrarTabelaSala = false;
+},
+  mostrarSala(){
+    this.categoriaVisivel = null,
+    this.mostrarTabelaSala = true;
+    this.mostrarChamadosManutençao = false;
+    this.mostrarFormulario = false;
+    this.mostrarTodosChamados = false;
+    this.mostrarTabelaExibida = false;
+  },
     editarAluno(id) {
       // Lógica para editar o aluno
       console.log("Editar aluno com ID:", id);
@@ -522,17 +555,30 @@ export default {
       this.categoriaVisivel = null;
       this.mostrarTodosChamados = true;
       this.mostrarFormulario = false; // Esconde o formulário
+      this.mostrarTabelaExibida = false;
+      this.mostrarTabelaSala = false;
+
+
     },
     chamadosManuntencao() {
       this.categoriaVisivel = null;
       this.mostrarTodosChamados = true;
       this.mostrarFormulario = false; // Esconde o formulário
+      this.mostrarTabelaExibida = false;
+      this.mostrarTabelaSala = false;
+
+
     },
     mostrarCadastro() {
       this.mostrarFormulario = true; // Mostra o formulário
       this.categoriaVisivel = false; // Reseta a categoria visível
       this.mostrarTodosChamados = false; // Esconde todos os itens
+      this.mostrarTabelaExibida = false;
+      this.mostrarTabelaSala = false;
+
+
     },
+    
     allowDrop(event) {
       event.preventDefault();
     },
@@ -765,4 +811,8 @@ html {
 .radio-group input[type="radio"] {
   margin-right: 5px; /* Space between radio button and its label */
 }
+
+/* css da tabela */
+
+
 </style>
