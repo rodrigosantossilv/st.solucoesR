@@ -516,12 +516,7 @@ export default {
       });
       await this.carregarChamados();
     },
-    adicionarComentario(chamado) {
-      if (this.novoComentario.trim()) {
-        chamado.comentarios.push(this.novoComentario);
-        this.novoComentario = "";
-      }
-    },
+  
 
     chamadosTi() {
       this.categoriaVisivel = null;
@@ -542,12 +537,7 @@ export default {
       event.preventDefault();
     },
 
-    adicionarComentario(chamado) {
-      if (this.novoComentario.trim()) {
-        chamado.comentarios.push(this.novoComentario);
-        this.novoComentario = "";
-      }
-    },
+
 
     async cadastrarAluno() {
       // Resetar o formulário
