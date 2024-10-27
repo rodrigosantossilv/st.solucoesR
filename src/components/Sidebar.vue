@@ -41,15 +41,92 @@
             >
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white" @click="mostrarSala" href="#"
-              >Adicionar Salas</a
-            >
-          </li>
+  <a class="nav-link text-white" @click="mostrarSala" href="#">
+    Adicionar Salas
+  </a>
+</li>
         </ul>
-      </div>
 
-        <!-- Tabela para cadastrar sala e mostra salas cadastradas-->
+<!-- Tabela para cadastrar sala e mostrar salas cadastradas -->
+</div>
+<div v-if="mostrarCadastrosala" class="table-container p-3">
+  <h2>Tabela de Salas Cadastradas</h2>
+  <input 
+    type="text" 
+    placeholder="Pesquisa por nome ou bloco" 
+    class="form-control mb-3" 
+  />
+  
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Bloco</th>
+          <th>Número da sala</th>
+          <th>Nome da sala</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Bloco">A</td>
+          <td data-label="Número da sala">23</td>
+          <td data-label="Nome da sala">Laboratório</td>
+          <td data-label="Ações">
+            <button class="btn btn-warning btn-sm">Editar</button>
+            <button class="btn btn-danger btn-sm">Remover</button>
+          </td>
+        </tr>
+        <!-- Adicione mais linhas aqui conforme necessário -->
+      </tbody>
+    </table>
+  </div>
+<!-- Formulário para cadastro de sala -->
+<form @submit.prevent="adicionarSala" class="mb-4">
+  <h2>Cadastra Salas</h2>
+    <div class="form-group">
+      <label for="bloco">Bloco da sala</label>
+      <input 
+        type="text" 
+        id="bloco" 
+        v-model="novoBloco" 
+        placeholder="Digite o bloco" 
+        class="form-control" 
+        required 
+      />
+    </div>
+    <div class="form-group">
+      <label for="nome">Nome da sala</label>
+      <input 
+        type="text" 
+        id="nome" 
+        v-model="novoNome" 
+        placeholder="Digite o nome da sala" 
+        class="form-control" 
+        required 
+      />
+    </div>
+    <div class="form-group">
+      <label for="numero">Número da sala</label>
+      <input 
+        type="number" 
+        id="numero" 
+        v-model="novoNumero" 
+        placeholder="Digite o número da sala" 
+        class="form-control" 
+        required 
+      />
+    </div>
+    <button type="submit" class="btn btn-primary">Adicionar Sala</button>
+  </form>
 
+  <input 
+    type="text" 
+    placeholder="Pesquisa por nome ou bloco" 
+    class="form-control mb-3" 
+  />
+  
+</div>
 
 
         
@@ -425,7 +502,7 @@ export default {
       mostrarFormulario: false,
       mostrarChamadosManutençao: false,
       mostrarTabelaExibida: false, 
-      mostrarTabelaSala: false,
+      mostrarCadastrosala: false,
 
       novoAluno: {
         senha: "",
@@ -436,6 +513,11 @@ export default {
         confirmarSenha: "",
         tipoUsuario: "",
       },
+      novoSala: {
+      bloco: '', // ou algum valor inicial
+      numerodasala:'',
+      nomedasala:''
+    },
     };
   },
   methods: {
@@ -475,7 +557,7 @@ export default {
   this.mostrarTodosChamados = true;
   this.mostrarFormulario = false;
   this.mostrarChamadosManutençao = false;
-  this.mostrarTabelaSala = false;
+  this.mostrarCadastrosala = false;
 },
 
 chamadosManuntencao() {
@@ -484,7 +566,7 @@ chamadosManuntencao() {
   this.mostrarChamadosManutençao = true;
   this.mostrarFormulario = false;
   this.mostrarTabelaExibida = false;
-  this.mostrarTabelaSala = false;
+  this.mostrarCadastrosala = false;
 },
 
 mostrarCadastro() {
@@ -493,7 +575,7 @@ mostrarCadastro() {
   this.mostrarTodosChamados = false;
   this.mostrarTabelaExibida = false;
   this.mostrarChamadosManutençao = false;
-  this.mostrarTabelaSala = false;
+  this.mostrarCadastrosala = false;
 },
 
 mostrarTabela() {
@@ -502,13 +584,14 @@ mostrarTabela() {
   this.mostrarChamadosManutençao = false;
   this.mostrarTodosChamados = false;
   this.mostrarFormulario = false;
-  this.mostrarTabelaSala = false;
+  this.mostrarCadastrosala = false;
 },
-  mostrarSala(){
-    this.categoriaVisivel = null,
-    this.mostrarTabelaSala = true;
-    this.mostrarChamadosManutençao = false;
+mostrarSala() {
+    console.log("Clique em Adicionar Salas!"); // Debug: verifique no console
+    this.categoriaVisivel = null;
+    this.mostrarCadastrosala = true; // Definir como true para exibir a seção
     this.mostrarFormulario = false;
+    this.mostrarChamadosManutençao = false;
     this.mostrarTodosChamados = false;
     this.mostrarTabelaExibida = false;
   },
@@ -557,8 +640,7 @@ mostrarTabela() {
       this.mostrarFormulario = false; // Esconde o formulário
       this.mostrarTabelaExibida = false;
       this.mostrarTabelaSala = false;
-
-
+      this.mostrarCadastrosala = false;
     },
     chamadosManuntencao() {
       this.categoriaVisivel = null;
@@ -566,7 +648,7 @@ mostrarTabela() {
       this.mostrarFormulario = false; // Esconde o formulário
       this.mostrarTabelaExibida = false;
       this.mostrarTabelaSala = false;
-
+      this.mostrarCadastrosala = false;
 
     },
     mostrarCadastro() {
@@ -575,8 +657,7 @@ mostrarTabela() {
       this.mostrarTodosChamados = false; // Esconde todos os itens
       this.mostrarTabelaExibida = false;
       this.mostrarTabelaSala = false;
-
-
+      this.mostrarCadastrosala = false;
     },
     
     allowDrop(event) {
@@ -812,7 +893,58 @@ html {
   margin-right: 5px; /* Space between radio button and its label */
 }
 
-/* css da tabela */
+.container {
+  max-width: 1200px; /* Largura máxima do contêiner */
+  margin: auto; /* Centraliza o contêiner */
+}
+
+.form-container {
+  background-color: #f8f9fa; /* Cor de fundo suave */
+  padding: 20px; /* Espaçamento interno */
+  border-radius: 8px; /* Bordas arredondadas */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+.form-title {
+  margin-bottom: 20px; /* Espaçamento inferior do título */
+}
+
+.table-responsive {
+  padding: 20px; /* Espaçamento interno */
+}
+
+.table {
+  margin-top: 20px; /* Espaçamento superior da tabela */
+}
+
+.table th {
+  background-color: #007bff; /* Cor de fundo dos cabeçalhos */
+  color: white; /* Cor do texto dos cabeçalhos */
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #f2f2f2; /* Cor de fundo para linhas ímpares */
+}
+
+.table td {
+  vertical-align: middle; /* Centraliza verticalmente o conteúdo */
+}
+
+.btn {
+  margin-right: 5px; /* Espaçamento entre os botões */
+}
+
+/* Estilo adicional para garantir que o layout fique responsivo */
+@media (max-width: 768px) {
+  .form-container {
+    margin-top: 20px; /* Espaçamento superior para o formulário em telas pequenas */
+  }
+
+  .form-title {
+    font-size: 1.5rem; /* Aumenta o tamanho da fonte em telas menores */
+  }
+}
+
 
 
 </style>
