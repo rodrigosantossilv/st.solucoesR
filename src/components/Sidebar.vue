@@ -2,8 +2,7 @@
   <div>
     <!-- Cabeçalho -->
     <header class="bg-primary text-white p-3">
-      
-    </header>
+        </header>
 
     <!-- Estrutura principal com o Dashboard e Kanban -->
     <div class="d-flex">
@@ -46,7 +45,7 @@
 <div v-if="mostrarCadastrosala" class="table-container p-3">
   <!-- Formulário para cadastro de sala -->
 <form @submit.prevent="adicionarSala" class="mb-4">
-  <h2>Cadastra Salas</h2>
+  <h2>Cadastrar Salas</h2>
     <div class="form-group">
       <label for="bloco">Bloco da sala</label>
       <input 
@@ -512,6 +511,7 @@ export default {
       chamadosPendentes: [],
       chamados: [],
       categoriaVisivel: null,
+      home: false,
       mostrarTodosChamados: true,
       mostrarFormulario: false,
       mostrarChamadosManutençao: false,
@@ -755,6 +755,7 @@ let status = ''
 
   },
 };
+
 </script>
 
 <style scoped>
@@ -775,6 +776,7 @@ header {
   min-height: 100vh;
   color: white;
   padding: 1rem;
+  transition: transform 0.3s ease-in-out;
 }
 
 .sidebar h2 {
@@ -797,6 +799,22 @@ header {
 
 .sidebar .nav-link:hover {
   background-color: #043c61;
+}
+
+/* Responsividade para Sidebar */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    left: -250px;
+    top: 0;
+    height: 100%;
+    z-index: 1000;
+    transform: translateX(0);
+  }
+
+  .sidebar.active {
+    transform: translateX(250px);
+  }
 }
 
 /* Tabela e Formulário */
@@ -835,6 +853,7 @@ header {
   background-color: #f1f1f1;
 }
 
+/* Botões */
 .btn {
   margin: 0 5px;
   font-size: 0.9rem;
@@ -861,7 +880,7 @@ header {
   padding: 0.5rem;
   border-radius: 0.25rem;
   border: 1px solid #ced4da;
-  width: 100%; /* Adiciona largura total ao campo */
+  width: 100%;
 }
 
 .form-container button[type="submit"] {
@@ -873,7 +892,7 @@ header {
   border-radius: 0.25rem;
   cursor: pointer;
   transition: background-color 0.3s;
-  width: 100%; /* Adiciona largura total ao botão */
+  width: 100%;
 }
 
 .form-container button[type="submit"]:hover {
@@ -904,70 +923,61 @@ header {
   cursor: grab;
 }
 
-.kanban-item p {
-  margin: 0.5rem 0;
-}
-
-.kanban-column h3.bg-secondary {
-  --bs-bg-opacity: 1;
-  background-color: #808285 !important; /* Alteração aqui */
-}
-
-.kanban-column h3.bg-danger {
-  background-color: #dc3545;
-}
-
-.kanban-column h3.bg-primary {
-  background-color: #007bff;
-}
-
-.kanban-column h3.bg-success {
-  background-color: #28a745;
-}
-
 /* Layout principal */
 .d-flex {
   display: flex;
 }
 
+/* Responsividade para o layout */
+@media (max-width: 1024px) {
+  .kanban-column {
+    width: 48%; /* Ajusta para duas colunas em tablets */
+  }
+}
+
+@media (max-width: 768px) {
+  .d-flex {
+    flex-direction: column; /* Empilha os elementos em telas menores */
+  }
+
+  .kanban-column {
+    width: 100%; /* Coluna única em dispositivos móveis */
+  }
+
+  .table-container {
+    padding: 1rem;
+  }
+
+  .form-container {
+    padding: 1rem;
+  }
+}
+
+/* Menu Hambúrguer */
+.hamburger {
+  display: none;
+  cursor: pointer;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1100;
+}
+
+.hamburger div {
+  width: 30px;
+  height: 4px;
+  background-color: white;
+  margin: 6px 0;
+  transition: 0.4s;
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+}
 .bg-secondary {
-  --bs-bg-opacity: 1;
-  background-color: #0d6efd !important;
+    --bs-bg-opacity: 1;
+    background-color: #0d6efd !important;
 }
-
-/* Estilos adicionais para botões e campos de entrada */
-.button,
-input,
-optgroup,
-select,
-textarea {
-  font-family: inherit;
-  line-height: inherit;
-}
-
-.btn[data-v-6dec5f19] {
-  margin: 5px;
-  font-size: 0.9rem;
-}
-.radio-group {
-  display:flex;
-  flex-direction:row; /* Alinha os itens verticalmente */
-}
-
-.radio-group input[type="radio"] {
-  margin-right: 0.5rem; /* Espaçamento entre o botão de rádio e o rótulo */
-  align-self: flex-start; /* Alinha os botões de rádio ao início */
-}
-
-.radio-group label {
-  display: flex; /* Torna o rótulo um flex container */
-  align-items: center; /* Alinha verticalmente o texto com o botão de rádio */
-  margin-bottom: 0.5rem; /* Espaçamento entre os rótulos */
-}
-.sidebar .nav-link.active {
-  background-color: #0056b3; /* Cor de fundo quando selecionado */
-  color: #ffffff; /* Cor do texto quando selecionado */
-}
-
 </style>
-
