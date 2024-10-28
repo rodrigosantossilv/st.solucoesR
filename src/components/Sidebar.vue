@@ -531,6 +531,26 @@ mostrarTabela() {
       console.log(chamado);
     },
     async drop(event) {
+     const pendentes = document.getElementById("Pendentes")
+     const Analise = document.getElementById("Análise")
+     const concluidos = document.getElementById("Concluido")
+     const andamento = document.getElementById("Em Andamento")
+     debugger
+let status = ''
+
+     if (pendentes=== event.target || pendentes.contains(event.target)) {
+      status = 'Pendentes'
+    } else if (Analise === event.target || Analise.contains(event.target)) {
+      status = 'Análise'
+    } else if (concluidos === event.target || concluidos.contains(event.target)) {
+      status = 'Concluido'
+    } else if (andamento === event.target || andamento.contains(event.target)) {
+      status = 'Em Andamento'
+      
+    }
+  
+    
+
       event.preventDefault();
       const chamado = JSON.parse(event.dataTransfer.getData("chamado"));
 
@@ -545,7 +565,7 @@ mostrarTabela() {
         return;
       }
 
-      chamado.status = event.target.id;
+      chamado.status = status ;
       console.log(event.target.id);
       debugger
       const token = localStorage.getItem("token");
