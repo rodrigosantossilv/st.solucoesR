@@ -259,218 +259,233 @@
 
 
         <!-- TABELAS DO KANBAN-->
-
         <div
-          v-show="mostrarTodosChamados || categoriaVisivel === 'Analise'"
-          id="Análise"
-          class="kanban-column"
-          @drop="drop($event)"
-          @dragover="allowDrop($event)"
-        >
-          <h3 class="kanban-header bg-secondary text-white p-2 text-center">
-            Analise
-          </h3>
-          <div
-            v-for="chamado in chamadosAnalise"
-            :key="chamado.id"
-            :id="chamado.id"
-            class="kanban-item bg-light p-3 my-2"
-            draggable="true"
-            @dragstart="drag($event, chamado)"
-          >
-            <p>
-              <strong>{{ chamado.problema_id }}</strong>
-            </p>
-            <p>
-              <em>Responsável: {{ chamado.usuario_id }}</em>
-            </p>
-            <div class="tags"></div>
-          </div>
-        </div>
-
+        v-show="mostrarTodosChamados || categoriaVisivel === 'Analise'"
+        id="Análise"
+        class="kanban-column"
+        @drop="drop($event)"
+        @dragover="allowDrop($event)"
+      >
+        <h3 class="kanban-header bg-secondary text-white p-2 text-center">
+          Analise
+        </h3>
         <div
-          v-show="mostrarTodosChamados || categoriaVisivel === 'Pendente'"
-          id="Pendentes"
-          class="kanban-column"
-          @drop="drop($event)"
-          @dragover="allowDrop($event)"
+          v-for="chamado in chamadosAnalise"
+          :key="chamado.id"
+          :id="chamado.id"
+          class="kanban-item bg-light p-3 my-2"
+          draggable="true"
+          @dragstart="drag($event, chamado)"
         >
-          <h3 class="kanban-header bg-danger text-white p-2 text-center">
-            Pendente
-          </h3>
-          <div
-            v-for="chamado in chamadosPendentes"
-            :key="chamado.id"
-            class="kanban-item bg-light p-3 my-2"
-            draggable="true"
-            @dragstart="drag($event, chamado)"
-          >
-            <p>
-              <strong>{{ chamado.problema_id }}</strong>
-            </p>
-            <p>
-              <em>Responsável: {{ chamado.usuario_id }}</em>
-            </p>
-          </div>
-        </div>
+          <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
+          <p><em>Email:</em> {{ chamado.email_usuario }}</p>
+          <p><em>Problema:</em> {{ chamado.problema }}</p>
+          <p><em>Descrição:</em> {{ chamado.descricao }}</p>
+          <p><em>Bloco:</em> {{ chamado.bloco }}</p>
+          <p><em>Sala:</em> {{ chamado.sala }}</p>
+          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
 
+          <div class="tags"></div>
+        </div>
+      </div>
+
+      <div
+        v-show="mostrarTodosChamados || categoriaVisivel === 'Pendente'"
+        id="Pendentes"
+        class="kanban-column"
+        @drop="drop($event)"
+        @dragover="allowDrop($event)"
+      >
+        <h3 class="kanban-header bg-danger text-white p-2 text-center">
+          Pendente
+        </h3>
         <div
-          v-show="mostrarTodosChamados || categoriaVisivel === 'Andamento'"
-          id="Em Andamento"
-          class="kanban-column"
-          @drop="drop($event)"
-          @dragover="allowDrop($event)"
+          v-for="chamado in chamadosPendentes"
+          :key="chamado.id"
+          class="kanban-item bg-light p-3 my-2"
+          draggable="true"
+          @dragstart="drag($event, chamado)"
         >
-          <h3 class="kanban-header bg-primary text-white p-2 text-center">
-            Andamento
-          </h3>
-          <div
-            v-for="chamado in chamadosAndamento"
-            :key="chamado.id"
-            class="kanban-item bg-light p-3 my-2"
-            draggable="true"
-            @dragstart="drag($event, chamado)"
-          >
-            <p>
-              <strong>{{ chamado.problema_id }}</strong>
-            </p>
-            <p>
-              <em>Responsável: {{ chamado.usuario_id }}</em>
-            </p>
-          </div>
-        </div>
+          <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
+          <p><em>Email:</em> {{ chamado.email_usuario }}</p>
+          <p><em>Problema:</em> {{ chamado.problema }}</p>
+          <p><em>Descrição:</em> {{ chamado.descricao }}</p>
+          <p><em>Bloco:</em> {{ chamado.bloco }}</p>
+          <p><em>Sala:</em> {{ chamado.sala }}</p>
+          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
 
+        </div>
+      </div>
+
+      <div
+        v-show="mostrarTodosChamados || categoriaVisivel === 'Andamento'"
+        id="Em Andamento"
+        class="kanban-column"
+        @drop="drop($event)"
+        @dragover="allowDrop($event)"
+      >
+        <h3 class="kanban-header bg-primary text-white p-2 text-center">
+          Andamento
+        </h3>
         <div
-          v-show="mostrarTodosChamados || categoriaVisivel === 'Concluído'"
-          id="Concluido"
-          class="kanban-column"
-          @drop="drop($event)"
-          @dragover="allowDrop($event)"
+          v-for="chamado in chamadosAndamento"
+          :key="chamado.id"
+          class="kanban-item bg-light p-3 my-2"
+          draggable="true"
+          @dragstart="drag($event, chamado)"
         >
-          <h3 class="kanban-header bg-success text-white p-2 text-center">
-            Concluído
-          </h3>
-          <div
-            v-for="chamado in chamadosConcluidos"
-            :key="chamado.id"
-            class="kanban-item bg-light p-3 my-2"
-            draggable="true"
-            @dragstart="drag($event, chamado)"
-          >
-            <p>
-              <strong>{{ chamado.problema_id }}</strong>
-            </p>
-            <p>
-              <em>Responsável: {{ chamado.usuario_id }}</em>
-            </p>
-          </div>
+          <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
+          <p><em>Email:</em> {{ chamado.email_usuario }}</p>
+          <p><em>Problema:</em> {{ chamado.problema }}</p>
+          <p><em>Descrição:</em> {{ chamado.descricao }}</p>
+          <p><em>Bloco:</em> {{ chamado.bloco }}</p>
+          <p><em>Sala:</em> {{ chamado.sala }}</p>
+          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
+
         </div>
+      </div>
 
-        <!-- TABELAS DO KANBAN mostrarChamadosManutençao  -->
-
+      <div
+        v-show="mostrarTodosChamados || categoriaVisivel === 'Concluído'"
+        id="Concluido"
+        class="kanban-column"
+        @drop="drop($event)"
+        @dragover="allowDrop($event)"
+      >
+        <h3 class="kanban-header bg-success text-white p-2 text-center">
+          Concluído
+        </h3>
         <div
-          v-show="mostrarChamadosManutençao || categoriaVisivel === 'Analise'"
-          id="Análise"
-          class="kanban-column"
-          @drop="drop($event)"
-          @dragover="allowDrop($event)"
+          v-for="chamado in chamadosConcluidos"
+          :key="chamado.id"
+          class="kanban-item bg-light p-3 my-2"
+          draggable="true"
+          @dragstart="drag($event, chamado)"
         >
-          <h3 class="kanban-header bg-secondary text-white p-2 text-center">
-            Analise
-          </h3>
-          <div
-            v-for="chamado in chamadosAnalise"
-            :key="chamado.id"
-            class="kanban-item bg-light p-3 my-2"
-            draggable="true"
-            @dragstart="drag($event, chamado)"
-          >
-            <p>
-              <strong>{{ chamado.usuario_id }}</strong>
-            </p>
-            <p>
-              <em>Responsável: {{ chamado.problema_id }}</em>
-            </p>
-          </div>
-        </div>
+          <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
+          <p><em>Email:</em> {{ chamado.email_usuario }}</p>
+          <p><em>Problema:</em> {{ chamado.problema }}</p>
+          <p><em>Descrição:</em> {{ chamado.descricao }}</p>
+          <p><em>Bloco:</em> {{ chamado.bloco }}</p>
+          <p><em>Sala:</em> {{ chamado.sala }}</p>
+          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
 
-        <div
-          v-show="mostrarChamadosManutençao || categoriaVisivel === 'Pendente'"
-          id="Pendentes"
-          class="kanban-column"
-          @drop="drop($event)"
-          @dragover="allowDrop($event)"
-        >
-          <h3 class="kanban-header bg-danger text-white p-2 text-center">
-            Pendente
-          </h3>
-          <div
-            v-for="chamado in chamadosPendentes"
-            :key="chamado.id"
-            class="kanban-item bg-light p-3 my-2"
-            draggable="true"
-            @dragstart="drag($event, chamado)"
-          >
-            <p>
-              <strong>{{ chamado.problema_id }}</strong>
-            </p>
-            <p>
-              <em>Responsável: {{ chamado.usuario_id }}</em>
-            </p>
-          </div>
         </div>
+      </div>
 
-        <div
-          v-show="mostrarChamadosManutençao || categoriaVisivel === 'Andamento'"
-          id="andamento"
-          class="kanban-column"
-          @drop="drop($event)"
-          @dragover="allowDrop($event)"
-        >
-          <h3 class="kanban-header bg-primary text-white p-2 text-center">
-            Andamento
-          </h3>
-          <div
-            v-for="chamado in chamadosAndamento"
-            :key="chamado.id"
-            class="kanban-item bg-light p-3 my-2"
-            draggable="true"
-            @dragstart="drag($event, chamado)"
-          >
-            <p>
-              <strong>{{ chamado.problema_id }}</strong>
-            </p>
-            <p>
-              <em>Responsável: {{ chamado.usuario_id }}</em>
-            </p>
-          </div>
-        </div>
+      <!-- TABELAS DO KANBAN mostrarChamadosManutençao  -->
 
+      <div
+        v-show="mostrarChamadosManutençao || categoriaVisivel === 'Analise'"
+        id="Análise"
+        class="kanban-column"
+        @drop="drop($event)"
+        @dragover="allowDrop($event)"
+      >
+        <h3 class="kanban-header bg-secondary text-white p-2 text-center">
+          Analise
+        </h3>
         <div
-          v-show="mostrarChamadosManutençao || categoriaVisivel === 'Concluído'"
-          id="concluido"
-          class="kanban-column"
-          @drop="drop($event)"
-          @dragover="allowDrop($event)"
+          v-for="chamado in chamadosAnalise"
+          :key="chamado.id"
+          class="kanban-item bg-light p-3 my-2"
+          draggable="true"
+          @dragstart="drag($event, chamado)"
         >
-          <h3 class="kanban-header bg-success text-white p-2 text-center">
-            Concluído
-          </h3>
-          <div
-            v-for="chamado in chamadosConcluidos"
-            :key="chamado.id"
-            class="kanban-item bg-light p-3 my-2"
-            draggable="true"
-            @dragstart="drag($event, chamado)"
-          >
-            <p>
-              <strong>{{ chamado.problema_id }}</strong>
-            </p>
-            <p>
-              <em>Responsável: {{ chamado.usuario_id }}</em>
-            </p>
-          </div>
+          <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
+          <p><em>Email:</em> {{ chamado.email_usuario }}</p>
+          <p><em>Problema:</em> {{ chamado.problema }}</p>
+          <p><em>Descrição:</em> {{ chamado.descricao }}</p>
+          <p><em>Bloco:</em> {{ chamado.bloco }}</p>
+          <p><em>Sala:</em> {{ chamado.sala }}</p>
+          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
+
         </div>
+      </div>
+
+      <div
+        v-show="mostrarChamadosManutençao || categoriaVisivel === 'Pendente'"
+        id="Pendentes"
+        class="kanban-column"
+        @drop="drop($event)"
+        @dragover="allowDrop($event)"
+      >
+        <h3 class="kanban-header bg-danger text-white p-2 text-center">
+          Pendente
+        </h3>
+        <div
+          v-for="chamado in chamadosPendentes"
+          :key="chamado.id"
+          class="kanban-item bg-light p-3 my-2"
+          draggable="true"
+          @dragstart="drag($event, chamado)"
+        >
+          <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
+          <p><em>Email:</em> {{ chamado.email_usuario }}</p>
+          <p><em>Problema:</em> {{ chamado.problema }}</p>
+          <p><em>Descrição:</em> {{ chamado.descricao }}</p>
+          <p><em>Bloco:</em> {{ chamado.bloco }}</p>
+          <p><em>Sala:</em> {{ chamado.sala }}</p>
+          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
+
+        </div>
+      </div>
+
+      <div
+        v-show="mostrarChamadosManutençao || categoriaVisivel === 'Andamento'"
+        id="andamento"
+        class="kanban-column"
+        @drop="drop($event)"
+        @dragover="allowDrop($event)"
+      >
+        <h3 class="kanban-header bg-primary text-white p-2 text-center">
+          Andamento
+        </h3>
+        <div
+          v-for="chamado in chamadosAndamento"
+          :key="chamado.id"
+          class="kanban-item bg-light p-3 my-2"
+          draggable="true"
+          @dragstart="drag($event, chamado)"
+        >
+          <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
+          <p><em>Email:</em> {{ chamado.email_usuario }}</p>
+          <p><em>Problema:</em> {{ chamado.problema }}</p>
+          <p><em>Descrição:</em> {{ chamado.descricao }}</p>
+          <p><em>Bloco:</em> {{ chamado.bloco }}</p>
+          <p><em>Sala:</em> {{ chamado.sala }}</p>
+          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
+
+        </div>
+      </div>
+
+  <div  v-show="mostrarChamadosManutençao || categoriaVisivel === 'Concluído'"
+        id="concluido"
+        class="kanban-column"
+        @drop="drop($event)"
+        @dragover="allowDrop($event)"
+      >
+        <h3 class="kanban-header bg-success text-white p-2 text-center">
+          Concluído
+        </h3>
+        <div
+          v-for="chamado in chamadosConcluidos"
+          :key="chamado.id"
+          class="kanban-item bg-light p-3 my-2"
+          draggable="true"
+          @dragstart="drag($event, chamado)"
+        >  
+          <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
+          <p><em>Email:</em> {{ chamado.email_usuario }}</p>
+          <p><em>Problema:</em> {{ chamado.problema }}</p>
+          <p><em>Descrição:</em> {{ chamado.descricao }}</p>
+          <p><em>Bloco:</em> {{ chamado.bloco }}</p>
+          <p><em>Sala:</em> {{ chamado.sala }}</p>
+          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
+
+        </div>
+      </div>
+  
       </div>
     </div>
 
@@ -515,20 +530,24 @@ export default {
     };
   },
   methods: {
+    
     async carregarChamados() {
       try {
         const token = localStorage.getItem("token");
-        const resposta = await axios.get("http://localhost:3000/chamados", {
-          headers: {
-            Authorization: `Bearer ${token}`, // Correção aqui
-          },
+      
+        const resposta = await axios.get('http://localhost:3000/chamados', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         });
 
         this.chamados = resposta.data;
 
         this.chamadosAnalise = this.chamados.filter(
           (chamado) => chamado.status === "Análise"
+      
         );
+        
 
         this.chamadosAndamento = this.chamados.filter(
           (chamado) => chamado.status === "Em Andamento"
@@ -539,10 +558,14 @@ export default {
         this.chamadosPendentes = this.chamados.filter(
           (chamado) => chamado.status === "Pendentes"
         );
-        console.log("Chamados carregados:", this.chamados);
       } catch (erro) {
         console.error("Erro ao carregar os chamados:", erro);
       }
+    },
+    atualizarChamados() {
+      setInterval(() => {
+        this.carregarChamados();
+      },1000*60);
     },
 
     chamadosTi() {
@@ -603,6 +626,26 @@ mostrarSala() {
       event.dataTransfer.setData("chamado", JSON.stringify(chamado));
     },
     async drop(event) {
+     const pendentes = document.getElementById("Pendentes")
+     const Analise = document.getElementById("Análise")
+     const concluidos = document.getElementById("Concluido")
+     const andamento = document.getElementById("Em Andamento")
+     debugger
+let status = ''
+
+     if (pendentes=== event.target || pendentes.contains(event.target)) {
+      status = 'Pendentes'
+    } else if (Analise === event.target || Analise.contains(event.target)) {
+      status = 'Análise'
+    } else if (concluidos === event.target || concluidos.contains(event.target)) {
+      status = 'Concluido'
+    } else if (andamento === event.target || andamento.contains(event.target)) {
+      status = 'Em Andamento'
+      
+    }
+  
+    
+
       event.preventDefault();
       const chamado = JSON.parse(event.dataTransfer.getData("chamado"));
 
@@ -617,7 +660,7 @@ mostrarSala() {
         return;
       }
 
-      chamado.status = event.target.id;
+      chamado.status = status ;
       const token = localStorage.getItem("token");
       await axios.put(`http://localhost:3000/chamados/${chamado.id}`, chamado, {
         headers: {
@@ -626,7 +669,7 @@ mostrarSala() {
       });
       await this.carregarChamados();
     },
-  
+
 
     chamadosTi() {
       this.categoriaVisivel = null;
@@ -703,6 +746,8 @@ mostrarSala() {
 
   mounted() {
     this.carregarChamados();
+    this.atualizarChamados();
+
   },
 };
 </script>
