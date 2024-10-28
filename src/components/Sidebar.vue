@@ -44,38 +44,7 @@
 <!-- Tabela para cadastrar sala e mostrar salas cadastradas -->
 </div>
 <div v-if="mostrarCadastrosala" class="table-container p-3">
-  <h2>Tabela de Salas Cadastradas</h2>
-  <input 
-    type="text" 
-    placeholder="Pesquisa por nome ou bloco" 
-    class="form-control mb-3" 
-  />
-  
-  <div class="table-responsive">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Bloco</th>
-          <th>Número da sala</th>
-          <th>Nome da sala</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td data-label="Bloco">A</td>
-          <td data-label="Número da sala">23</td>
-          <td data-label="Nome da sala">Laboratório</td>
-          <td data-label="Ações">
-            <button class="btn btn-warning btn-sm">Editar</button>
-            <button class="btn btn-danger btn-sm">Remover</button>
-          </td>
-        </tr>
-        <!-- Adicione mais linhas aqui conforme necessário -->
-      </tbody>
-    </table>
-  </div>
-<!-- Formulário para cadastro de sala -->
+  <!-- Formulário para cadastro de sala -->
 <form @submit.prevent="adicionarSala" class="mb-4">
   <h2>Cadastra Salas</h2>
     <div class="form-group">
@@ -113,13 +82,49 @@
     </div>
     <button type="submit" class="btn btn-primary">Adicionar Sala</button>
   </form>
-
+  
+  <h2>Tabela de Salas Cadastradas</h2>
   <input 
     type="text" 
     placeholder="Pesquisa por nome ou bloco" 
     class="form-control mb-3" 
   />
   
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Bloco</th>
+          <th>Número da sala</th>
+          <th>Nome da sala</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Bloco">A</td>
+          <td data-label="Número da sala">23</td>
+          <td data-label="Nome da sala">Laboratório</td>
+          <td data-label="Ações">
+            <button class="btn btn-warning btn-sm">Editar</button>
+            <button class="btn btn-danger btn-sm">Remover</button>
+          </td>
+        </tr>
+        <tr>
+          <td data-label="Bloco">A</td>
+          <td data-label="Número da sala">23</td>
+          <td data-label="Nome da sala">Laboratório</td>
+          <td data-label="Ações">
+            <button class="btn btn-warning btn-sm">Editar</button>
+            <button class="btn btn-danger btn-sm">Remover</button>
+          </td>
+        </tr>
+        <!-- Adicione mais linhas aqui conforme necessário -->
+      </tbody>
+    </table>
+  </div>
+
+
 </div>
 
 
