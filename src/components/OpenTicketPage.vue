@@ -15,31 +15,58 @@
     <div class="right-side">
       <div class="login-box">
         <h2>Olá, Informe seu problema</h2>
-        <b-form-group   >
-          <b-form-select v-model="problema" id="problema" @change="updateProblemas($event)">
+        <b-form-group>
+          <b-form-select
+            v-model="problema"
+            id="problema"
+            @change="updateProblemas($event)"
+          >
             <option value="" disabled>Selecione um problema</option>
-            <option v-for="(problema, index) in problemas" :key="index" :value="problema.id">
+            <option
+              v-for="(problema, index) in problemas"
+              :key="index"
+              :value="problema.id"
+            >
               {{ problema.descricao }}
             </option>
           </b-form-select>
         </b-form-group>
 
-        <b-form-group v-if="
-          problemas.some((p) => p.descricao === 'outros'&& p.id === problema)	
-        " label="Descreva o problema específico" label-for="descricaoProblema">
-          <b-form-input v-model="descricaoProblema" id="descricaoProblema"
-            placeholder="Digite mais detalhes sobre o problema"></b-form-input>
+        <b-form-group
+          v-if="
+            problemas.some((p) => p.descricao === 'outros' && p.id === problema)
+          "
+          label="Descreva o problema específico"
+          label-for="descricaoProblema"
+        >
+          <b-form-input
+            v-model="descricaoProblema"
+            id="descricaoProblema"
+            placeholder="Digite mais detalhes sobre o problema"
+          ></b-form-input>
         </b-form-group>
         <b-form-group label="Bloco da sala*" label-for="blocodasala">
-          <b-form-select v-model="blocodaSala" id="blocodasala" @change="updateSalas($event)">
+          <b-form-select
+            v-model="blocodaSala"
+            id="blocodasala"
+            @change="updateSalas($event)"
+          >
             <option value="" disabled>Selecione um Bloco da sala</option>
-            <option v-for="(bloco, index) in blocos" :key="index" :value="bloco.id">
+            <option
+              v-for="(bloco, index) in blocos"
+              :key="index"
+              :value="bloco.id"
+            >
               {{ bloco.nome_bloco }}
             </option>
           </b-form-select>
         </b-form-group>
 
-        <b-form-group v-if="blocodaSala" label="Selecionar sala*" label-for="sala">
+        <b-form-group
+          v-if="blocodaSala"
+          label="Selecionar sala*"
+          label-for="sala"
+        >
           <b-form-select v-model="numerodaSala" id="sala">
             <option value="" disabled>Selecione a Sala</option>
             <option v-for="sala in salas" :key="sala.id" :value="sala.id">
@@ -52,24 +79,35 @@
           Relatar Problema
         </b-button>
         <div class="text-center mt-3">
-          <router-link to="/" class="btn btn-link">Voltar à página inicial</router-link>
+          <router-link to="/" class="btn btn-link"
+            >Voltar à página inicial</router-link
+          >
         </div>
       </div>
+      <div>
 
-      <div v-if="mostrarSelecionarLugar" class="lugar-selection">
-        <h2>Escolha o seu lugar</h2>
-        <div class="sala">
-          <div v-for="lugar in lugares" :key="lugar.id" class="lugar" :class="{ selecionado: lugar.selecionado }"
-            @click="toggleSelecao(lugar.id)" :style="{ gridColumn: lugar.coluna, gridRow: lugar.fileira }">
-            {{ lugar.fileira }}-{{ lugar.coluna }}
-          </div>
-        </div>
-        <button class="btn-submit" @click="confirmarSelecao">
-          Confirmar Seleção
-        </button>
+<div class="room-selection"  v-if="problemas.some(p => (p.descricao === 'Computadores e Periféricos' || p.descricao === 'Softwares e Programas Específicos') && (p.id === problema))"
+>
+    <h2>Selecione as Salas</h2>
+    <div class="rooms-grid">
+      <div
+        class="room-card"
+        v-for="room in rooms"
+        :key="room"
+        @click="toggleRoomSelection(room)"
+        :class="{ selected: selectedRooms.includes(room) }"
+      >
+        Maquina {{ room }}
       </div>
+    </div>
 
-      
+
+    
+  </div>
+
+</div>
+
+
     </div>
   </div>
 </template>
@@ -79,8 +117,9 @@ import Swal from "sweetalert2";
 import axios from "axios";
 export default {
   data() {
-
     return {
+      rooms: Array.from({ length: 50 }, (_, i) => i + 1), // Gera um array de 1 a 50
+      selectedRooms: [],   
       problema: "",
       problemas: [],
       blocodaSala: "",
@@ -90,7 +129,7 @@ export default {
       descricaoProblema: "",
       lugares: [], // Adicione os lugares disponíveis para seleção
       mostrarSelecionarLugar: false, // Controle da exibição da seleção de lugares
-      lugarSelecionado: "", // Armazena o lugar selecionado
+      maquinas: "", // Armazena o lugar selecionado
     };
   },
   mounted() {
@@ -116,11 +155,23 @@ export default {
           Swal.fire("Erro", "Não foi possível carregar os blocos.", "error");
         });
     },
+    toggleRoomSelection(room) {
+      const index = this.selectedRooms.indexOf(room);
+      if (index === -1) {
+        this.selectedRooms.push(room); // Adiciona a sala se não estiver selecionada
+      } else {
+        this.selectedRooms.splice(index, 1); // Remove a sala se já estiver selecionada
+      }
+    },
+ 
+  
+
 
     async exibirProblema() {
       const token = localStorage.getItem("token");
       try {
-        const response = await axios.get("http://localhost:3000/problemas",
+        const response = await axios.get(
+          "http://localhost:3000/problemas",
 
           {
             headers: {
@@ -139,6 +190,9 @@ export default {
         Swal.fire("Erro", "Não foi possível exibir o problema.", "error");
       }
     },
+    toggleSelecao(lugarId) {
+      this.maquina = lugarId;
+    },
 
     updateSalas(value) {
       const blocodaSala = value;
@@ -153,10 +207,11 @@ export default {
     async cadastrarChamado() {
       const token = localStorage.getItem("token");
       const chamado = {
-        problema_id: this.problema, 
+        problema_id: this.problema,
         bloco_id: this.blocodaSala,
         sala_id: this.numerodaSala,
         descricao: this.descricaoProblema,
+        maquinas: this.selectedRooms,
       };
 
       try {
@@ -238,7 +293,7 @@ html {
 /* Container de registro */
 .login-container {
   display: flex;
-  height: 100vh;
+ min-height: 100vh;
   position: relative;
   /* Necessário para a posição absoluta das bolhas */
 }
@@ -438,4 +493,97 @@ html {
     opacity: 0;
   }
 }
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 5px; /* Espaçamento entre as células */
+}
+
+td {
+    text-align: center;
+    border: 1px solid #ccc;
+    height: 50px; /* Altura mínima para os lugares */
+    background: #f0f0f0; /* Cor de fundo dos lugares */
+}
+
+.lugar {
+    background: #f0f0f0; /* Cor de fundo para as células dos lugares */
+}
+
+.maquina {
+    background: #e0e0e0; /* Cor de fundo para a célula "Máquina" */
+    font-weight: bold; /* Texto em negrito */
+}
+
+.separacao {
+    width: 10px; /* Largura da separação */
+    background-color: transparent; /* Espaço vazio */
+}
+.room-selection {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9;
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+}
+
+.rooms-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 colunas */
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.room-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border: 1px solid #007bff;
+  border-radius: 8px;
+  background-color: #e9f7fe;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.room-card:hover {
+  background-color: #cce4ff;
+  transform: scale(1.05);
+}
+
+.room-card.selected {
+  background-color: #007bff;
+  color: white;
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  width: 100%;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.selected-rooms {
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid #007bff;
+  border-radius: 5px;
+  background-color: #e9f7fe;
+}
+
 </style>

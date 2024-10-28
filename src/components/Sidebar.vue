@@ -191,6 +191,8 @@
           <p><em>Descrição:</em> {{ chamado.descricao }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
           <p><em>Sala:</em> {{ chamado.sala }}</p>
+          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
+
           <div class="tags"></div>
         </div>
       </div>
@@ -218,6 +220,8 @@
           <p><em>Descrição:</em> {{ chamado.descricao }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
           <p><em>Sala:</em> {{ chamado.sala }}</p>
+          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
+
         </div>
       </div>
 
@@ -244,6 +248,8 @@
           <p><em>Descrição:</em> {{ chamado.descricao }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
           <p><em>Sala:</em> {{ chamado.sala }}</p>
+          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
+
         </div>
       </div>
 
@@ -270,6 +276,8 @@
           <p><em>Descrição:</em> {{ chamado.descricao }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
           <p><em>Sala:</em> {{ chamado.sala }}</p>
+          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
+
         </div>
       </div>
 
@@ -298,6 +306,8 @@
           <p><em>Descrição:</em> {{ chamado.descricao }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
           <p><em>Sala:</em> {{ chamado.sala }}</p>
+          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
+
         </div>
       </div>
 
@@ -324,6 +334,8 @@
           <p><em>Descrição:</em> {{ chamado.descricao }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
           <p><em>Sala:</em> {{ chamado.sala }}</p>
+          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
+
         </div>
       </div>
 
@@ -350,6 +362,8 @@
           <p><em>Descrição:</em> {{ chamado.descricao }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
           <p><em>Sala:</em> {{ chamado.sala }}</p>
+          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
+
         </div>
       </div>
 
@@ -376,6 +390,8 @@
           <p><em>Descrição:</em> {{ chamado.descricao }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
           <p><em>Sala:</em> {{ chamado.sala }}</p>
+          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
+
         </div>
       </div>
     </div>
@@ -420,7 +436,8 @@ export default {
     };
   },
   methods: {
-    async carregarChamados() {
+
+     async carregarChamados() {
       try {
         const token = localStorage.getItem("token");
       
@@ -433,8 +450,12 @@ export default {
         this.chamados = resposta.data;
 
         this.chamadosAnalise = this.chamados.filter(
-          (chamado) => chamado.status === "Análise"
+          (chamado) =>{console.log( chamado.status , "Análise") 
+          return chamado.status === "Análise"
+      }
         );
+        
+        console.log(this.chamadosAnalise);
 
         this.chamadosAndamento = this.chamados.filter(
           (chamado) => chamado.status === "Em Andamento"
@@ -449,6 +470,11 @@ export default {
       } catch (erro) {
         console.error("Erro ao carregar os chamados:", erro);
       }
+    },
+    atualizarChamados() {
+      setInterval(() => {
+        this.carregarChamados();
+      },1000*60);
     },
 
     chamadosTi() {
