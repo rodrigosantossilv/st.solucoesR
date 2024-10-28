@@ -415,10 +415,11 @@ export default {
     async carregarChamados() {
       try {
         const token = localStorage.getItem("token");
-        const resposta = await axios.get("http://localhost:3000/chamados", {
-          headers: {
-            Authorization: `Bearer ${token}`, // Correção aqui
-          },
+      
+        const resposta = await axios.get('http://localhost:3000/chamados', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         });
 
         this.chamados = resposta.data;
