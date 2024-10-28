@@ -367,8 +367,7 @@
         </div>
       </div>
 
-      <div
-        v-show="mostrarChamadosManutençao || categoriaVisivel === 'Concluído'"
+  <div  v-show="mostrarChamadosManutençao || categoriaVisivel === 'Concluído'"
         id="concluido"
         class="kanban-column"
         @drop="drop($event)"
@@ -383,7 +382,7 @@
           class="kanban-item bg-light p-3 my-2"
           draggable="true"
           @dragstart="drag($event, chamado)"
-        >
+        >  
           <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
           <p><em>Email:</em> {{ chamado.email_usuario }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
@@ -450,12 +449,10 @@ export default {
         this.chamados = resposta.data;
 
         this.chamadosAnalise = this.chamados.filter(
-          (chamado) =>{console.log( chamado.status , "Análise") 
-          return chamado.status === "Análise"
-      }
+          (chamado) => chamado.status === "Análise"
+      
         );
         
-        console.log(this.chamadosAnalise);
 
         this.chamadosAndamento = this.chamados.filter(
           (chamado) => chamado.status === "Em Andamento"
@@ -466,7 +463,6 @@ export default {
         this.chamadosPendentes = this.chamados.filter(
           (chamado) => chamado.status === "Pendentes"
         );
-        console.log("Chamados carregados:", this.chamados);
       } catch (erro) {
         console.error("Erro ao carregar os chamados:", erro);
       }
@@ -532,6 +528,7 @@ mostrarTabela() {
     },
     drag(event, chamado) {
       event.dataTransfer.setData("chamado", JSON.stringify(chamado));
+      console.log(chamado);
     },
     async drop(event) {
       event.preventDefault();
@@ -549,6 +546,8 @@ mostrarTabela() {
       }
 
       chamado.status = event.target.id;
+      console.log(event.target.id);
+      debugger
       const token = localStorage.getItem("token");
       await axios.put(`http://localhost:3000/chamados/${chamado.id}`, chamado, {
         headers: {
@@ -633,8 +632,11 @@ mostrarTabela() {
 
   mounted() {
     this.carregarChamados();
+   this.atualizarChamados();
   },
+  
 };
+
 </script>
 
 
