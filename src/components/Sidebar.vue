@@ -41,16 +41,19 @@
             >
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white" @click="mostrarSala" href="#"
-              >Adicionar Salas</a
-            >
-          </li>
+  <a class="nav-link text-white" @click="mostrarSala" href="#">
+    Adicionar Salas
+  </a>
+</li>
         </ul>
       </div>
 
-      <!-- Tabela para cadastrar sala e mostra salas cadastradas-->
+        <!-- Tabela para cadastrar sala e mostra salas cadastradas-->
 
-      <!-- Tabela Alunos-->
+
+
+        
+    <!-- Tabela Alunos-->
       <div v-if="mostrarTabelaExibida" class="table-container p-3">
         <h2>Tabela de Usuários</h2>
         <input
@@ -397,7 +400,7 @@ export default {
       mostrarTodosChamados: true,
       mostrarFormulario: false,
       mostrarChamadosManutençao: false,
-      mostrarTabelaExibida: false,
+      mostrarTabelaExibida: false, 
       mostrarTabelaSala: false,
 
       novoAluno: {
@@ -409,6 +412,11 @@ export default {
         confirmarSenha: "",
         tipoUsuario: "",
       },
+      novoSala: {
+      bloco: '', // ou algum valor inicial
+      numerodasala:'',
+      nomedasala:''
+    },
     };
   },
   methods: {
@@ -444,47 +452,48 @@ export default {
     },
 
     chamadosTi() {
-      this.categoriaVisivel = null;
-      this.mostrarTabelaExibida = false;
-      this.mostrarTodosChamados = true;
-      this.mostrarFormulario = false;
-      this.mostrarChamadosManutençao = false;
-      this.mostrarTabelaSala = false;
-    },
+  this.categoriaVisivel = null;
+  this.mostrarTabelaExibida = false;
+  this.mostrarTodosChamados = true;
+  this.mostrarFormulario = false;
+  this.mostrarChamadosManutençao = false;
+  this.mostrarTabelaSala = false;
+},
 
-    chamadosManuntencao() {
-      this.categoriaVisivel = null;
-      this.mostrarTodosChamados = false;
-      this.mostrarChamadosManutençao = true;
-      this.mostrarFormulario = false;
-      this.mostrarTabelaExibida = false;
-      this.mostrarTabelaSala = false;
-    },
+chamadosManuntencao() {
+  this.categoriaVisivel = null;
+  this.mostrarTodosChamados = false;
+  this.mostrarChamadosManutençao = true;
+  this.mostrarFormulario = false;
+  this.mostrarTabelaExibida = false;
+  this.mostrarTabelaSala = false;
+},
 
-    mostrarCadastro() {
-      this.mostrarFormulario = true;
-      this.categoriaVisivel = null;
-      this.mostrarTodosChamados = false;
-      this.mostrarTabelaExibida = false;
-      this.mostrarChamadosManutençao = false;
-      this.mostrarTabelaSala = false;
-    },
+mostrarCadastro() {
+  this.mostrarFormulario = true;
+  this.categoriaVisivel = null;
+  this.mostrarTodosChamados = false;
+  this.mostrarTabelaExibida = false;
+  this.mostrarChamadosManutençao = false;
+  this.mostrarTabelaSala = false;
+},
 
-    mostrarTabela() {
-      this.categoriaVisivel = null;
-      this.mostrarTabelaExibida = true;
-      this.mostrarChamadosManutençao = false;
-      this.mostrarTodosChamados = false;
-      this.mostrarFormulario = false;
-      this.mostrarTabelaSala = false;
-    },
-    mostrarSala() {
-      (this.categoriaVisivel = null), (this.mostrarTabelaSala = true);
-      this.mostrarChamadosManutençao = false;
-      this.mostrarFormulario = false;
-      this.mostrarTodosChamados = false;
-      this.mostrarTabelaExibida = false;
-    },
+mostrarTabela() {
+  this.categoriaVisivel = null;
+  this.mostrarTabelaExibida = true;
+  this.mostrarChamadosManutençao = false;
+  this.mostrarTodosChamados = false;
+  this.mostrarFormulario = false;
+  this.mostrarTabelaSala = false;
+},
+  mostrarSala(){
+    this.categoriaVisivel = null,
+    this.mostrarTabelaSala = true;
+    this.mostrarChamadosManutençao = false;
+    this.mostrarFormulario = false;
+    this.mostrarTodosChamados = false;
+    this.mostrarTabelaExibida = false;
+  },
     editarAluno(id) {
       // Lógica para editar o aluno
       console.log("Editar aluno com ID:", id);
@@ -529,6 +538,8 @@ export default {
       this.mostrarFormulario = false; // Esconde o formulário
       this.mostrarTabelaExibida = false;
       this.mostrarTabelaSala = false;
+
+
     },
     chamadosManuntencao() {
       this.categoriaVisivel = null;
@@ -536,6 +547,8 @@ export default {
       this.mostrarFormulario = false; // Esconde o formulário
       this.mostrarTabelaExibida = false;
       this.mostrarTabelaSala = false;
+
+
     },
     mostrarCadastro() {
       this.mostrarFormulario = true; // Mostra o formulário
@@ -543,6 +556,8 @@ export default {
       this.mostrarTodosChamados = false; // Esconde todos os itens
       this.mostrarTabelaExibida = false;
       this.mostrarTabelaSala = false;
+
+
     },
 
     allowDrop(event) {
@@ -777,4 +792,6 @@ html {
 }
 
 /* css da tabela */
+
+
 </style>
