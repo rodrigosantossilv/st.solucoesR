@@ -284,7 +284,7 @@
     <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
     <p><em>Email:</em> {{ chamado.email_usuario }}</p>
     <p><em>Problema:</em> {{ chamado.problema }}</p>
-    <p><em>Descrição:</em> {{ chamado.descricao }}</p>
+    <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
     <p><em>Bloco:</em> {{ chamado.bloco }}</p>
     <p><em>Sala:</em> {{ chamado.sala }}</p>
     <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join(", ") }}</p>
@@ -314,7 +314,7 @@
           <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
           <p><em>Email:</em> {{ chamado.email_usuario }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
-          <p><em>Descrição:</em> {{ chamado.descricao }}</p>
+          <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
           <p><em>Sala:</em> {{ chamado.sala }}</p>
           <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
@@ -342,7 +342,7 @@
           <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
           <p><em>Email:</em> {{ chamado.email_usuario }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
-          <p><em>Descrição:</em> {{ chamado.descricao }}</p>
+          <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
           <p><em>Sala:</em> {{ chamado.sala }}</p>
           <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
@@ -370,7 +370,7 @@
           <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
           <p><em>Email:</em> {{ chamado.email_usuario }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
-          <p><em>Descrição:</em> {{ chamado.descricao }}</p>
+          <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
           <p><em>Sala:</em> {{ chamado.sala }}</p>
           <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
@@ -400,7 +400,7 @@
           <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
           <p><em>Email:</em> {{ chamado.email_usuario }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
-          <p><em>Descrição:</em> {{ chamado.descricao }}</p>
+          <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
           <p><em>Sala:</em> {{ chamado.sala }}</p>
           <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
@@ -428,7 +428,7 @@
           <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
           <p><em>Email:</em> {{ chamado.email_usuario }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
-          <p><em>Descrição:</em> {{ chamado.descricao }}</p>
+          <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
           <p><em>Sala:</em> {{ chamado.sala }}</p>
           <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
@@ -456,7 +456,7 @@
           <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
           <p><em>Email:</em> {{ chamado.email_usuario }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
-          <p><em>Descrição:</em> {{ chamado.descricao }}</p>
+          <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
           <p><em>Sala:</em> {{ chamado.sala }}</p>
           <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
@@ -483,7 +483,7 @@
           <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
           <p><em>Email:</em> {{ chamado.email_usuario }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
-          <p><em>Descrição:</em> {{ chamado.descricao }}</p>
+          <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
           <p><em>Sala:</em> {{ chamado.sala }}</p>
           <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
