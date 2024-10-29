@@ -1004,4 +1004,22 @@ header {
     --bs-bg-opacity: 1;
     background-color: #0d6efd !important;
 }
+.form-group {
+  margin-bottom: 15px;
+}
+
+.radio-group {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.radio-group input {
+  margin-right: 5px;
+}
+
+.radio-group label {
+  margin-right: 15px;
+}
+
 </style>
