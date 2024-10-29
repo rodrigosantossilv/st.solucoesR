@@ -31,20 +31,18 @@
             </option>
           </b-form-select>
         </b-form-group>
-
         <b-form-group
-          v-if="
-            problemas.some((p) => p.descricao === 'outros' && p.id === problema)
-          "
-          label="Descreva o problema específico"
-          label-for="descricaoProblema"
-        >
-          <b-form-input
-            v-model="descricaoProblema"
-            id="descricaoProblema"
-            placeholder="Digite mais detalhes sobre o problema"
-          ></b-form-input>
-        </b-form-group>
+  v-if="problemas.some(p => (p.descricao === 'outros' || p.descricao === 'Computadores e Periféricos' || p.descricao === 'Softwares e Programas Específicos') && (p.id === problema))"
+  label="Descreva o problema específico"
+  label-for="descricaoProblema"
+>
+  <b-form-input
+    v-model="descricaoProblema"
+    id="descricaoProblema"
+    placeholder="Digite mais detalhes sobre o problema"
+  ></b-form-input>
+</b-form-group>
+
         <b-form-group label="Bloco da sala*" label-for="blocodasala">
           <b-form-select
             v-model="blocodaSala"
