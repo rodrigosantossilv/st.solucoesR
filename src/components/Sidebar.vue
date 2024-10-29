@@ -264,34 +264,35 @@
 
         <!-- TABELAS DO KANBAN-->
         <div
-        v-show="mostrarTodosChamados || categoriaVisivel === 'Analise'"
-        id="Análise"
-        class="kanban-column"
-        @drop="drop($event)"
-        @dragover="allowDrop($event)"
-      >
-        <h3 class="kanban-header bg-secondary text-white p-2 text-center">
-          Analise
-        </h3>
-        <div
-          v-for="chamado in chamadosAnalise"
-          :key="chamado.id"
-          :id="chamado.id"
-          class="kanban-item bg-light p-3 my-2"
-          draggable="true"
-          @dragstart="drag($event, chamado)"
-        >
-          <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
-          <p><em>Email:</em> {{ chamado.email_usuario }}</p>
-          <p><em>Problema:</em> {{ chamado.problema }}</p>
-          <p><em>Descrição:</em> {{ chamado.descricao }}</p>
-          <p><em>Bloco:</em> {{ chamado.bloco }}</p>
-          <p><em>Sala:</em> {{ chamado.sala }}</p>
-          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
+  v-show="mostrarTodosChamados || categoriaVisivel === 'Analise'"
+  id="Análise"
+  class="kanban-column"
+  @drop="drop($event)"
+  @dragover="allowDrop($event)"
+>
+  <h3 class="kanban-header bg-secondary text-white p-2 text-center">
+    Analise
+  </h3>
+  <div
+    v-for="chamado in chamadosAnalise"
+    :key="chamado.id"
+    :id="chamado.id"
+    class="kanban-item bg-light p-3 my-2"
+    draggable="true"
+    @dragstart="drag($event, chamado)"
+  >
+    <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
+    <p><em>Email:</em> {{ chamado.email_usuario }}</p>
+    <p><em>Problema:</em> {{ chamado.problema }}</p>
+    <p><em>Descrição:</em> {{ chamado.descricao }}</p>
+    <p><em>Bloco:</em> {{ chamado.bloco }}</p>
+    <p><em>Sala:</em> {{ chamado.sala }}</p>
+    <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join(", ") }}</p>
+    <button class="btn btn-danger btn-sm" @click="confirmarRemocao(chamado.id)">Remover</button>
 
-          <div class="tags"></div>
-        </div>
-      </div>
+    <div class="tags"></div>
+  </div>
+</div>
 
       <div
         v-show="mostrarTodosChamados || categoriaVisivel === 'Pendente'"
@@ -373,7 +374,7 @@
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
           <p><em>Sala:</em> {{ chamado.sala }}</p>
           <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
-
+          <button class="btn btn-danger btn-sm" @click="confirmarRemocao(chamado.id)">Remover</button>
         </div>
       </div>
 
@@ -536,6 +537,29 @@ export default {
   },
   methods: {
     
+  methods: {
+    confirmarRemocao(id) {
+      Swal.fire({
+        title: 'Tem certeza que deseja deletar?',
+        text: "Esta ação não pode ser desfeita!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sim, deletar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.deletarChamado(id);
+        }
+      });
+    },
+    deletarChamado(id) {
+      // Lógica para remover o chamado do array `chamadosAnalise`
+      this.chamadosAnalise = this.chamadosAnalise.filter(chamado => chamado.id !== id);
+      Swal.fire('Deletado!', 'O chamado foi removido.', 'success');
+    }
+  },
     async carregarChamados() {
       try {
         const token = localStorage.getItem("token");
