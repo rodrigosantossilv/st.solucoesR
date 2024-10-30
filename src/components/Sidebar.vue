@@ -14,10 +14,14 @@
             <a class="nav-link text-white" @click="home" href="#">Home </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white" @click="chamadosTi" href="#"
-              >Chamados Ti</a
-            >
-          </li>
+  <select class="form-select text-white bg-dark" aria-label="Chamados Ti" @click="chamadosTi">
+    <option selected>Chamados Ti</option>
+    <option value="1">Alunos</option>
+    <option value="2">Docentes</option>
+    <option value="3">terceiros</option>
+  </select>
+</li>
+
           <li class="nav-item">
             <a class="nav-link text-white" @click="chamadosManuntencao" href="#"
               >Chamados Manuntencao</a
@@ -1022,4 +1026,30 @@ header {
   margin-right: 15px;
 }
 
+/* Menu Lateral com opçoes */
+.bg-dark {
+    --bs-bg-opacity: 1;
+    background-color: #0d6efd !important;
+}
+.form-select {
+    --bs-form-select-bg-img: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e);
+    display: block;
+    width: 100%;
+    padding: .375rem 2.25rem .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--bs-body-color);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: var(--bs-body-bg);
+    background-image: var(--bs-form-select-bg-img), var(--bs-form-select-bg-icon, none);
+    background-repeat: no-repeat;
+    background-position: right .75rem center;
+    background-size: 16px 12px;
+    border: var(--bs-border-width) solid #0d6efd;
+    border-radius: var(--bs-border-radius);
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
 </style>
