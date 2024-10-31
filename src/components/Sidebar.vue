@@ -13,16 +13,20 @@
           <li class="nav-item">
             <a class="nav-link text-white" @click="home" href="#">Home </a>
           </li>
+
           <li class="nav-item">
-            <select class="form-select text-white bg-dark" aria-label="Chamados Ti" @click="chamadosTi">
-              <option selected>Chamados Ti</option>
-              <option value="1">Alunos</option>
-              <option value="2">Docentes</option>
-              <option value="3">terceiros</option>
+            <select v-model="filterOcupacao" class="form-select text-white bg-dark" aria-label="Chamados Ti" @change="atualizarFiltro"
+              @click="chamadosTi">
+              <option value="TODOS" selected>Todos os Chamados</option>
+              <option value="ESTUDANTE">Alunos</option>
+              <option value="DOCENTE">Docentes</option>
+              <option value="MANUTENCAO">Manuteção</option>
+              <option value="TI">Técnico de TI</option>
+              <option value="NOA">ADM</option>
             </select>
           </li>
 
-          <li  v-if="this.role === this.ROLES.NOA" class="nav-item">
+          <li v-if="this.role === this.ROLES.NOA" class="nav-item">
             <a class="nav-link text-white" @click="chamadosManuntencao" href="#">Chamados Manuntencao</a>
           </li>
 
@@ -106,7 +110,7 @@
 
 
       <!-- Tabela Alunos-->
-      <div v-if="mostrarTabelaExibida" class="table-container p-3">
+       <div v-if="mostrarTabelaExibida" class="table-container p-3">
         <h2>Tabela de Usuários</h2>
         <input type="text" placeholder="Pesquisa por nome ou email" class="form-control mb-3" />
         <div class="table-responsive">
@@ -151,16 +155,16 @@
             <input type="text" id="nome" v-model="novoAluno.nome" required />
           </div>
           <div class="form-group">
-            <label for="email">Telefone:</label>
+            <label for="telefone">Telefone:</label>
             <input type="text	" id="telefone" v-model="novoAluno.telefone" required />
           </div>
           <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" v-model="novoAluno.email" required />
+            <label for="Gmail">gmail:</label>
+            <input type="email" id="email" v-model="novoAluno.gmail" required />
           </div>
           <div class="form-group">
-            <label for="email">Confirmar Email:</label>
-            <input type="email" id="email" v-model="novoAluno.email" required />
+            <label for="Gmail">Confirmar Gmail:</label>
+            <input type="email" id="email" v-model="novoAluno.gmail" required />
           </div>
           <div class="form-group">
             <label for="senha">Senha:</label>
@@ -191,23 +195,26 @@
 
 
       <!-- TABELAS DO KANBAN-->
-      <div v-show="mostrarTodosChamados || categoriaVisivel === 'Analise'" id="Análise" class="kanban-column"
-        @drop="drop($event)" @dragover="allowDrop($event)">
-        <h3 class="kanban-header bg-secondary text-white p-2 text-center">
-          Analise
-        </h3>
-        <div v-for="chamado in chamadosAnalise" :key="chamado.id" :id="chamado.id" class="kanban-item bg-light p-3 my-2"
-          draggable="true" @dragstart="drag($event, chamado)">
-          <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
-          <p><em>Email:</em> {{ chamado.email_usuario }}</p>
-          <p><em>Problema:</em> {{ chamado.problema }}</p>
-          <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
-          <p><em>Bloco:</em> {{ chamado.bloco }}</p>
-          <p><em>Sala:</em> {{ chamado.sala }}</p>
-          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join(", ") }}</p>
-          <button class="btn btn-danger btn-sm" @click="confirmarRemocao(chamado.id)">Remover</button>
+      <div v-if="this.role === this.ROLES.NOA">
+        <div v-show="mostrarTodosChamados || categoriaVisivel === 'Analise'" id="Análise" class="kanban-column"
+          @drop="drop($event)" @dragover="allowDrop($event)">
+          <h3 class="kanban-header bg-secondary text-white p-2 text-center">
+            Analise
+          </h3>
+          <!-- v-if="this.role === this.ROLES.NOA" -->
+          <div v-for="chamado in chamadosAnalise" :key="chamado.id" :id="chamado.id"
+            class="kanban-item bg-light p-3 my-2" draggable="true" @dragstart="drag($event, chamado)">
+            <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
+            <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
+            <p><em>Problema:</em> {{ chamado.problema }}</p>
+            <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
+            <p><em>Bloco:</em> {{ chamado.bloco }}</p>
+            <p><em>Sala:</em> {{ chamado.sala }}</p>
+            <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join(", ") }}</p>
+            <button class="btn btn-danger btn-sm" @click="confirmarRemocao(chamado.id)">Remover</button>
 
-          <div class="tags"></div>
+            <div class="tags"></div>
+          </div>
         </div>
       </div>
 
@@ -219,7 +226,7 @@
         <div v-for="chamado in chamadosPendentes" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
           draggable="true" @dragstart="drag($event, chamado)">
           <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
-          <p><em>Email:</em> {{ chamado.email_usuario }}</p>
+          <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
           <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
@@ -237,7 +244,7 @@
         <div v-for="chamado in chamadosAndamento" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
           draggable="true" @dragstart="drag($event, chamado)">
           <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
-          <p><em>Email:</em> {{ chamado.email_usuario }}</p>
+          <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
           <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
@@ -255,7 +262,7 @@
         <div v-for="chamado in chamadosConcluidos" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
           draggable="true" @dragstart="drag($event, chamado)">
           <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
-          <p><em>Email:</em> {{ chamado.email_usuario }}</p>
+          <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
           <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
@@ -275,7 +282,7 @@
         <div v-for="chamado in chamadosAnalise" :key="chamado.id" class="kanban-item bg-light p-3 my-2" draggable="true"
           @dragstart="drag($event, chamado)">
           <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
-          <p><em>Email:</em> {{ chamado.email_usuario }}</p>
+          <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
           <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
@@ -293,7 +300,7 @@
         <div v-for="chamado in chamadosPendentes" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
           draggable="true" @dragstart="drag($event, chamado)">
           <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
-          <p><em>Email:</em> {{ chamado.email_usuario }}</p>
+          <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
           <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
@@ -311,7 +318,7 @@
         <div v-for="chamado in chamadosAndamento" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
           draggable="true" @dragstart="drag($event, chamado)">
           <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
-          <p><em>Email:</em> {{ chamado.email_usuario }}</p>
+          <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
           <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
@@ -329,7 +336,7 @@
         <div v-for="chamado in chamadosConcluidos" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
           draggable="true" @dragstart="drag($event, chamado)">
           <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
-          <p><em>Email:</em> {{ chamado.email_usuario }}</p>
+          <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
           <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
@@ -355,6 +362,7 @@ import { ROLES } from "../util/roles";
 export default {
   data() {
     return {
+      filterOcupacao: "",
       ROLES,
       role: null,
       chamadosAnalise: [],
@@ -370,6 +378,7 @@ export default {
       mostrarTabelaExibida: false,
       mostrarCadastrosala: false,
 
+    
       novoAluno: {
         senha: "",
         nome: "",
@@ -386,203 +395,221 @@ export default {
       },
     };
   },
+
+
+  mounted() {
+    this.carregarChamados();
+    this.atualizarChamados();
+    this.role = localStorage.getItem("role")
+  },
   methods: {
 
-    methods: {
-      confirmarRemocao(id) {
-        Swal.fire({
-          title: 'Tem certeza que deseja deletar?',
-          text: "Esta ação não pode ser desfeita!",
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#d33',
-          cancelButtonColor: '#3085d6',
-          confirmButtonText: 'Sim, deletar',
-          cancelButtonText: 'Cancelar'
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.deletarChamado(id);
-          }
-        });
-      },
-      deletarChamado(id) {
-        // Lógica para remover o chamado do array `chamadosAnalise`
-        this.chamadosAnalise = this.chamadosAnalise.filter(chamado => chamado.id !== id);
-        Swal.fire('Deletado!', 'O chamado foi removido.', 'success');
-      }
+   async atualizarFiltro(event) {
+   await this.carregarChamados();
+      
     },
-    async carregarChamados() {
-      try {
-        const token = localStorage.getItem("token");
-
-        const resposta = await axios.get('http://localhost:3000/chamados', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        this.chamados = resposta.data;
-
-        this.chamadosAnalise = this.chamados.filter(
-          (chamado) => chamado.status === "Análise"
-
-        );
-
-
-        this.chamadosAndamento = this.chamados.filter(
-          (chamado) => chamado.status === "Em Andamento"
-        );
-        this.chamadosConcluidos = this.chamados.filter(
-          (chamado) => chamado.status === "Concluido"
-        );
-        this.chamadosPendentes = this.chamados.filter(
-          (chamado) => chamado.status === "Pendentes"
-        );
-      } catch (erro) {
-        console.error("Erro ao carregar os chamados:", erro);
-      }
-    },
-    atualizarChamados() {
-      setInterval(() => {
-        this.carregarChamados();
-      }, 1000 * 60);
-    },
-
-    chamadosTi() {
-      this.categoriaVisivel = null;
-      this.mostrarTabelaExibida = false;
-      this.mostrarTodosChamados = true;
-      this.mostrarFormulario = false;
-      this.mostrarChamadosManutençao = false;
-      this.mostrarCadastrosala = false;
-    },
-
-    chamadosManuntencao() {
-      this.categoriaVisivel = null;
-      this.mostrarTodosChamados = false;
-      this.mostrarChamadosManutençao = true;
-      this.mostrarFormulario = false;
-      this.mostrarTabelaExibida = false;
-      this.mostrarCadastrosala = false;
-    },
-
-    mostrarCadastro() {
-      this.mostrarFormulario = true;
-      this.categoriaVisivel = null;
-      this.mostrarTodosChamados = false;
-      this.mostrarTabelaExibida = false;
-      this.mostrarChamadosManutençao = false;
-      this.mostrarCadastrosala = false;
-    },
-
-    mostrarTabela() {
-      this.categoriaVisivel = null;
-      this.mostrarTabelaExibida = true;
-      this.mostrarChamadosManutençao = false;
-      this.mostrarTodosChamados = false;
-      this.mostrarFormulario = false;
-      this.mostrarCadastrosala = false;
-    },
-    mostrarSala() {
-      console.log("Clique em Adicionar Salas!"); // Debug: verifique no console
-      this.categoriaVisivel = null;
-      this.mostrarCadastrosala = true; // Definir como true para exibir a seção
-      this.mostrarFormulario = false;
-      this.mostrarChamadosManutençao = false;
-      this.mostrarTodosChamados = false;
-      this.mostrarTabelaExibida = false;
-    },
-    editarAluno(id) {
-      // Lógica para editar o aluno
-      console.log("Editar aluno com ID:", id);
-    },
-    removerAluno(id) {
-      this.chamados = this.chamados.filter((aluno) => aluno.id !== id);
-    },
-    allowDrop(event) {
-      event.preventDefault();
-    },
-    drag(event, chamado) {
-      event.dataTransfer.setData("chamado", JSON.stringify(chamado));
-    },
-    async drop(event) {
-      const pendentes = document.getElementById("Pendentes")
-      const Analise = document.getElementById("Análise")
-      const concluidos = document.getElementById("Concluido")
-      const andamento = document.getElementById("Em Andamento")
-      let status = ''
-
-      if (pendentes === event.target || pendentes.contains(event.target)) {
-        status = 'Pendentes'
-      } else if (Analise === event.target || Analise.contains(event.target)) {
-        status = 'Análise'
-      } else if (concluidos === event.target || concluidos.contains(event.target)) {
-        status = 'Concluido'
-      } else if (andamento === event.target || andamento.contains(event.target)) {
-        status = 'Em Andamento'
-
-      }
-
-
-
-      event.preventDefault();
-      const chamado = JSON.parse(event.dataTransfer.getData("chamado"));
-
-      const result = await Swal.fire({
-        title: "Voce tem certeza?",
-        text: "voce deseja mudar o status do chamado?",
+    confirmarRemocao(id) {
+      Swal.fire({
+        title: 'Tem certeza que deseja deletar?',
+        text: "Esta ação não pode ser desfeita!",
+        icon: 'warning',
         showCancelButton: true,
-        icon: "question",
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sim, deletar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.deletarChamado(id);
+        }
       });
-
-      if (!result.isConfirmed) {
-        return;
-      }
-
-      chamado.status = status;
+    },
+    deletarChamado(id) {
+      // Lógica para remover o chamado do array `chamadosAnalise`
+      this.chamadosAnalise = this.chamadosAnalise.filter(chamado => chamado.id !== id);
+      Swal.fire('Deletado!', 'O chamado foi removido.', 'success');
+    },
+  
+  async carregarChamados() {
+    
+    try {
       const token = localStorage.getItem("token");
-      await axios.put(`http://localhost:3000/chamados/${chamado.id}`, chamado, {
+
+      const resposta = await axios.get('http://localhost:3000/chamados', {
         headers: {
-          Authorization: `Bearer ${token}`, // Correção aqui
+          Authorization: `Bearer ${token}`,
         },
       });
-      await this.carregarChamados();
-    },
 
 
-    chamadosTi() {
-      this.categoriaVisivel = null;
-      this.mostrarTodosChamados = true;
-      this.mostrarFormulario = false; // Esconde o formulário
-      this.mostrarTabelaExibida = false;
-      this.mostrarTabelaSala = false;
-      this.mostrarCadastrosala = false;
-    },
-    chamadosManuntencao() {
-      this.categoriaVisivel = null;
-      this.mostrarTodosChamados = true;
-      this.mostrarFormulario = false; // Esconde o formulário
-      this.mostrarTabelaExibida = false;
-      this.mostrarTabelaSala = false;
-      this.mostrarCadastrosala = false;
+      this.chamados = resposta.data;
+      console.log(this.chamados)
+console.log(this.filterOcupacao)
 
-    },
-    mostrarCadastro() {
-      this.mostrarFormulario = true; // Mostra o formulário
-      this.categoriaVisivel = false; // Reseta a categoria visível
-      this.mostrarTodosChamados = false; // Esconde todos os itens
-      this.mostrarTabelaExibida = false;
-      this.mostrarTabelaSala = false;
-      this.mostrarCadastrosala = false;
-    },
+      this.chamados = this.filterOcupacao !== "TODOS" ? this.chamados.filter(
+        (chamado) => chamado.ocupacao === this.fliterOcupacao) : this.chamados
 
-    allowDrop(event) {
-      event.preventDefault();
-    },
+        this.chamados = this.filterOcupacao === "ESTUDANTE" ? this.chamados.filter(
+        (chamado) => chamado.ocupacao === this.fliterOcupacao) : this.chamados
+
+      this.chamadosAnalise = this.chamados.filter(
+        (chamado) => chamado.status === "Análise"
+
+      );
+      this.chamadosAndamento = this.chamados.filter(
+        (chamado) => chamado.status === "Em Andamento"
+      );
+      this.chamadosConcluidos = this.chamados.filter(
+        (chamado) => chamado.status === "Concluido"
+      );
+      this.chamadosPendentes = this.chamados.filter(
+        (chamado) => chamado.status === "Pendentes"
+      );
+    } catch (erro) {
+      console.error("Erro ao carregar os chamados:", erro);
+    }
+  },
+
+  atualizarChamados() {
+    setInterval(() => {
+      this.carregarChamados();
+    }, 1000 * 60);
+  },
+
+  chamadosTi() {
+    this.categoriaVisivel = null;
+    this.mostrarTabelaExibida = false;
+    this.mostrarTodosChamados = true;
+    this.mostrarFormulario = false;
+    this.mostrarChamadosManutençao = false;
+    this.mostrarCadastrosala = false;
+  },
+
+  chamadosManuntencao() {
+    this.categoriaVisivel = null;
+    this.mostrarTodosChamados = false;
+    this.mostrarChamadosManutençao = true;
+    this.mostrarFormulario = false;
+    this.mostrarTabelaExibida = false;
+    this.mostrarCadastrosala = false;
+  },
+
+  mostrarCadastro() {
+    this.mostrarFormulario = true;
+    this.categoriaVisivel = null;
+    this.mostrarTodosChamados = false;
+    this.mostrarTabelaExibida = false;
+    this.mostrarChamadosManutençao = false;
+    this.mostrarCadastrosala = false;
+  },
+
+  mostrarTabela() {
+    this.categoriaVisivel = null;
+    this.mostrarTabelaExibida = true;
+    this.mostrarChamadosManutençao = false;
+    this.mostrarTodosChamados = false;
+    this.mostrarFormulario = false;
+    this.mostrarCadastrosala = false;
+  },
+  mostrarSala() {
+    console.log("Clique em Adicionar Salas!"); // Debug: verifique no console
+    this.categoriaVisivel = null;
+    this.mostrarCadastrosala = true; // Definir como true para exibir a seção
+    this.mostrarFormulario = false;
+    this.mostrarChamadosManutençao = false;
+    this.mostrarTodosChamados = false;
+    this.mostrarTabelaExibida = false;
+  },
+  editarAluno(id) {
+    // Lógica para editar o aluno
+    console.log("Editar aluno com ID:", id);
+  },
+  removerAluno(id) {
+    this.chamados = this.chamados.filter((aluno) => aluno.id !== id);
+  },
+  allowDrop(event) {
+    event.preventDefault();
+  },
+  drag(event, chamado) {
+    event.dataTransfer.setData("chamado", JSON.stringify(chamado));
+  },
+  async drop(event) {
+    const pendentes = document.getElementById("Pendentes")
+    const Analise = document.getElementById("Análise")
+    const concluidos = document.getElementById("Concluido")
+    const andamento = document.getElementById("Em Andamento")
+    let status = ''
+
+    if (pendentes === event.target || pendentes.contains(event.target)) {
+      status = 'Pendentes'
+    } else if (Analise === event.target || Analise.contains(event.target)) {
+      status = 'Análise'
+    } else if (concluidos === event.target || concluidos.contains(event.target)) {
+      status = 'Concluido'
+    } else if (andamento === event.target || andamento.contains(event.target)) {
+      status = 'Em Andamento'
+
+    }
 
 
 
-    async cadastrarAluno() {
+    event.preventDefault();
+    const chamado = JSON.parse(event.dataTransfer.getData("chamado"));
+
+    const result = await Swal.fire({
+      title: "Voce tem certeza?",
+      text: "voce deseja mudar o status do chamado?",
+      showCancelButton: true,
+      icon: "question",
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    chamado.status = status;
+    const token = localStorage.getItem("token");
+    await axios.put(`http://localhost:3000/chamados/${chamado.id}`, chamado, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Correção aqui
+      },
+    });
+    await this.carregarChamados();
+  },
+
+
+  chamadosTi() {
+    this.categoriaVisivel = null;
+    this.mostrarTodosChamados = true;
+    this.mostrarFormulario = false; // Esconde o formulário
+    this.mostrarTabelaExibida = false;
+    this.mostrarTabelaSala = false;
+    this.mostrarCadastrosala = false;
+  },
+  chamadosManuntencao() {
+    this.categoriaVisivel = null;
+    this.mostrarTodosChamados = true;
+    this.mostrarFormulario = false; // Esconde o formulário
+    this.mostrarTabelaExibida = false;
+    this.mostrarTabelaSala = false;
+    this.mostrarCadastrosala = false;
+
+  },
+  mostrarCadastro() {
+    this.mostrarFormulario = true; // Mostra o formulário
+    this.categoriaVisivel = false; // Reseta a categoria visível
+    this.mostrarTodosChamados = false; // Esconde todos os itens
+    this.mostrarTabelaExibida = false;
+    this.mostrarTabelaSala = false;
+    this.mostrarCadastrosala = false;
+  },
+
+  allowDrop(event) {
+    event.preventDefault();
+  },
+
+
+  async cadastrarAluno() {
       // Resetar o formulário
       const dadosUsuario = {
         nome_completo: this.novoAluno.nome,
@@ -622,13 +649,7 @@ export default {
       }
     },
   },
-
-  mounted() {
-    this.carregarChamados();
-    this.atualizarChamados();
-    this.role = localStorage.getItem("role")
-  },
-};
+  };
 
 </script>
 
