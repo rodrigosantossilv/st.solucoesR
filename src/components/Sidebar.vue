@@ -162,7 +162,7 @@
         v-model="novoAluno.telefone"
         @input="formatarTelefone"
         required
-        maxlength="11"
+        maxlength="16"
     />
 </div>
 
@@ -413,15 +413,34 @@ export default {
 
   methods: {
     formatarTelefone(event) {
-        // Remove caracteres não numéricos
-        this.novoAluno.telefone = this.novoAluno.telefone.replace(/\D/g, '');
-    },
-    submitForm() {
-        if (this.novoAluno.telefone.length !== 11) {
-            alert('O telefone deve ter exatamente 11 dígitos.');
-            return;
-        }
-      },
+    // Remove todos os caracteres não numéricos
+    let telefone = this.novoAluno.telefone.replace(/\D/g, '');
+
+    // Aplica a máscara de acordo com a quantidade de dígitos
+    if (telefone.length <= 10) {
+        this.novoAluno.telefone = `(${telefone.slice(0, 2)}) ${telefone.slice(2, 6)}-${telefone.slice(6, 10)}`;
+    } else if (telefone.length <= 15) {
+        this.novoAluno.telefone = `(${telefone.slice(0, 2)}) ${telefone.slice(2, 7)}-${telefone.slice(7, 11)} ${telefone.slice(11, 15)}`;
+    } else if (telefone.length <= 20) {
+        this.novoAluno.telefone = `(${telefone.slice(0, 2)}) ${telefone.slice(2, 7)}-${telefone.slice(7, 11)} ${telefone.slice(11, 15)} ${telefone.slice(15, 20)}`;
+    } else {
+        // Caso haja mais de 20 dígitos, truncamos o valor
+        this.novoAluno.telefone = `(${telefone.slice(0, 2)}) ${telefone.slice(2, 7)}-${telefone.slice(7, 11)} ${telefone.slice(11, 15)} ${telefone.slice(15, 20)}`;
+    }
+},
+
+submitForm() {
+    // Remove caracteres não numéricos antes de validar
+    const telefoneSemMascara = this.novoAluno.telefone.replace(/\D/g, '');
+    
+    if (telefoneSemMascara.length < 10 || telefoneSemMascara.length > 20) {
+        alert('O telefone deve ter entre 10 e 20 dígitos.');
+        return;
+    }
+
+    // Lógica de envio do formulário
+},
+
     async atualizarFiltro(event) {
     await this.carregarChamados();
       
@@ -939,18 +958,5 @@ header {
   border-radius: var(--bs-border-radius);
   transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
-.sidebar[data-v-6dec5f19] {
-    background-color: #0d6efd;
-    width: 30%;
-    min-height: 100vh;
-    color: white;
-    padding: 1rem;
-    transition: transform 0.3s ease-in-out;
-}
-.kanban-column[data-v-6dec5f19] {
-    width: 64%;
-    margin: 0.5rem;
-    display: inline-block;
-    vertical-align: top;
-}
+
 </style>
