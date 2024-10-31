@@ -1,0 +1,309 @@
+
+
+<script>
+import axios from "axios";
+import Swal from "sweetalert2";
+import { ROLES } from "../util/roles";
+export default {
+  data() {
+    return {
+      filterOcupacao: "",
+      ROLES,
+      role: null,
+      chamadosAnalise: [],
+      chamadosAndamento: [],
+      chamadosConcluidos: [],
+      chamadosPendentes: [],
+      chamados: [],
+      categoriaVisivel: null,
+      home: false,
+      mostrarTodosChamados: true,
+      mostrarFormulario: false,
+      mostrarChamadosManutençao: false,
+      mostrarTabelaExibida: false,
+      mostrarCadastrosala: false,
+
+    
+      novoAluno: {
+        senha: "",
+        nome: "",
+        email: "",
+        telefone: "",
+        confirmarEmail: "",
+        confirmarSenha: "",
+        tipoUsuario: "",
+      },
+      novoSala: {
+        bloco: '', // ou algum valor inicial
+        numerodasala: '',
+        nomedasala: ''
+      },
+    };
+  },
+
+  mounted() {
+    this.carregarChamados();
+    this.atualizarChamados();
+    this.role = localStorage.getItem("role")
+  },
+
+  methods: {
+    formatarTelefone(event) {
+        // Remove caracteres não numéricos
+        this.novoAluno.telefone = this.novoAluno.telefone.replace(/\D/g, '');
+    },
+    
+    submitForm() {
+        if (this.novoAluno.telefone.length !== 11) {
+            alert('O telefone deve ter exatamente 11 dígitos.');
+            return;
+        }
+      },
+    async atualizarFiltro(event) {
+    await this.carregarChamados();
+      
+    },
+    confirmarRemocao(id) {
+      Swal.fire({
+        title: 'Tem certeza que deseja deletar?',
+        text: "Esta ação não pode ser desfeita!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sim, deletar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.deletarChamado(id);
+        }
+      });
+    },
+    deletarChamado(id) {
+      // Lógica para remover o chamado do array `chamadosAnalise`
+      this.chamadosAnalise = this.chamadosAnalise.filter(chamado => chamado.id !== id);
+      Swal.fire('Deletado!', 'O chamado foi removido.', 'success');
+    },
+  
+  async carregarChamados() {
+    
+    try {
+      const token = localStorage.getItem("token");
+
+      const resposta = await axios.get('http://localhost:3000/chamados', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+
+      this.chamados = resposta.data;
+      console.log(this.chamados)
+console.log(this.filterOcupacao)
+
+      this.chamados = this.filterOcupacao !== "TODOS" ? this.chamados.filter(
+        (chamado) => chamado.ocupacao === this.fliterOcupacao) : this.chamados
+
+        this.chamados = this.filterOcupacao === "ESTUDANTE" ? this.chamados.filter(
+        (chamado) => chamado.ocupacao === this.fliterOcupacao) : this.chamados
+
+      this.chamadosAnalise = this.chamados.filter(
+        (chamado) => chamado.status === "Análise"
+
+      );
+      this.chamadosAndamento = this.chamados.filter(
+        (chamado) => chamado.status === "Em Andamento"
+      );
+      this.chamadosConcluidos = this.chamados.filter(
+        (chamado) => chamado.status === "Concluido"
+      );
+      this.chamadosPendentes = this.chamados.filter(
+        (chamado) => chamado.status === "Pendentes"
+      );
+    } catch (erro) {
+      console.error("Erro ao carregar os chamados:", erro);
+    }
+  },
+
+  atualizarChamados() {
+    setInterval(() => {
+      this.carregarChamados();
+    }, 1000 * 60);
+  },
+
+  chamadosTi() {
+    this.categoriaVisivel = null;
+    this.mostrarTabelaExibida = false;
+    this.mostrarTodosChamados = true;
+    this.mostrarFormulario = false;
+    this.mostrarChamadosManutençao = false;
+    this.mostrarCadastrosala = false;
+  },
+
+  chamadosManuntencao() {
+    this.categoriaVisivel = null;
+    this.mostrarTodosChamados = false;
+    this.mostrarChamadosManutençao = true;
+    this.mostrarFormulario = false;
+    this.mostrarTabelaExibida = false;
+    this.mostrarCadastrosala = false;
+  },
+
+  mostrarCadastro() {
+    this.mostrarFormulario = true;
+    this.categoriaVisivel = null;
+    this.mostrarTodosChamados = false;
+    this.mostrarTabelaExibida = false;
+    this.mostrarChamadosManutençao = false;
+    this.mostrarCadastrosala = false;
+  },
+
+  mostrarTabela() {
+    this.categoriaVisivel = null;
+    this.mostrarTabelaExibida = true;
+    this.mostrarChamadosManutençao = false;
+    this.mostrarTodosChamados = false;
+    this.mostrarFormulario = false;
+    this.mostrarCadastrosala = false;
+  },
+  mostrarSala() {
+    console.log("Clique em Adicionar Salas!"); // Debug: verifique no console
+    this.categoriaVisivel = null;
+    this.mostrarCadastrosala = true; // Definir como true para exibir a seção
+    this.mostrarFormulario = false;
+    this.mostrarChamadosManutençao = false;
+    this.mostrarTodosChamados = false;
+    this.mostrarTabelaExibida = false;
+  },
+  editarAluno(id) {
+    // Lógica para editar o aluno
+    console.log("Editar aluno com ID:", id);
+  },
+  removerAluno(id) {
+    this.chamados = this.chamados.filter((aluno) => aluno.id !== id);
+  },
+  allowDrop(event) {
+    event.preventDefault();
+  },
+  drag(event, chamado) {
+    event.dataTransfer.setData("chamado", JSON.stringify(chamado));
+  },
+  async drop(event) {
+    const pendentes = document.getElementById("Pendentes")
+    const Analise = document.getElementById("Análise")
+    const concluidos = document.getElementById("Concluido")
+    const andamento = document.getElementById("Em Andamento")
+    let status = ''
+
+    if (pendentes === event.target || pendentes.contains(event.target)) {
+      status = 'Pendentes'
+    } else if (Analise === event.target || Analise.contains(event.target)) {
+      status = 'Análise'
+    } else if (concluidos === event.target || concluidos.contains(event.target)) {
+      status = 'Concluido'
+    } else if (andamento === event.target || andamento.contains(event.target)) {
+      status = 'Em Andamento'
+
+    }
+
+
+
+    event.preventDefault();
+    const chamado = JSON.parse(event.dataTransfer.getData("chamado"));
+
+    const result = await Swal.fire({
+      title: "Voce tem certeza?",
+      text: "voce deseja mudar o status do chamado?",
+      showCancelButton: true,
+      icon: "question",
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    chamado.status = status;
+    const token = localStorage.getItem("token");
+    await axios.put(`http://localhost:3000/chamados/${chamado.id}`, chamado, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Correção aqui
+      },
+    });
+    await this.carregarChamados();
+  },
+
+
+  chamadosTi() {
+    this.categoriaVisivel = null;
+    this.mostrarTodosChamados = true;
+    this.mostrarFormulario = false; // Esconde o formulário
+    this.mostrarTabelaExibida = false;
+    this.mostrarTabelaSala = false;
+    this.mostrarCadastrosala = false;
+  },
+  chamadosManuntencao() {
+    this.categoriaVisivel = null;
+    this.mostrarTodosChamados = true;
+    this.mostrarFormulario = false; // Esconde o formulário
+    this.mostrarTabelaExibida = false;
+    this.mostrarTabelaSala = false;
+    this.mostrarCadastrosala = false;
+
+  },
+  mostrarCadastro() {
+    this.mostrarFormulario = true; // Mostra o formulário
+    this.categoriaVisivel = false; // Reseta a categoria visível
+    this.mostrarTodosChamados = false; // Esconde todos os itens
+    this.mostrarTabelaExibida = false;
+    this.mostrarTabelaSala = false;
+    this.mostrarCadastrosala = false;
+  },
+
+  allowDrop(event) {
+    event.preventDefault();
+  },
+
+
+  async cadastrarAluno() {
+      // Resetar o formulário
+      const dadosUsuario = {
+        nome_completo: this.novoAluno.nome,
+        senha: this.novoAluno.senha,
+        email: this.novoAluno.email,
+        telefone: this.novoAluno.telefone,
+        setor_id: this.novoAluno.setor_id,
+        instituicao: "Senai",
+        ocupacao: this.novoAluno.tipoUsuario,
+      };
+      const token = localStorage.getItem("token");
+
+      const resposta = await axios.post(
+        "http://localhost:3000/auth/register",
+        dadosUsuario,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      this.novoAluno = {
+        nome: "",
+        email: "",
+        telefone: "",
+        tipoUsuario: "",
+        senha: "",
+      };
+      this.mostrarFormulario = true;
+
+      if (resposta.status === 201 && this.carregarChamados) {
+        alert("Aluno cadastrado com sucesso!");
+      } else {
+        alert("Erro ao cadastrar o aluno");
+      }
+    },
+  },
+  };
+
+</script>

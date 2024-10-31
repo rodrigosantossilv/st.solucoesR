@@ -155,15 +155,24 @@
             <input type="text" id="nome" v-model="novoAluno.nome" required />
           </div>
           <div class="form-group">
-            <label for="telefone">Telefone:</label>
-            <input type="text	" id="telefone" v-model="novoAluno.telefone" required />
-          </div>
+    <label for="telefone">Telefone:</label>
+    <input
+        type="tel"
+        id="telefone"
+        v-model="novoAluno.telefone"
+        @input="formatarTelefone"
+        required
+        maxlength="11"
+    />
+</div>
+
+
           <div class="form-group">
-            <label for="Gmail">gmail:</label>
+            <label for="Gmail">email:</label>
             <input type="email" id="email" v-model="novoAluno.gmail" required />
           </div>
           <div class="form-group">
-            <label for="Gmail">Confirmar Gmail:</label>
+            <label for="Gmail">Confirmar email:</label>
             <input type="email" id="email" v-model="novoAluno.gmail" required />
           </div>
           <div class="form-group">
@@ -195,8 +204,8 @@
 
 
       <!-- TABELAS DO KANBAN-->
-      <div v-if="this.role === this.ROLES.NOA">
-        <div v-show="mostrarTodosChamados || categoriaVisivel === 'Analise'" id="Análise" class="kanban-column"
+      <div v-if="this.role === this.ROLES.NOA"  class="kanban-column">
+        <div v-show="mostrarTodosChamados || categoriaVisivel === 'Analise'" id="Análise"
           @drop="drop($event)" @dragover="allowDrop($event)">
           <h3 class="kanban-header bg-secondary text-white p-2 text-center">
             Analise
@@ -396,16 +405,25 @@ export default {
     };
   },
 
-
   mounted() {
     this.carregarChamados();
     this.atualizarChamados();
     this.role = localStorage.getItem("role")
   },
-  methods: {
 
-   async atualizarFiltro(event) {
-   await this.carregarChamados();
+  methods: {
+    formatarTelefone(event) {
+        // Remove caracteres não numéricos
+        this.novoAluno.telefone = this.novoAluno.telefone.replace(/\D/g, '');
+    },
+    submitForm() {
+        if (this.novoAluno.telefone.length !== 11) {
+            alert('O telefone deve ter exatamente 11 dígitos.');
+            return;
+        }
+      },
+    async atualizarFiltro(event) {
+    await this.carregarChamados();
       
     },
     confirmarRemocao(id) {
