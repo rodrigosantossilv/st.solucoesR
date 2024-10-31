@@ -939,4 +939,18 @@ header {
   border-radius: var(--bs-border-radius);
   transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
+.sidebar[data-v-6dec5f19] {
+    background-color: #0d6efd;
+    width: 30%;
+    min-height: 100vh;
+    color: white;
+    padding: 1rem;
+    transition: transform 0.3s ease-in-out;
+}
+.kanban-column[data-v-6dec5f19] {
+    width: 64%;
+    margin: 0.5rem;
+    display: inline-block;
+    vertical-align: top;
+}
 </style>
