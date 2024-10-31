@@ -21,7 +21,7 @@
           <h2>Bem-vindo!</h2>
 
           <input
-            type="gmail"
+            type="email"
             placeholder="Usuário"
             v-model="gmail"
             aria-label="Usuário"

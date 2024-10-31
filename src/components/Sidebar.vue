@@ -22,17 +22,17 @@
             </select>
           </li>
 
-          <li class="nav-item">
+          <li  v-if="this.role === this.ROLES.NOA" class="nav-item">
             <a class="nav-link text-white" @click="chamadosManuntencao" href="#">Chamados Manuntencao</a>
           </li>
 
           <li v-if="this.role === this.ROLES.NOA" class="nav-item">
             <a class="nav-link text-white" @click="mostrarCadastro" to="#">Cadastro</a>
           </li>
-          <li class="nav-item">
+          <li v-if="this.role === this.ROLES.NOA" class="nav-item">
             <a class="nav-link text-white" @click="mostrarTabela" href="#">Tabela</a>
           </li>
-          <li class="nav-item">
+          <li v-if="this.role === this.ROLES.NOA" class="nav-item">
             <a class="nav-link text-white" @click="mostrarSala" href="#">
               Adicionar Salas
             </a>
