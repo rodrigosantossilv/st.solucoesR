@@ -2,7 +2,7 @@
   <div>
     <!-- Cabeçalho -->
     <header class="bg-primary text-white p-3">
-        </header>
+    </header>
 
     <!-- Estrutura principal com o Dashboard e Kanban -->
     <div class="d-flex">
@@ -14,489 +14,333 @@
             <a class="nav-link text-white" @click="home" href="#">Home </a>
           </li>
           <li class="nav-item">
-  <select class="form-select text-white bg-dark" aria-label="Chamados Ti" @click="chamadosTi">
-    <option selected>Chamados Ti</option>
-    <option value="1">Alunos</option>
-    <option value="2">Docentes</option>
-    <option value="3">terceiros</option>
-  </select>
-</li>
+            <select class="form-select text-white bg-dark" aria-label="Chamados Ti" @click="chamadosTi">
+              <option selected>Chamados Ti</option>
+              <option value="1">Alunos</option>
+              <option value="2">Docentes</option>
+              <option value="3">terceiros</option>
+            </select>
+          </li>
 
           <li class="nav-item">
-            <a class="nav-link text-white" @click="chamadosManuntencao" href="#"
-              >Chamados Manuntencao</a
-            >
+            <a class="nav-link text-white" @click="chamadosManuntencao" href="#">Chamados Manuntencao</a>
+          </li>
+
+          <li v-if="this.role === this.ROLES.NOA" class="nav-item">
+            <a class="nav-link text-white" @click="mostrarCadastro" to="#">Cadastro</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white" @click="mostrarCadastro" to="#"
-              >Cadastro</a
-            >
+            <a class="nav-link text-white" @click="mostrarTabela" href="#">Tabela</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white" @click="mostrarTabela" href="#"
-              >Tabela</a
-            >
+            <a class="nav-link text-white" @click="mostrarSala" href="#">
+              Adicionar Salas
+            </a>
           </li>
-          <li class="nav-item">
-  <a class="nav-link text-white" @click="mostrarSala" href="#">
-    Adicionar Salas
-  </a>
-</li>
         </ul>
 
-<!-- Tabela para cadastrar sala e mostrar salas cadastradas -->
-</div>
-<div v-if="mostrarCadastrosala" class="table-container p-3">
-  <!-- Formulário para cadastro de sala -->
-<form @submit.prevent="adicionarSala" class="mb-4">
-  <h2>Cadastrar Salas</h2>
-    <div class="form-group">
-      <label for="bloco">Bloco da sala</label>
-      <input 
-        type="text" 
-        id="bloco" 
-        v-model="novoBloco" 
-        placeholder="Digite o bloco" 
-        class="form-control" 
-        required 
-      />
-    </div>
-    <div class="form-group">
-      <label for="nome">Nome da sala</label>
-      <input 
-        type="text" 
-        id="nome" 
-        v-model="novoNome" 
-        placeholder="Digite o nome da sala" 
-        class="form-control" 
-        required 
-      />
-    </div>
-    <div class="form-group">
-      <label for="numero">Número da sala</label>
-      <input 
-        type="number" 
-        id="numero" 
-        v-model="novoNumero" 
-        placeholder="Digite o número da sala" 
-        class="form-control" 
-        required 
-      />
-    </div>
-    <button type="submit" class="btn btn-primary">Adicionar Sala</button>
-  </form>
-  
-  <h2>Tabela de Salas Cadastradas</h2>
-  <input 
-    type="text" 
-    placeholder="Pesquisa por nome ou bloco" 
-    class="form-control mb-3" 
-  />
-  
-  <div class="table-responsive">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Bloco</th>
-          <th>Número da sala</th>
-          <th>Nome da sala</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td data-label="Bloco">A</td>
-          <td data-label="Número da sala">23</td>
-          <td data-label="Nome da sala">Laboratório</td>
-          <td data-label="Ações">
-            <button class="btn btn-warning btn-sm">Editar</button>
-            <button class="btn btn-danger btn-sm">Remover</button>
-          </td>
-        </tr>
-        <tr>
-          <td data-label="Bloco">A</td>
-          <td data-label="Número da sala">23</td>
-          <td data-label="Nome da sala">Laboratório</td>
-          <td data-label="Ações">
-            <button class="btn btn-warning btn-sm">Editar</button>
-            <button class="btn btn-danger btn-sm">Remover</button>
-          </td>
-        </tr>
-        <!-- Adicione mais linhas aqui conforme necessário -->
-      </tbody>
-    </table>
-  </div>
+        <!-- Tabela para cadastrar sala e mostrar salas cadastradas -->
+      </div>
+      <div v-if="mostrarCadastrosala" class="table-container p-3">
+        <!-- Formulário para cadastro de sala -->
+        <form @submit.prevent="adicionarSala" class="mb-4">
+          <h2>Cadastrar Salas</h2>
+          <div class="form-group">
+            <label for="bloco">Bloco da sala</label>
+            <input type="text" id="bloco" v-model="novoBloco" placeholder="Digite o bloco" class="form-control"
+              required />
+          </div>
+          <div class="form-group">
+            <label for="nome">Nome da sala</label>
+            <input type="text" id="nome" v-model="novoNome" placeholder="Digite o nome da sala" class="form-control"
+              required />
+          </div>
+          <div class="form-group">
+            <label for="numero">Número da sala</label>
+            <input type="number" id="numero" v-model="novoNumero" placeholder="Digite o número da sala"
+              class="form-control" required />
+          </div>
+          <button type="submit" class="btn btn-primary">Adicionar Sala</button>
+        </form>
 
+        <h2>Tabela de Salas Cadastradas</h2>
+        <input type="text" placeholder="Pesquisa por nome ou bloco" class="form-control mb-3" />
 
-</div>
-
-
-        
-    <!-- Tabela Alunos-->
-      <div v-if="mostrarTabelaExibida" class="table-container p-3">
-    <h2>Tabela de Usuários</h2>
-    <input 
-        type="text" 
-        placeholder="Pesquisa por nome ou email" 
-        class="form-control mb-3" 
-    />
-    <div class="table-responsive">
-        <table class="table table-striped">
+        <div class="table-responsive">
+          <table class="table table-striped">
             <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Email</th>
-                    <th>Ações</th>
-                </tr>
+              <tr>
+                <th>Bloco</th>
+                <th>Número da sala</th>
+                <th>Nome da sala</th>
+                <th>Ações</th>
+              </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td data-label="Nome">João Silva</td>
-                    <td data-label="Email">joao@example.com</td>
-                    <td data-label="Ações">
-                      <button class="btn btn-warning btn-sm">Editar</button>
-                      <button class="btn btn-danger btn-sm">Remover</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td data-label="Nome">Maria Oliveira</td>
-                    <td data-label="Email">maria@example.com</td>
-                    <td data-label="Ações">
-                      <button class="btn btn-warning btn-sm">Editar</button>
-                      <button class="btn btn-danger btn-sm">Remover</button>
-                    </td>
-                </tr>
+              <tr>
+                <td data-label="Bloco">A</td>
+                <td data-label="Número da sala">23</td>
+                <td data-label="Nome da sala">Laboratório</td>
+                <td data-label="Ações">
+                  <button class="btn btn-warning btn-sm">Editar</button>
+                  <button class="btn btn-danger btn-sm">Remover</button>
+                </td>
+              </tr>
+              <tr>
+                <td data-label="Bloco">A</td>
+                <td data-label="Número da sala">23</td>
+                <td data-label="Nome da sala">Laboratório</td>
+                <td data-label="Ações">
+                  <button class="btn btn-warning btn-sm">Editar</button>
+                  <button class="btn btn-danger btn-sm">Remover</button>
+                </td>
+              </tr>
+              <!-- Adicione mais linhas aqui conforme necessário -->
             </tbody>
-        </table>
-    </div>
-</div>
-
-
-        <!-- Formulário para cadastrar novo aluno -->
-      
-        <div v-if="mostrarFormulario" class="form-container">
-          <h2>Cadastrar usuário</h2>
-          <form @submit.prevent="cadastrarAluno">
-            <div class="form-group">
-              <label for="nome">Nome:</label>
-              <input type="text" id="nome" v-model="novoAluno.nome" required />
-            </div>
-            <div class="form-group">
-              <label for="email">Telefone:</label>
-              <input
-                type="text	"
-                id="telefone"
-                v-model="novoAluno.telefone"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="email">Email:</label>
-              <input
-                type="email"
-                id="email"
-                v-model="novoAluno.email"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="email">Confirmar Email:</label>
-              <input
-                type="email"
-                id="email"
-                v-model="novoAluno.email"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="senha">Senha:</label>
-              <input
-                type="senha"
-                id="semha"
-                v-model="novoAluno.senha"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="senha"> Confirmar Senha:</label>
-              <input
-                type="senha"
-                id="semha"
-                v-model="novoAluno.senha"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label>Tipo de Usuário:</label>
-              <div class="radio-group">
-                <input
-                  type="radio"
-                  id="estudante"
-                  value="ESTUDANTE"
-                  v-model="novoAluno.tipoUsuario"
-                />
-                <label for="estudante">Estudante</label>
-
-                <input
-                  type="radio"
-                  id="tecnico"
-                  value="TI"
-                  v-model="novoAluno.tipoUsuario"
-                />
-                <label for="tecnico">Técnico de TI</label>
-                <input
-                  type="radio"
-                  id="Docente"
-                  value="DOCENTE"
-                  v-model="novoAluno.tipoUsuario"
-                />
-                <label for="tecnico">Docente</label>
-                <input
-                  type="radio"
-                  id="tecnico"
-                  value="MANUTENCAO"
-                  v-model="novoAluno.tipoUsuario"
-                />
-                <label for="tecnico">Técnico de Manuteção</label>
-              </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Cadastrar</button>
-          </form>
+          </table>
         </div>
 
 
-        <!-- TABELAS DO KANBAN-->
-        <div
-  v-show="mostrarTodosChamados || categoriaVisivel === 'Analise'"
-  id="Análise"
-  class="kanban-column"
-  @drop="drop($event)"
-  @dragover="allowDrop($event)"
->
-  <h3 class="kanban-header bg-secondary text-white p-2 text-center">
-    Analise
-  </h3>
-  <div
-    v-for="chamado in chamadosAnalise"
-    :key="chamado.id"
-    :id="chamado.id"
-    class="kanban-item bg-light p-3 my-2"
-    draggable="true"
-    @dragstart="drag($event, chamado)"
-  >
-    <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
-    <p><em>Email:</em> {{ chamado.email_usuario }}</p>
-    <p><em>Problema:</em> {{ chamado.problema }}</p>
-    <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
-    <p><em>Bloco:</em> {{ chamado.bloco }}</p>
-    <p><em>Sala:</em> {{ chamado.sala }}</p>
-    <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join(", ") }}</p>
-    <button class="btn btn-danger btn-sm" @click="confirmarRemocao(chamado.id)">Remover</button>
+      </div>
 
-    <div class="tags"></div>
-  </div>
-</div>
 
-      <div
-        v-show="mostrarTodosChamados || categoriaVisivel === 'Pendente'"
-        id="Pendentes"
-        class="kanban-column"
-        @drop="drop($event)"
-        @dragover="allowDrop($event)"
-      >
+
+      <!-- Tabela Alunos-->
+      <div v-if="mostrarTabelaExibida" class="table-container p-3">
+        <h2>Tabela de Usuários</h2>
+        <input type="text" placeholder="Pesquisa por nome ou email" class="form-control mb-3" />
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Nome">João Silva</td>
+                <td data-label="Email">joao@example.com</td>
+                <td data-label="Ações">
+                  <button class="btn btn-warning btn-sm">Editar</button>
+                  <button class="btn btn-danger btn-sm">Remover</button>
+                </td>
+              </tr>
+              <tr>
+                <td data-label="Nome">Maria Oliveira</td>
+                <td data-label="Email">maria@example.com</td>
+                <td data-label="Ações">
+                  <button class="btn btn-warning btn-sm">Editar</button>
+                  <button class="btn btn-danger btn-sm">Remover</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+      <!-- Formulário para cadastrar novo aluno -->
+
+      <div v-if="mostrarFormulario" class="form-container">
+        <h2>Cadastrar usuário</h2>
+        <form @submit.prevent="cadastrarAluno">
+          <div class="form-group">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" v-model="novoAluno.nome" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Telefone:</label>
+            <input type="text	" id="telefone" v-model="novoAluno.telefone" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" v-model="novoAluno.email" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Confirmar Email:</label>
+            <input type="email" id="email" v-model="novoAluno.email" required />
+          </div>
+          <div class="form-group">
+            <label for="senha">Senha:</label>
+            <input type="senha" id="semha" v-model="novoAluno.senha" required />
+          </div>
+          <div class="form-group">
+            <label for="senha"> Confirmar Senha:</label>
+            <input type="senha" id="semha" v-model="novoAluno.senha" required />
+          </div>
+          <div class="form-group">
+            <label>Tipo de Usuário:</label>
+            <div class="radio-group">
+              <input type="radio" id="estudante" value="ESTUDANTE" v-model="novoAluno.tipoUsuario" />
+              <label for="estudante">Estudante</label>
+
+              <input type="radio" id="tecnico" value="TI" v-model="novoAluno.tipoUsuario" />
+              <label for="tecnico">Técnico de TI</label>
+              <input type="radio" id="Docente" value="DOCENTE" v-model="novoAluno.tipoUsuario" />
+              <label for="tecnico">Docente</label>
+              <input type="radio" id="tecnico" value="MANUTENCAO" v-model="novoAluno.tipoUsuario" />
+              <label for="tecnico">Técnico de Manuteção</label>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Cadastrar</button>
+        </form>
+      </div>
+
+
+      <!-- TABELAS DO KANBAN-->
+      <div v-show="mostrarTodosChamados || categoriaVisivel === 'Analise'" id="Análise" class="kanban-column"
+        @drop="drop($event)" @dragover="allowDrop($event)">
+        <h3 class="kanban-header bg-secondary text-white p-2 text-center">
+          Analise
+        </h3>
+        <div v-for="chamado in chamadosAnalise" :key="chamado.id" :id="chamado.id" class="kanban-item bg-light p-3 my-2"
+          draggable="true" @dragstart="drag($event, chamado)">
+          <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
+          <p><em>Email:</em> {{ chamado.email_usuario }}</p>
+          <p><em>Problema:</em> {{ chamado.problema }}</p>
+          <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
+          <p><em>Bloco:</em> {{ chamado.bloco }}</p>
+          <p><em>Sala:</em> {{ chamado.sala }}</p>
+          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join(", ") }}</p>
+          <button class="btn btn-danger btn-sm" @click="confirmarRemocao(chamado.id)">Remover</button>
+
+          <div class="tags"></div>
+        </div>
+      </div>
+
+      <div v-show="mostrarTodosChamados || categoriaVisivel === 'Pendente'" id="Pendentes" class="kanban-column"
+        @drop="drop($event)" @dragover="allowDrop($event)">
         <h3 class="kanban-header bg-danger text-white p-2 text-center">
           Pendente
         </h3>
-        <div
-          v-for="chamado in chamadosPendentes"
-          :key="chamado.id"
-          class="kanban-item bg-light p-3 my-2"
-          draggable="true"
-          @dragstart="drag($event, chamado)"
-        >
+        <div v-for="chamado in chamadosPendentes" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
+          draggable="true" @dragstart="drag($event, chamado)">
           <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
           <p><em>Email:</em> {{ chamado.email_usuario }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
           <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
           <p><em>Sala:</em> {{ chamado.sala }}</p>
-          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
+          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join(", ") }}</p>
 
         </div>
       </div>
 
-      <div
-        v-show="mostrarTodosChamados || categoriaVisivel === 'Andamento'"
-        id="Em Andamento"
-        class="kanban-column"
-        @drop="drop($event)"
-        @dragover="allowDrop($event)"
-      >
+      <div v-show="mostrarTodosChamados || categoriaVisivel === 'Andamento'" id="Em Andamento" class="kanban-column"
+        @drop="drop($event)" @dragover="allowDrop($event)">
         <h3 class="kanban-header bg-primary text-white p-2 text-center">
           Andamento
         </h3>
-        <div
-          v-for="chamado in chamadosAndamento"
-          :key="chamado.id"
-          class="kanban-item bg-light p-3 my-2"
-          draggable="true"
-          @dragstart="drag($event, chamado)"
-        >
+        <div v-for="chamado in chamadosAndamento" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
+          draggable="true" @dragstart="drag($event, chamado)">
           <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
           <p><em>Email:</em> {{ chamado.email_usuario }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
           <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
           <p><em>Sala:</em> {{ chamado.sala }}</p>
-          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
+          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join(", ") }}</p>
 
         </div>
       </div>
 
-      <div
-        v-show="mostrarTodosChamados || categoriaVisivel === 'Concluído'"
-        id="Concluido"
-        class="kanban-column"
-        @drop="drop($event)"
-        @dragover="allowDrop($event)"
-      >
+      <div v-show="mostrarTodosChamados || categoriaVisivel === 'Concluído'" id="Concluido" class="kanban-column"
+        @drop="drop($event)" @dragover="allowDrop($event)">
         <h3 class="kanban-header bg-success text-white p-2 text-center">
           Concluído
         </h3>
-        <div
-          v-for="chamado in chamadosConcluidos"
-          :key="chamado.id"
-          class="kanban-item bg-light p-3 my-2"
-          draggable="true"
-          @dragstart="drag($event, chamado)"
-        >
+        <div v-for="chamado in chamadosConcluidos" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
+          draggable="true" @dragstart="drag($event, chamado)">
           <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
           <p><em>Email:</em> {{ chamado.email_usuario }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
           <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
           <p><em>Sala:</em> {{ chamado.sala }}</p>
-          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
+          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join(", ") }}</p>
           <button class="btn btn-danger btn-sm" @click="confirmarRemocao(chamado.id)">Remover</button>
         </div>
       </div>
 
       <!-- TABELAS DO KANBAN mostrarChamadosManutençao  -->
 
-      <div
-        v-show="mostrarChamadosManutençao || categoriaVisivel === 'Analise'"
-        id="Análise"
-        class="kanban-column"
-        @drop="drop($event)"
-        @dragover="allowDrop($event)"
-      >
+      <div v-show="mostrarChamadosManutençao || categoriaVisivel === 'Analise'" id="Análise" class="kanban-column"
+        @drop="drop($event)" @dragover="allowDrop($event)">
         <h3 class="kanban-header bg-secondary text-white p-2 text-center">
           Analise
         </h3>
-        <div
-          v-for="chamado in chamadosAnalise"
-          :key="chamado.id"
-          class="kanban-item bg-light p-3 my-2"
-          draggable="true"
-          @dragstart="drag($event, chamado)"
-        >
+        <div v-for="chamado in chamadosAnalise" :key="chamado.id" class="kanban-item bg-light p-3 my-2" draggable="true"
+          @dragstart="drag($event, chamado)">
           <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
           <p><em>Email:</em> {{ chamado.email_usuario }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
           <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
           <p><em>Sala:</em> {{ chamado.sala }}</p>
-          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
+          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join(", ") }}</p>
 
         </div>
       </div>
 
-      <div
-        v-show="mostrarChamadosManutençao || categoriaVisivel === 'Pendente'"
-        id="Pendentes"
-        class="kanban-column"
-        @drop="drop($event)"
-        @dragover="allowDrop($event)"
-      >
+      <div v-show="mostrarChamadosManutençao || categoriaVisivel === 'Pendente'" id="Pendentes" class="kanban-column"
+        @drop="drop($event)" @dragover="allowDrop($event)">
         <h3 class="kanban-header bg-danger text-white p-2 text-center">
           Pendente
         </h3>
-        <div
-          v-for="chamado in chamadosPendentes"
-          :key="chamado.id"
-          class="kanban-item bg-light p-3 my-2"
-          draggable="true"
-          @dragstart="drag($event, chamado)"
-        >
+        <div v-for="chamado in chamadosPendentes" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
+          draggable="true" @dragstart="drag($event, chamado)">
           <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
           <p><em>Email:</em> {{ chamado.email_usuario }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
           <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
           <p><em>Sala:</em> {{ chamado.sala }}</p>
-          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
+          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join(", ") }}</p>
 
         </div>
       </div>
 
-      <div
-        v-show="mostrarChamadosManutençao || categoriaVisivel === 'Andamento'"
-        id="andamento"
-        class="kanban-column"
-        @drop="drop($event)"
-        @dragover="allowDrop($event)"
-      >
+      <div v-show="mostrarChamadosManutençao || categoriaVisivel === 'Andamento'" id="andamento" class="kanban-column"
+        @drop="drop($event)" @dragover="allowDrop($event)">
         <h3 class="kanban-header bg-primary text-white p-2 text-center">
           Andamento
         </h3>
-        <div
-          v-for="chamado in chamadosAndamento"
-          :key="chamado.id"
-          class="kanban-item bg-light p-3 my-2"
-          draggable="true"
-          @dragstart="drag($event, chamado)"
-        >
+        <div v-for="chamado in chamadosAndamento" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
+          draggable="true" @dragstart="drag($event, chamado)">
           <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
           <p><em>Email:</em> {{ chamado.email_usuario }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
           <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
           <p><em>Sala:</em> {{ chamado.sala }}</p>
-          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
+          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join(", ") }}</p>
 
         </div>
       </div>
 
-  <div  v-show="mostrarChamadosManutençao || categoriaVisivel === 'Concluído'"
-        id="concluido"
-        class="kanban-column"
-        @drop="drop($event)"
-        @dragover="allowDrop($event)"
-      >
+      <div v-show="mostrarChamadosManutençao || categoriaVisivel === 'Concluído'" id="concluido" class="kanban-column"
+        @drop="drop($event)" @dragover="allowDrop($event)">
         <h3 class="kanban-header bg-success text-white p-2 text-center">
           Concluído
         </h3>
-        <div
-          v-for="chamado in chamadosConcluidos"
-          :key="chamado.id"
-          class="kanban-item bg-light p-3 my-2"
-          draggable="true"
-          @dragstart="drag($event, chamado)"
-        >  
+        <div v-for="chamado in chamadosConcluidos" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
+          draggable="true" @dragstart="drag($event, chamado)">
           <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
           <p><em>Email:</em> {{ chamado.email_usuario }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
           <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
           <p><em>Bloco:</em> {{ chamado.bloco }}</p>
           <p><em>Sala:</em> {{ chamado.sala }}</p>
-          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join (", ") }}</p>
+          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join(", ") }}</p>
 
         </div>
       </div>
-  
-      </div>
+
     </div>
+  </div>
 
 
   <!-- Ultima div (Templete)-->
@@ -507,9 +351,12 @@
 <script>
 import axios from "axios";
 import Swal from "sweetalert2";
+import { ROLES } from "../util/roles";
 export default {
   data() {
     return {
+      ROLES,
+      role: null,
       chamadosAnalise: [],
       chamadosAndamento: [],
       chamadosConcluidos: [],
@@ -520,7 +367,7 @@ export default {
       mostrarTodosChamados: true,
       mostrarFormulario: false,
       mostrarChamadosManutençao: false,
-      mostrarTabelaExibida: false, 
+      mostrarTabelaExibida: false,
       mostrarCadastrosala: false,
 
       novoAluno: {
@@ -533,54 +380,54 @@ export default {
         tipoUsuario: "",
       },
       novoSala: {
-      bloco: '', // ou algum valor inicial
-      numerodasala:'',
-      nomedasala:''
-    },
+        bloco: '', // ou algum valor inicial
+        numerodasala: '',
+        nomedasala: ''
+      },
     };
   },
   methods: {
-    
-  methods: {
-    confirmarRemocao(id) {
-      Swal.fire({
-        title: 'Tem certeza que deseja deletar?',
-        text: "Esta ação não pode ser desfeita!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Sim, deletar',
-        cancelButtonText: 'Cancelar'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.deletarChamado(id);
-        }
-      });
+
+    methods: {
+      confirmarRemocao(id) {
+        Swal.fire({
+          title: 'Tem certeza que deseja deletar?',
+          text: "Esta ação não pode ser desfeita!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: 'Sim, deletar',
+          cancelButtonText: 'Cancelar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.deletarChamado(id);
+          }
+        });
+      },
+      deletarChamado(id) {
+        // Lógica para remover o chamado do array `chamadosAnalise`
+        this.chamadosAnalise = this.chamadosAnalise.filter(chamado => chamado.id !== id);
+        Swal.fire('Deletado!', 'O chamado foi removido.', 'success');
+      }
     },
-    deletarChamado(id) {
-      // Lógica para remover o chamado do array `chamadosAnalise`
-      this.chamadosAnalise = this.chamadosAnalise.filter(chamado => chamado.id !== id);
-      Swal.fire('Deletado!', 'O chamado foi removido.', 'success');
-    }
-  },
     async carregarChamados() {
       try {
         const token = localStorage.getItem("token");
-      
+
         const resposta = await axios.get('http://localhost:3000/chamados', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
 
         this.chamados = resposta.data;
 
         this.chamadosAnalise = this.chamados.filter(
           (chamado) => chamado.status === "Análise"
-      
+
         );
-        
+
 
         this.chamadosAndamento = this.chamados.filter(
           (chamado) => chamado.status === "Em Andamento"
@@ -598,53 +445,53 @@ export default {
     atualizarChamados() {
       setInterval(() => {
         this.carregarChamados();
-      },1000*60);
+      }, 1000 * 60);
     },
 
     chamadosTi() {
-  this.categoriaVisivel = null;
-  this.mostrarTabelaExibida = false;
-  this.mostrarTodosChamados = true;
-  this.mostrarFormulario = false;
-  this.mostrarChamadosManutençao = false;
-  this.mostrarCadastrosala = false;
-},
+      this.categoriaVisivel = null;
+      this.mostrarTabelaExibida = false;
+      this.mostrarTodosChamados = true;
+      this.mostrarFormulario = false;
+      this.mostrarChamadosManutençao = false;
+      this.mostrarCadastrosala = false;
+    },
 
-chamadosManuntencao() {
-  this.categoriaVisivel = null;
-  this.mostrarTodosChamados = false;
-  this.mostrarChamadosManutençao = true;
-  this.mostrarFormulario = false;
-  this.mostrarTabelaExibida = false;
-  this.mostrarCadastrosala = false;
-},
+    chamadosManuntencao() {
+      this.categoriaVisivel = null;
+      this.mostrarTodosChamados = false;
+      this.mostrarChamadosManutençao = true;
+      this.mostrarFormulario = false;
+      this.mostrarTabelaExibida = false;
+      this.mostrarCadastrosala = false;
+    },
 
-mostrarCadastro() {
-  this.mostrarFormulario = true;
-  this.categoriaVisivel = null;
-  this.mostrarTodosChamados = false;
-  this.mostrarTabelaExibida = false;
-  this.mostrarChamadosManutençao = false;
-  this.mostrarCadastrosala = false;
-},
+    mostrarCadastro() {
+      this.mostrarFormulario = true;
+      this.categoriaVisivel = null;
+      this.mostrarTodosChamados = false;
+      this.mostrarTabelaExibida = false;
+      this.mostrarChamadosManutençao = false;
+      this.mostrarCadastrosala = false;
+    },
 
-mostrarTabela() {
-  this.categoriaVisivel = null;
-  this.mostrarTabelaExibida = true;
-  this.mostrarChamadosManutençao = false;
-  this.mostrarTodosChamados = false;
-  this.mostrarFormulario = false;
-  this.mostrarCadastrosala = false;
-},
-mostrarSala() {
-    console.log("Clique em Adicionar Salas!"); // Debug: verifique no console
-    this.categoriaVisivel = null;
-    this.mostrarCadastrosala = true; // Definir como true para exibir a seção
-    this.mostrarFormulario = false;
-    this.mostrarChamadosManutençao = false;
-    this.mostrarTodosChamados = false;
-    this.mostrarTabelaExibida = false;
-  },
+    mostrarTabela() {
+      this.categoriaVisivel = null;
+      this.mostrarTabelaExibida = true;
+      this.mostrarChamadosManutençao = false;
+      this.mostrarTodosChamados = false;
+      this.mostrarFormulario = false;
+      this.mostrarCadastrosala = false;
+    },
+    mostrarSala() {
+      console.log("Clique em Adicionar Salas!"); // Debug: verifique no console
+      this.categoriaVisivel = null;
+      this.mostrarCadastrosala = true; // Definir como true para exibir a seção
+      this.mostrarFormulario = false;
+      this.mostrarChamadosManutençao = false;
+      this.mostrarTodosChamados = false;
+      this.mostrarTabelaExibida = false;
+    },
     editarAluno(id) {
       // Lógica para editar o aluno
       console.log("Editar aluno com ID:", id);
@@ -659,25 +506,24 @@ mostrarSala() {
       event.dataTransfer.setData("chamado", JSON.stringify(chamado));
     },
     async drop(event) {
-     const pendentes = document.getElementById("Pendentes")
-     const Analise = document.getElementById("Análise")
-     const concluidos = document.getElementById("Concluido")
-     const andamento = document.getElementById("Em Andamento")
-     debugger
-let status = ''
+      const pendentes = document.getElementById("Pendentes")
+      const Analise = document.getElementById("Análise")
+      const concluidos = document.getElementById("Concluido")
+      const andamento = document.getElementById("Em Andamento")
+      let status = ''
 
-     if (pendentes=== event.target || pendentes.contains(event.target)) {
-      status = 'Pendentes'
-    } else if (Analise === event.target || Analise.contains(event.target)) {
-      status = 'Análise'
-    } else if (concluidos === event.target || concluidos.contains(event.target)) {
-      status = 'Concluido'
-    } else if (andamento === event.target || andamento.contains(event.target)) {
-      status = 'Em Andamento'
-      
-    }
-  
-    
+      if (pendentes === event.target || pendentes.contains(event.target)) {
+        status = 'Pendentes'
+      } else if (Analise === event.target || Analise.contains(event.target)) {
+        status = 'Análise'
+      } else if (concluidos === event.target || concluidos.contains(event.target)) {
+        status = 'Concluido'
+      } else if (andamento === event.target || andamento.contains(event.target)) {
+        status = 'Em Andamento'
+
+      }
+
+
 
       event.preventDefault();
       const chamado = JSON.parse(event.dataTransfer.getData("chamado"));
@@ -693,7 +539,7 @@ let status = ''
         return;
       }
 
-      chamado.status = status ;
+      chamado.status = status;
       const token = localStorage.getItem("token");
       await axios.put(`http://localhost:3000/chamados/${chamado.id}`, chamado, {
         headers: {
@@ -729,7 +575,7 @@ let status = ''
       this.mostrarTabelaSala = false;
       this.mostrarCadastrosala = false;
     },
-    
+
     allowDrop(event) {
       event.preventDefault();
     },
@@ -780,7 +626,7 @@ let status = ''
   mounted() {
     this.carregarChamados();
     this.atualizarChamados();
-
+    this.role = localStorage.getItem("role")
   },
 };
 
@@ -959,17 +805,20 @@ header {
 /* Responsividade para o layout */
 @media (max-width: 1024px) {
   .kanban-column {
-    width: 48%; /* Ajusta para duas colunas em tablets */
+    width: 48%;
+    /* Ajusta para duas colunas em tablets */
   }
 }
 
 @media (max-width: 768px) {
   .d-flex {
-    flex-direction: column; /* Empilha os elementos em telas menores */
+    flex-direction: column;
+    /* Empilha os elementos em telas menores */
   }
 
   .kanban-column {
-    width: 100%; /* Coluna única em dispositivos móveis */
+    width: 100%;
+    /* Coluna única em dispositivos móveis */
   }
 
   .table-container {
@@ -1004,10 +853,12 @@ header {
     display: block;
   }
 }
+
 .bg-secondary {
-    --bs-bg-opacity: 1;
-    background-color: #0d6efd !important;
+  --bs-bg-opacity: 1;
+  background-color: #0d6efd !important;
 }
+
 .form-group {
   margin-bottom: 15px;
 }
@@ -1028,28 +879,29 @@ header {
 
 /* Menu Lateral com opçoes */
 .bg-dark {
-    --bs-bg-opacity: 1;
-    background-color: #0d6efd !important;
+  --bs-bg-opacity: 1;
+  background-color: #0d6efd !important;
 }
+
 .form-select {
-    --bs-form-select-bg-img: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e);
-    display: block;
-    width: 100%;
-    padding: .375rem 2.25rem .375rem .75rem;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: var(--bs-body-color);
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-color: var(--bs-body-bg);
-    background-image: var(--bs-form-select-bg-img), var(--bs-form-select-bg-icon, none);
-    background-repeat: no-repeat;
-    background-position: right .75rem center;
-    background-size: 16px 12px;
-    border: var(--bs-border-width) solid #0d6efd;
-    border-radius: var(--bs-border-radius);
-    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  --bs-form-select-bg-img: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e);
+  display: block;
+  width: 100%;
+  padding: .375rem 2.25rem .375rem .75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--bs-body-color);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: var(--bs-body-bg);
+  background-image: var(--bs-form-select-bg-img), var(--bs-form-select-bg-icon, none);
+  background-repeat: no-repeat;
+  background-position: right .75rem center;
+  background-size: 16px 12px;
+  border: var(--bs-border-width) solid #0d6efd;
+  border-radius: var(--bs-border-radius);
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
 </style>

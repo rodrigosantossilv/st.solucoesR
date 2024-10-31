@@ -105,12 +105,13 @@ export default {
 
         if (response.status === 200) {
           localStorage.setItem("token", response.data.token);
+          localStorage.setItem("role",response.data.ocupacao)
 
           if (
             response.data.ocupacao.endsWith("ESTUDANTE") ||
             response.data.ocupacao.endsWith("DOCENTE")
           ) {
-            this.$router.push("/openticketpage");
+            this.$router.push({name:"/openticketpage"});
           } else if (
             response.data.ocupacao.endsWith("MANUTENCAO") ||
             response.data.ocupacao.endsWith("TI")
