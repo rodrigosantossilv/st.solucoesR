@@ -461,15 +461,11 @@ export default {
 
 
       this.chamados = resposta.data;
-      console.log(this.chamados)
-console.log(this.filterOcupacao)
 
-      this.chamados = this.filterOcupacao !== "TODOS" ? this.chamados.filter(
-        (chamado) => chamado.ocupacao === this.fliterOcupacao) : this.chamados
-
-        this.chamados = this.filterOcupacao === "ESTUDANTE" ? this.chamados.filter(
-        (chamado) => chamado.ocupacao === this.fliterOcupacao) : this.chamados
-
+   this.chamados = this.filterOcupacao !== "TODOS" ? this.chamados.filter(
+    (chamado) => chamado.ocupacao === this.filterOcupacao
+) : this.chamados;
+      
       this.chamadosAnalise = this.chamados.filter(
         (chamado) => chamado.status === "Análise"
 
