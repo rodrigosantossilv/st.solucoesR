@@ -116,7 +116,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      rooms: Array.from({ length: 50 }, (_, i) => i + 1), // Gera um array de 1 a 50
+      rooms: Array.from({ length: 43}, (_, i) => i + 1), // Gera um array de 1 a 50
       selectedRooms: [],   
       problema: "",
       problemas: [],
