@@ -215,7 +215,7 @@
           <!-- v-if="this.role === this.ROLES.NOA" -->
           <div v-for="chamado in chamadosAnalise" :key="chamado.id" :id="chamado.id"
             class="kanban-item bg-light p-3 my-2" draggable="true" @dragstart="drag($event, chamado)">
-            <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
+            <p><strong>Gmail:</strong> {{ chamado.email }}</p>
             <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
             <p><em>Problema:</em> {{ chamado.problema }}</p>
             <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
@@ -236,7 +236,7 @@
         </h3>
         <div v-for="chamado in chamadosPendentes" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
           draggable="true" @dragstart="drag($event, chamado)">
-          <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
+          <p><strong>Gmail:</strong> {{ chamado.email }}</p>
           <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
           <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
@@ -254,7 +254,7 @@
         </h3>
         <div v-for="chamado in chamadosAndamento" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
           draggable="true" @dragstart="drag($event, chamado)">
-          <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
+          <p><strong>Gmail:</strong> {{ chamado.email }}</p>
           <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
           <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
@@ -272,7 +272,7 @@
         </h3>
         <div v-for="chamado in chamadosConcluidos" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
           draggable="true" @dragstart="drag($event, chamado)">
-          <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
+          <p><strong>Gmail:</strong> {{ chamado.email }}</p>
           <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
           <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
@@ -292,7 +292,7 @@
         </h3>
         <div v-for="chamado in chamadosAnalise" :key="chamado.id" class="kanban-item bg-light p-3 my-2" draggable="true"
           @dragstart="drag($event, chamado)">
-          <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
+          <p><strong>Gmail:</strong> {{ chamado.email }}</p>
           <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
           <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
@@ -310,7 +310,7 @@
         </h3>
         <div v-for="chamado in chamadosPendentes" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
           draggable="true" @dragstart="drag($event, chamado)">
-          <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
+          <p><strong>Gmail:</strong> {{ chamado.email }}</p>
           <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
           <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
@@ -328,7 +328,7 @@
         </h3>
         <div v-for="chamado in chamadosAndamento" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
           draggable="true" @dragstart="drag($event, chamado)">
-          <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
+          <p><strong>Gmail:</strong> {{ chamado.email }}</p>
           <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
           <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
@@ -346,7 +346,7 @@
         </h3>
         <div v-for="chamado in chamadosConcluidos" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
           draggable="true" @dragstart="drag($event, chamado)">
-          <p><strong>Nome:</strong> {{ chamado.nome_usuario }}</p>
+          <p><strong>Gmail:</strong> {{ chamado.email }}</p>
           <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
           <p><em>Problema:</em> {{ chamado.problema }}</p>
           <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
