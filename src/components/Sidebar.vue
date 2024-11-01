@@ -373,7 +373,7 @@ import { ROLES } from "../util/roles";
 export default {
   data() {
     return {
-      filterOcupacao: "",
+      filterOcupacao: "TODOS",
       ROLES,
       role: null,
       chamadosAnalise: [],
