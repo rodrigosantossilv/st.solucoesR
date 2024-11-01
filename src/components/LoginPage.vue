@@ -111,13 +111,14 @@ export default {
             response.data.ocupacao.endsWith("ESTUDANTE") ||
             response.data.ocupacao.endsWith("DOCENTE")
           ) {
-            this.$router.push({name:"/openticketpage"});
+            this.$router.push("/openticketpage");
           } else if (
             response.data.ocupacao.endsWith("MANUTENCAO") ||
             response.data.ocupacao.endsWith("TI")
           ) {
             this.$router.push("/sidebar");
-          } else if (response.data.ocupacao.endsWith("NOA")) {
+          } else if (
+            response.data.ocupacao.endsWith("NOA")) {
             this.$router.push("/sidebar");
           }
         } else {
