@@ -196,7 +196,7 @@
               <input type="radio" id="tecnico" value="MANUTENCAO" v-model="novoAluno.tipoUsuario" />
               <label for="tecnico">Técnico de Manuteção</label>
               <input type="radio" id="administrativo" value="NOA" v-model="novoAluno.tipoUsuario" />
-              <label for="administrativo">Noa</label>
+              <label for="administrativo">NOA</label>
             </div>
           </div>
 
