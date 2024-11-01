@@ -649,7 +649,7 @@ submitForm() {
       const dadosUsuario = {
         nome_completo: this.novoAluno.nome,
         senha: this.novoAluno.senha,
-        email: this.novoAluno.email,
+        email: this.novoAluno.gmail,
         telefone: this.novoAluno.telefone,
         setor_id: this.novoAluno.setor_id,
         instituicao: "Senai",
