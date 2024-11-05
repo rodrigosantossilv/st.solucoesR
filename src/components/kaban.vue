@@ -420,7 +420,7 @@ header {
 /* Sidebar */
 .sidebar {
   background-color: #0d6efd;
-  width: 250px;
+  width: 390px;
   min-height: 100vh;
   color: white;
   padding: 1rem;
@@ -549,7 +549,7 @@ header {
 
 /* Kanban Board */
 .kanban-column {
-  width: 24%;
+  width: 50%;
   margin: 0.5rem;
   display: inline-block;
   vertical-align: top;

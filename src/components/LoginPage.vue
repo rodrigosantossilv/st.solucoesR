@@ -18,7 +18,7 @@
 
       <div class="right-side">
         <div class="login-box">
-          <h2>Bem-vindo!</h2>
+          <h2>Bem-vindo(a)!</h2>
 
           <input
             type="email"

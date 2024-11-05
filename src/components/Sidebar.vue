@@ -8,7 +8,7 @@
     <div class="d-flex">
       <!-- Sidebar (Dashboard) -->
       <div class="sidebar bg-secondary text-white p-3">
-        <h2>Opções</h2>
+        <h2>Menu</h2>
         <ul class="nav flex-column">
           <li class="nav-item">
             <a class="nav-link text-white" @click="home" href="#">Home </a>
@@ -31,20 +31,24 @@
           </li>
 
           <li v-if="this.role === this.ROLES.NOA" class="nav-item">
-            <a class="nav-link text-white" @click="mostrarCadastro" to="#">Cadastro</a>
+            <a class="nav-link text-white" @click="mostrarCadastro" to="#">Novo Cadastro</a>
           </li>
           <li v-if="this.role === this.ROLES.NOA" class="nav-item">
-            <a class="nav-link text-white" @click="mostrarTabela" href="#">Tabela</a>
+            <a class="nav-link text-white" @click="mostrarTabela" href="#">Tabela de usuários</a>
           </li>
           <li v-if="this.role === this.ROLES.NOA" class="nav-item">
             <a class="nav-link text-white" @click="mostrarSala" href="#">
-              Adicionar Salas
+              Cadastra sala
+            </a>
+          </li>
+          <li v-if="this.role === this.ROLES.NOA" class="nav-item">
+            <a class="nav-link text-white" @click="mostraTabelasalascadasatradas" href="#">
+              Tabela de salas
             </a>
           </li>
         </ul>
-
-        <!-- Tabela para cadastrar sala e mostrar salas cadastradas -->
       </div>
+
       <div v-if="mostrarCadastrosala" class="table-container p-3">
         <!-- Formulário para cadastro de sala -->
         <form @submit.prevent="adicionarSala" class="mb-4">
@@ -65,12 +69,15 @@
               class="form-control" required />
           </div>
           <button type="submit" class="btn btn-primary">Adicionar Sala</button>
+          <h2>Pesquisa de salas cadastradas</h2>
+          <input type="text" placeholder="Pesquisa por sala ou laboratorio cadastrado" class="form-control mb-3" />
         </form>
 
-        <h2>Tabela de Salas Cadastradas</h2>
-        <input type="text" placeholder="Pesquisa por nome ou bloco" class="form-control mb-3" />
 
-        <div class="table-responsive">
+      </div>
+      <div v-if="mostrarTabelasalas"  class="table-container p-3">
+        <h2>Tabela de salas cadastradas</h2>
+        <input type="text" placeholder="Pesquisa por salas ou laboratórios cadastrados" class="form-control mb-3" />
           <table class="table table-striped">
             <thead>
               <tr>
@@ -82,7 +89,7 @@
             </thead>
             <tbody>
               <tr>
-                <td data-label="Bloco">A</td>
+                <td data-label="Bloco">m</td>
                 <td data-label="Número da sala">23</td>
                 <td data-label="Nome da sala">Laboratório</td>
                 <td data-label="Ações">
@@ -91,7 +98,7 @@
                 </td>
               </tr>
               <tr>
-                <td data-label="Bloco">A</td>
+                <td data-label="Bloco">b</td>
                 <td data-label="Número da sala">23</td>
                 <td data-label="Nome da sala">Laboratório</td>
                 <td data-label="Ações">
@@ -99,18 +106,14 @@
                   <button class="btn btn-danger btn-sm">Remover</button>
                 </td>
               </tr>
-              <!-- Adicione mais linhas aqui conforme necessário -->
+            
             </tbody>
           </table>
         </div>
 
 
-      </div>
-
-
-
       <!-- Tabela Alunos-->
-       <div v-if="mostrarTabelaExibida" class="table-container p-3">
+      <div v-if="mostrarTabelaExibida" class="table-container p-3">
         <h2>Tabela de Usuários</h2>
         <input type="text" placeholder="Pesquisa por nome ou email" class="form-control mb-3" />
         <div class="table-responsive">
@@ -301,7 +304,7 @@ export default {
       mostrarChamadosManutençao: false,
       mostrarTabelaExibida: false,
       mostrarCadastrosala: false,
-
+      mostrarTabelasalas: false,
     
       novoAluno: {
         senha: "",
@@ -431,6 +434,7 @@ submitForm() {
     this.mostrarFormulario = false;
     this.mostrarChamadosManutençao = false;
     this.mostrarCadastrosala = false;
+    this.mostrarTabelasalas = false;
   },
 
   chamadosManuntencao() {
@@ -440,6 +444,8 @@ submitForm() {
     this.mostrarFormulario = false;
     this.mostrarTabelaExibida = false;
     this.mostrarCadastrosala = false;
+    this.mostrarTabelasalas = false;
+
   },
 
   mostrarCadastro() {
@@ -449,6 +455,8 @@ submitForm() {
     this.mostrarTabelaExibida = false;
     this.mostrarChamadosManutençao = false;
     this.mostrarCadastrosala = false;
+    this.mostrarTabelasalas = false;
+
   },
 
   mostrarTabela() {
@@ -458,6 +466,8 @@ submitForm() {
     this.mostrarTodosChamados = false;
     this.mostrarFormulario = false;
     this.mostrarCadastrosala = false;
+    this.mostrarTabelasalas = false;
+
   },
   mostrarSala() {
     console.log("Clique em Adicionar Salas!"); // Debug: verifique no console
@@ -467,7 +477,21 @@ submitForm() {
     this.mostrarChamadosManutençao = false;
     this.mostrarTodosChamados = false;
     this.mostrarTabelaExibida = false;
+    this.mostrarTabelasalas = false;
+
   },
+  mostraTabelasalascadasatradas(){
+    console.log("Clique em Adicionar Salas!"); // Debug: verifique no console
+    this.categoriaVisivel = null;
+    this.mostrarCadastrosala = false; // Definir como true para exibir a seção
+    this.mostrarFormulario = false;
+    this.mostrarChamadosManutençao = false;
+    this.mostrarTodosChamados = false;
+    this.mostrarTabelaExibida = false;
+    this.mostrarTabelasalas = true;
+
+  },
+
   editarAluno(id) {
     // Lógica para editar o aluno
     console.log("Editar aluno com ID:", id);
@@ -534,6 +558,7 @@ submitForm() {
     this.mostrarTabelaExibida = false;
     this.mostrarTabelaSala = false;
     this.mostrarCadastrosala = false;
+    this.mostrarTabelasalas = false;
   },
   chamadosManuntencao() {
     this.categoriaVisivel = null;
@@ -542,6 +567,7 @@ submitForm() {
     this.mostrarTabelaExibida = false;
     this.mostrarTabelaSala = false;
     this.mostrarCadastrosala = false;
+    this.mostrarTabelasalas = false;
 
   },
   mostrarCadastro() {
@@ -551,6 +577,7 @@ submitForm() {
     this.mostrarTabelaExibida = false;
     this.mostrarTabelaSala = false;
     this.mostrarCadastrosala = false;
+    this.mostrarTabelasalas = false;
   },
 
   allowDrop(event) {
@@ -745,7 +772,7 @@ header {
 
 /* Kanban Board */
 .kanban-column {
-  width: 24%;
+  width: 30%;
   margin: 0.5rem;
   display: inline-block;
   vertical-align: top;
