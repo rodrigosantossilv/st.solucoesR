@@ -191,9 +191,6 @@
 
     </div>
   </div>
-
-
-  <!-- Ultima div (Templete)-->
 </template>
 
 
@@ -312,41 +309,9 @@ export default {
     this.mostrarCadastrosala = false;
   },
 
-  chamadosManuntencao() {
-    this.categoriaVisivel = null;
-    this.mostrarTodosChamados = false;
-    this.mostrarChamadosManutençao = true;
-    this.mostrarFormulario = false;
-    this.mostrarTabelaExibida = false;
-    this.mostrarCadastrosala = false;
-  },
 
-  mostrarCadastro() {
-    this.mostrarFormulario = true;
-    this.categoriaVisivel = null;
-    this.mostrarTodosChamados = false;
-    this.mostrarTabelaExibida = false;
-    this.mostrarChamadosManutençao = false;
-    this.mostrarCadastrosala = false;
-  },
 
-  mostrarTabela() {
-    this.categoriaVisivel = null;
-    this.mostrarTabelaExibida = true;
-    this.mostrarChamadosManutençao = false;
-    this.mostrarTodosChamados = false;
-    this.mostrarFormulario = false;
-    this.mostrarCadastrosala = false;
-  },
-  mostrarSala() {
-    console.log("Clique em Adicionar Salas!"); // Debug: verifique no console
-    this.categoriaVisivel = null;
-    this.mostrarCadastrosala = true; // Definir como true para exibir a seção
-    this.mostrarFormulario = false;
-    this.mostrarChamadosManutençao = false;
-    this.mostrarTodosChamados = false;
-    this.mostrarTabelaExibida = false;
-  },
+ 
   editarAluno(id) {
     // Lógica para editar o aluno
     console.log("Editar aluno com ID:", id);

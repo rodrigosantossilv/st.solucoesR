@@ -229,7 +229,7 @@
         </div>
       </div>
 
-      <div v-show="mostrarTodosChamados || categoriaVisivel === 'Pendente'" id="Pendentes" class="kanban-column"
+      <div v-show="mostrarTodosChamados || categoriaVisivel === 'TI'" id="Pendentes" class="kanban-column"
         @drop="drop($event)" @dragover="allowDrop($event)">
         <h3 class="kanban-header bg-danger text-white p-2 text-center">
           TI
@@ -481,9 +481,10 @@ submitForm() {
   drag(event, chamado) {
     event.dataTransfer.setData("chamado", JSON.stringify(chamado));
   },
+
   async drop(event) {
-    const pendentes = document.getElementById("Pendentes")
     const Analise = document.getElementById("Análise")
+    const pendentes = document.getElementById("Pendentes")
     const concluidos = document.getElementById("Concluido")
     const andamento = document.getElementById("Em Andamento")
     let status = ''
