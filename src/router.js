@@ -4,7 +4,7 @@ import LoginPage from './components/LoginPage.vue';
 import RegisterPage from './components/RegisterPage.vue';
 import Sidebar from './components/Sidebar.vue';
 import OpenTicketPage from './components/OpenTicketPage.vue';
-import Lugares from './components/Lugares.vue';
+import kaban from './components/kaban.vue';
 import HomePage from './components/HomePage.vue';
 
 const routes = [
@@ -13,7 +13,7 @@ const routes = [
   { path: '/register', component: RegisterPage },
   { path: '/sidebar', component: Sidebar },
   { path: '/openticketpage', component: OpenTicketPage},
-  { path: '/lugar', component: Lugares},
+  { path: '/kaban', component: kaban},
   { path: '/home', component: HomePage}
 
 ];
