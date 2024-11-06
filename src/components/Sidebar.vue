@@ -149,88 +149,143 @@
 
 
       <!-- Formulário para cadastrar novo aluno -->
-
       <div v-if="mostrarFormulario" class="form-container">
-        <h2>Cadastrar usuário</h2>
-        <form @submit.prevent="cadastrarAluno">
-          <div class="form-group">
-            <label for="nome">Nome:</label>
-            <input type="text" id="nome" v-model="novoAluno.nome" required />
-          </div>
-          <div class="form-group">
-    <label for="telefone">Telefone:</label>
-    <input
+  <h2>Cadastrar usuário</h2>
+  <form @submit.prevent="cadastrarAluno">
+    <div class="form-group">
+      <label for="nome">Nome:</label>
+      <input type="text" id="nome" v-model="novoAluno.nome" required />
+    </div>
+
+    <div class="form-group">
+      <label for="telefone">Telefone:</label>
+      <input
         type="tel"
         id="telefone"
         v-model="novoAluno.telefone"
         @input="formatarTelefone"
         required
         maxlength="16"
-    />
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input
+        type="email"
+        id="email"
+        v-model="novoAluno.gmail"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="confirmar-email">Confirmar Email:</label>
+      <input
+        type="email"
+        id="confirmar-email"
+        v-model="novoAluno.confirmarEmail"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="senha">Senha:</label>
+      <input
+        type="password"
+        id="senha"
+        v-model="novoAluno.senha"
+        required
+        minlength="8"
+        :title="'Senha deve ter pelo menos 8 caracteres'"
+      />
+      <small class="form-text text-muted">A senha deve ter pelo menos 8 caracteres.</small>
+    </div>
+
+    <div class="form-group">
+      <label for="confirmar-senha">Confirmar Senha:</label>
+      <input
+        type="password"
+        id="confirmar-senha"
+        v-model="novoAluno.confirmarSenha"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label>Tipo de Usuário:</label>
+      <div class="radio-group">
+        <input
+          type="radio"
+          id="estudante"
+          value="ESTUDANTE"
+          v-model="novoAluno.tipoUsuario"
+        />
+        <label for="estudante">Estudante</label>
+
+        <input
+          type="radio"
+          id="tecnico"
+          value="TI"
+          v-model="novoAluno.tipoUsuario"
+        />
+        <label for="tecnico">Técnico de TI</label>
+
+        <input
+          type="radio"
+          id="docente"
+          value="DOCENTE"
+          v-model="novoAluno.tipoUsuario"
+        />
+        <label for="docente">Docente</label>
+
+        <input
+          type="radio"
+          id="manutencao"
+          value="MANUTENCAO"
+          v-model="novoAluno.tipoUsuario"
+        />
+        <label for="manutencao">Técnico de Manutenção</label>
+
+        <input
+          type="radio"
+          id="administrativo"
+          value="NOA"
+          v-model="novoAluno.tipoUsuario"
+        />
+        <label for="administrativo">NOA</label>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Cadastrar</button>
+  </form>
 </div>
 
 
-          <div class="form-group">
-            <label for="Gmail">email:</label>
-            <input type="email" id="email" v-model="novoAluno.gmail" required />
-          </div>
-          <div class="form-group">
-            <label for="Gmail">Confirmar email:</label>
-            <input type="email" id="email" v-model="novoAluno.gmail" required />
-          </div>
-          <div class="form-group">
-            <label for="senha">Senha:</label>
-            <input type="senha" id="semha" v-model="novoAluno.senha" required />
-          </div>
-          <div class="form-group">
-            <label for="senha"> Confirmar Senha:</label>
-            <input type="senha" id="semha" v-model="novoAluno.senha" required />
-          </div>
-          <div class="form-group">
-            <label>Tipo de Usuário:</label>
-            <div class="radio-group">
-              <input type="radio" id="estudante" value="ESTUDANTE" v-model="novoAluno.tipoUsuario" />
-              <label for="estudante">Estudante</label>
-
-              <input type="radio" id="tecnico" value="TI" v-model="novoAluno.tipoUsuario" />
-              <label for="tecnico">Técnico de TI</label>
-              <input type="radio" id="Docente" value="DOCENTE" v-model="novoAluno.tipoUsuario" />
-              <label for="tecnico">Docente</label>
-              <input type="radio" id="tecnico" value="MANUTENCAO" v-model="novoAluno.tipoUsuario" />
-              <label for="tecnico">Técnico de Manuteção</label>
-              <input type="radio" id="administrativo" value="NOA" v-model="novoAluno.tipoUsuario" />
-              <label for="administrativo">NOA</label>
-            </div>
-          </div>
-
-          <button type="submit" class="btn btn-primary">Cadastrar</button>
-        </form>
-      </div>
-
-
       <!-- TABELAS DO KANBAN-->
-      <div v-if="this.role === this.ROLES.NOA"  class="kanban-column">
-        <div v-show="mostrarTodosChamados || categoriaVisivel === 'Analise'" id="Análise"
-          @drop="drop($event)" @dragover="allowDrop($event)">
-          <h3 class="kanban-header bg-secondary text-white p-2 text-center">
-            Analise
-          </h3>
-          <!-- v-if="this.role === this.ROLES.NOA" -->
-          <div v-for="chamado in chamadosAnalise" :key="chamado.id" :id="chamado.id"
-            class="kanban-item bg-light p-3 my-2" draggable="true" @dragstart="drag($event, chamado)">
-            <p><strong>Gmail:</strong> {{ chamado.email }}</p>
-            <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
-            <p><em>Problema:</em> {{ chamado.problema }}</p>
-            <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
-            <p><em>Bloco:</em> {{ chamado.bloco }}</p>
-            <p><em>Sala:</em> {{ chamado.sala }}</p>
-            <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join(", ") }}</p>
-            <button class="btn btn-danger btn-sm" @click="confirmarRemocao(chamado.id)">Remover</button>
+<div v-if="this.role === this.ROLES.NOA" class="kanban-column">
+  <div v-show="mostrarTodosChamados || categoriaVisivel === 'Analise'" id="Análise"
+    @drop="drop($event)" @dragover="allowDrop($event)">
+    <h3 class="kanban-header bg-warning text-white p-2 text-center">
+      ANALISE
+    </h3>
+    <!-- v-if="this.role === this.ROLES.NOA" -->
+    <div v-for="chamado in chamadosAnalise" :key="chamado.id" :id="chamado.id"
+      class="kanban-item bg-light p-3 my-2" draggable="true" @dragstart="drag($event, chamado)">
+      <p><strong>Gmail:</strong> {{ chamado.email }}</p>
+      <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
+      <p><em>Problema:</em> {{ chamado.problema }}</p>
+      <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
+      <p><em>Bloco:</em> {{ chamado.bloco }}</p>
+      <p><em>Sala:</em> {{ chamado.sala }}</p>
+      <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join(", ") }}</p>
+      <button class="btn btn-danger btn-sm" @click="confirmarRemocao(chamado.id)">Remover</button>
 
-            <div class="tags"></div>
-          </div>
-        </div>
-      </div>
+      <div class="tags"></div>
+    </div>
+  </div>
+</div>
+
 
       <div v-show="mostrarTodosChamados || categoriaVisivel === 'TI'" id="Pendentes" class="kanban-column"
         @drop="drop($event)" @dragover="allowDrop($event)">
@@ -268,8 +323,7 @@
         </div>
       </div>
 
-     
-       
+
     
       
 
@@ -310,9 +364,7 @@ export default {
         senha: "",
         nome: "",
         email: "",
-        telefone: "",
-        confirmarEmail: "",
-        confirmarSenha: "",
+      
         tipoUsuario: "",
       },
       novoSala: {
@@ -584,48 +636,93 @@ submitForm() {
     event.preventDefault();
   },
 
-
   async cadastrarAluno() {
-      // Resetar o formulário
-      const dadosUsuario = {
-        nome_completo: this.novoAluno.nome,
-        senha: this.novoAluno.senha,
-        email: this.novoAluno.gmail,
-        telefone: this.novoAluno.telefone,
-        setor_id: this.novoAluno.setor_id,
-        instituicao: "Senai",
-        ocupacao: this.novoAluno.tipoUsuario,
-      };
-      const token = localStorage.getItem("token");
+  // Verificar se as senhas e emails são iguais
+  if (this.novoAluno.senha !== this.novoAluno.confirmarSenha) {
+    alert("As senhas não coincidem. Por favor, verifique.");
+    return;
+  }
 
-      const resposta = await axios.post(
-        "http://localhost:3000/auth/register",
-        dadosUsuario,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+  if (this.novoAluno.gmail !== this.novoAluno.confirmarEmail) {
+    alert("Os e-mails não coincidem. Por favor, verifique.");
+    return;
+  }
 
-      this.novoAluno = {
-        nome: "",
-        email: "",
-        telefone: "",
-        tipoUsuario: "",
-        senha: "",
-      };
-      this.mostrarFormulario = true;
+  // Verificar se a senha tem pelo menos 8 caracteres
+  if (this.novoAluno.senha.length < 8) {
+    alert("A senha deve ter pelo menos 8 caracteres.");
+    return;
+  }
 
-      if (resposta.status === 201 && this.carregarChamados) {
-        alert("Aluno cadastrado com sucesso!");
-      } else {
-        alert("Erro ao cadastrar o aluno");
-      }
-    },
-  },
+  // Montar os dados do usuário
+  const dadosUsuario = {
+    nome_completo: this.novoAluno.nome,
+    senha: this.novoAluno.senha,
+    email: this.novoAluno.gmail,
+    telefone: this.novoAluno.telefone,
+    setor_id: this.novoAluno.setor_id, // Adicionar o setor_id no objeto de dados se necessário
+    instituicao: "Senai",
+    ocupacao: this.novoAluno.tipoUsuario,
   };
+
+  const token = localStorage.getItem("token");
+
+  try {
+    // Enviar a requisição para o servidor
+    const resposta = await axios.post(
+      "http://localhost:3000/auth/register",
+      dadosUsuario,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    // Resetar os campos do formulário
+    this.novoAluno = {
+      nome: "",
+      email: "",
+      tipoUsuario: "",
+      senha: "",
+      
+    };
+    this.mostrarFormulario = true;
+
+    // Exibir a mensagem personalizada com base no tipo de usuário
+    if (resposta.status === 201) {
+      let mensagemSucesso = "";
+      switch (this.novoAluno.tipoUsuario) {
+        case "ESTUDANTE":
+          mensagemSucesso = "Aluno cadastrado com sucesso!";
+          break;
+        case "TI":
+          mensagemSucesso = "Técnico de TI cadastrado com sucesso!";
+          break;
+        case "DOCENTE":
+          mensagemSucesso = "Docente cadastrado com sucesso!";
+          break;
+        case "MANUTENCAO":
+          mensagemSucesso = "Técnico de Manutenção cadastrado com sucesso!";
+          break;
+        case "NOA":
+          mensagemSucesso = "Usuário NOA cadastrado com sucesso!";
+          break;
+        default:
+          mensagemSucesso = "Cadastro realizado com sucesso!";
+      }
+      alert(mensagemSucesso);
+    } else {
+      alert("Erro ao cadastrar o usuário");
+    }
+  } catch (error) {
+    console.error("Erro no cadastro:", error);
+    alert("Erro ao cadastrar o usuário. Tente novamente.");
+  }
+},
+  },
+};
 
 </script>
 
@@ -902,4 +999,4 @@ header {
   transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
 
-</style>
+</style>  
