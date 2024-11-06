@@ -31,17 +31,18 @@
             </option>
           </b-form-select>
         </b-form-group>
+        
         <b-form-group
-  v-if="problemas.some(p => (p.descricao === 'outros' || p.descricao === 'Computadores e Periféricos' || p.descricao === 'Softwares e Programas Específicos') && (p.id === problema))"
-  label="Descreva o problema específico"
-  label-for="descricaoProblema"
->
-  <b-form-input
-    v-model="descricaoProblema"
-    id="descricaoProblema"
-    placeholder="Digite mais detalhes sobre o problema"
-  ></b-form-input>
-</b-form-group>
+          v-if="problemas.some(p => (p.descricao === 'outros' || p.descricao === 'Computadores e Periféricos' || p.descricao === 'Softwares e Programas Específicos') && (p.id === problema))"
+          label="Descreva o problema específico"
+          label-for="descricaoProblema"
+        >
+          <b-form-input
+            v-model="descricaoProblema"
+            id="descricaoProblema"
+            placeholder="Digite mais detalhes sobre o problema"
+          ></b-form-input>
+        </b-form-group>
 
         <b-form-group label="Bloco da sala*" label-for="blocodasala">
           <b-form-select
@@ -76,35 +77,34 @@
         <b-button type="submit" variant="primary" @click="reportProblem">
           Relatar Problema
         </b-button>
+
         <div class="text-center mt-3">
           <router-link to="/" class="btn btn-link"
             >Voltar à página inicial</router-link
           >
         </div>
       </div>
-      <div>
 
-<div class="room-selection"  v-if="problemas.some(p => (p.descricao === 'Computadores e Periféricos' || p.descricao === 'Softwares e Programas Específicos') && (p.id === problema))"
->
-    <h2>Selecione as Salas</h2>
-    <div class="rooms-grid">
-      <div
-        class="room-card"
-        v-for="room in rooms"
-        :key="room"
-        @click="toggleRoomSelection(room)"
-        :class="{ selected: selectedRooms.includes(room) }"
-      >
-        Maquina {{ room }}
+      <div v-if="problemas.some(p => (p.descricao === 'Computadores e Periféricos' || p.descricao === 'Softwares e Programas Específicos') && (p.id === problema))">
+        <h2>Selecione as Máquinas</h2>
+        <b-button @click="showModal" variant="info">Selecionar Máquinas</b-button>
       </div>
-    </div>
 
-
-    
-  </div>
-
-</div>
-
+      <!-- Modal para selecionar máquinas -->
+      <b-modal v-model="isModalVisible" title="Selecione as Máquinas">
+        <div class="rooms-grid">
+          <div
+            class="room-card"
+            v-for="room in rooms"
+            :key="room"
+            @click="toggleRoomSelection(room)"
+            :class="{ selected: selectedRooms.includes(room) }"
+          >
+            Maquina {{ room }}
+          </div>
+        </div>
+        <b-button variant="primary" @click="saveSelectedRooms">Confirmar Seleção</b-button>
+      </b-modal>
 
     </div>
   </div>
@@ -113,11 +113,13 @@
 <script>
 import Swal from "sweetalert2";
 import axios from "axios";
+
 export default {
   data() {
     return {
-      rooms: Array.from({ length: 43}, (_, i) => i + 1), // Gera um array de 1 a 50
-      selectedRooms: [],   
+      rooms: Array.from({ length: 43 }, (_, i) => i + 1), // Gera um array de 1 a 43 para as máquinas
+      selectedRooms: [], // Lista de salas selecionadas
+      isModalVisible: false, // Controle da exibição do modal
       problema: "",
       problemas: [],
       blocodaSala: "",
@@ -125,16 +127,12 @@ export default {
       salas: [],
       blocos: [],
       descricaoProblema: "",
-      lugares: [], // Adicione os lugares disponíveis para seleção
-      mostrarSelecionarLugar: false, // Controle da exibição da seleção de lugares
-      maquinas: "", // Armazena o lugar selecionado
     };
   },
   mounted() {
     this.fetchBlocos();
     this.exibirProblema();
   },
-
   methods: {
     fetchBlocos() {
       const apiEndpointBlocos = "http://localhost:3000/blocos/com/salas";
@@ -142,7 +140,7 @@ export default {
       axios
         .get(apiEndpointBlocos, {
           headers: {
-            Authorization: `Bearer ${token}`, // Correção aqui
+            Authorization: `Bearer ${token}`,
           },
         })
         .then((response) => {
@@ -156,42 +154,18 @@ export default {
     toggleRoomSelection(room) {
       const index = this.selectedRooms.indexOf(room);
       if (index === -1) {
-        this.selectedRooms.push(room); // Adiciona a sala se não estiver selecionada
+        this.selectedRooms.push(room);
       } else {
-        this.selectedRooms.splice(index, 1); // Remove a sala se já estiver selecionada
+        this.selectedRooms.splice(index, 1);
       }
     },
- 
-  
-
-
-    async exibirProblema() {
-      const token = localStorage.getItem("token");
-      try {
-        const response = await axios.get(
-          "http://localhost:3000/problemas",
-
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        this.problemas = response.data;
-        const problemasFiltrados = response.data.filter((p) =>
-          p.descricao.includes(this.problema)
-        );
-
-        return problemasFiltrados;
-      } catch (error) {
-        console.error("Erro ao exibir problema:", error);
-        Swal.fire("Erro", "Não foi possível exibir o problema.", "error");
-      }
+    showModal() {
+      this.isModalVisible = true;
     },
-    toggleSelecao(lugarId) {
-      this.maquina = lugarId;
+    saveSelectedRooms() {
+      this.maquina = this.selectedRooms;
+      this.isModalVisible = false;
     },
-
     updateSalas(value) {
       const blocodaSala = value;
       const bloco = this.blocos.find((bloco) => bloco.id === blocodaSala);
@@ -201,7 +175,22 @@ export default {
     updateProblemas(value) {
       const problema = value;
     },
-
+    async exibirProblema() {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/problemas", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        this.problemas = response.data;
+      } catch (error) {
+        console.error("Erro ao exibir problema:", error);
+        Swal.fire("Erro", "Não foi possível exibir o problema.", "error");
+      }
+    },
     async cadastrarChamado() {
       const token = localStorage.getItem("token");
       const chamado = {
@@ -218,7 +207,7 @@ export default {
           chamado,
           {
             headers: {
-              Authorization: `Bearer ${token}`, // Correção aqui
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -229,7 +218,6 @@ export default {
         Swal.fire("Erro", "Não foi possível cadastrar o chamado.", "error");
       }
     },
-
     reportProblem() {
       if (this.blocodaSala && this.numerodaSala && this.problema) {
         this.cadastrarChamado();
@@ -244,8 +232,6 @@ export default {
   },
 };
 </script>
-
-
 
 
 
@@ -535,7 +521,7 @@ h2 {
 .rooms-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr); /* 5 colunas */
-  gap: 10px;
+  gap: 4px;
   margin: 20px 0;
 }
 
@@ -543,9 +529,9 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  border: 1px solid #007bff;
-  border-radius: 8px;
+  padding: 0px;
+  border: 8px  solid  #0866ca;
+  border-radius: 9px;
   background-color: #e9f7fe;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s;

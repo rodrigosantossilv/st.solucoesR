@@ -34,12 +34,12 @@
             <a class="nav-link text-white" @click="mostrarCadastro" to="#">Novo Cadastro</a>
           </li>
           <li v-if="this.role === this.ROLES.NOA" class="nav-item">
-            <a class="nav-link text-white" @click="mostrarTabela" href="#">Tabela de usuários</a>
-          </li>
-          <li v-if="this.role === this.ROLES.NOA" class="nav-item">
             <a class="nav-link text-white" @click="mostrarSala" href="#">
               Cadastra sala
             </a>
+          </li>
+          <li v-if="this.role === this.ROLES.NOA" class="nav-item">
+            <a class="nav-link text-white" @click="mostrarTabela" href="#">Tabela de usuários</a>
           </li>
           <li v-if="this.role === this.ROLES.NOA" class="nav-item">
             <a class="nav-link text-white" @click="mostraTabelasalascadasatradas" href="#">
