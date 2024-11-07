@@ -1335,5 +1335,7 @@ canvas {
 .custom-logout-button:hover {
   background-color: #c82333; /* Cor mais escura ao passar o mouse */
 }
-
+.bg-primary[data-v-6dec5f19] {
+    background-color: #0d6efd !important;
+}
 </style>
