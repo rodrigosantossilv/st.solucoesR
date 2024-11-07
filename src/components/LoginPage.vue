@@ -30,30 +30,22 @@
           <p v-if="usuarioInvalido" class="error-text">Usuário inválido!</p>
 
           <div class="password-container">
-            <input
-              :type="passwordFieldType"
-              placeholder="Senha"
-              v-model="password"
-              aria-label="Senha"
-              @keyup.enter="login"
-            />
-            <i @click="togglePasswordVisibility" class="password-icon">
-              <span v-if="passwordFieldType === 'password'">
-                <img
-                  src="/images/olho.png"
-                  alt="Mostrar senha"
-                  class="eye-icon"
-                />
-              </span>
-              <span v-else>
-                <img
-                  src="/images/fechado.png"
-                  alt="Ocultar senha"
-                  class="eye-icon"
-                />
-              </span>
-            </i>
-          </div>
+  <input
+    :type="passwordFieldType"
+    placeholder="Senha"
+    v-model="password"
+    aria-label="Senha"
+    @keyup.enter="login"
+  />
+  <i @click="togglePasswordVisibility" class="password-icon">
+    <!-- Se a senha estiver oculta, mostra o ícone de olho aberto -->
+    <img
+      :src="passwordFieldType === 'password' ? '/images/olho.png' : '/images/fechado.png'"
+      :alt="passwordFieldType === 'password' ? 'Mostrar senha' : 'Ocultar senha'"
+      class="eye-icon"
+    />
+  </i>
+</div>
           <p v-if="senhaInvalida" class="error-text">Senha inválida!</p>
 
           <button @click="login" :disabled="isLoading">
@@ -264,31 +256,27 @@ html {
     display: none;
   }
 }
-
-/* Contêiner e ícone da senha */
 .password-container {
   position: relative;
 }
 
-.password-container input {
-  padding-right: 40px;
-}
-
 .password-icon {
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
   cursor: pointer;
-  font-size: 1.2em;
-  color: #666;
-  user-select: none;
-  transition: color 0.3s, transform 0.3s;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
-.password-icon:hover {
-  color: #000;
-  transform: scale(1.2);
+.eye-icon {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease, opacity 0.3s ease; /* Transição suave */
+}
+
+.password-icon:hover .eye-icon {
+  transform: scale(1.2); /* Efeito de zoom ao passar o mouse */
+  opacity: 0.8;
 }
 
 /* Bubbles Animation */

@@ -3,41 +3,52 @@
     <!-- Cabeçalho -->
     <header class="header">
       <div class="header-content">
-        <img src="/images/ST.KABAN.png" class="header-image" alt="Descrição da Imagem">
-        <h1 class="header-title">Home</h1>
+        <img src="/images/ST.KABAN.png" class="header-image" alt="Logo do Dashboard">
+        <h1 class="header-title">Dashboard</h1>
       </div>
     </header>
 
-    <!-- Estrutura principal com o Dashboard e Kanban -->
-    <div class="main-container">
-      <!-- Sidebar (Dashboard) -->
-      <nav class="sidebar">
-        <h2>Menu</h2>
-        <ul class="nav-list">
-          <li class="nav-item">
-            <a @click="mostrarHome" href="#" class="nav-link">Home</a>
-          </li>
-          <li class="nav-item">
-            <a @click="KanbanBoard" href="kanbanboard" class="nav-link">Chamados</a>
-          </li>
-          <li class="nav-item">
-            <a @click="mostrarCategoria('Pendente')" href="#" class="nav-link">Pendentes</a>
-          </li>
-          <li class="nav-item">
-            <a @click="mostrarCategoria('Andamento')" href="#" class="nav-link">Andamentos</a>
-          </li>
-          <li class="nav-item">
-            <a @click="mostrarCategoria('Concluído')" href="#" class="nav-link">Concluídos</a>
-          </li>
-        </ul>
-      </nav>
+    <!-- Estrutura principal com Sidebar e Conteúdo -->
+    <div class="dashboard-container">
+      <!-- Sidebar de navegação -->
+  
 
-      <!-- Conteúdo principal (Kanban com gráfico) -->
+      <!-- Conteúdo Principal com cartões resumo e gráficos -->
       <div class="content">
-        <!-- Gráfico de barras (único gráfico) -->
-        <div class="flex justify-center items-center">
-          <div class="card w-[30%] h-[15rem]">
-            <Chart type="bar" :data="chartDataBar" :options="chartOptionsBar" class="h-full" />
+        <h2>Resumo Geral</h2>
+        <div class="dashboard-summary">
+          <div class="summary-card"><h3>Total de Chamados Abertos</h3><p>150</p></div>
+          <div class="summary-card"><h3>Total de Chamados Finalizados</h3><p>120</p></div>
+          <div class="summary-card"><h3>Total de Chamados Em Andamento</h3><p>30</p></div>
+          <div class="summary-card"><h3>Tempo Médio de Resolução</h3><p>4h 30m</p></div>
+          <div class="summary-card"><h3>Problemas Mais Recorrentes</h3><p>Impressoras, Rede</p></div>
+        </div>
+
+        <!-- Gráficos -->
+        <h2>Estatísticas Visuais</h2>
+        <div class="charts-container">
+          <!-- Gráfico de Pizza -->
+          <div class="chart-card">
+            <h3>Distribuição de Chamados por Categoria</h3>
+            <canvas id="pieChart"></canvas>
+          </div>
+
+          <!-- Gráfico de Barra -->
+          <div class="chart-card">
+            <h3>Chamados por Mês</h3>
+            <canvas id="barChart"></canvas>
+          </div>
+
+          <!-- Gráfico de Linha -->
+          <div class="chart-card">
+            <h3>Evolução dos Chamados</h3>
+            <canvas id="lineChart"></canvas>
+          </div>
+
+          <!-- Gráfico de Degrau -->
+          <div class="chart-card">
+            <h3>Chamados em Degrau</h3>
+            <canvas id="stepChart"></canvas>
           </div>
         </div>
       </div>
@@ -46,88 +57,92 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import Chart from 'primevue/chart';
+import { onMounted } from 'vue';
+import Chart from 'chart.js/auto';
 
-// Lógica para gráfico de barras
 onMounted(() => {
-    chartDataBar.value = setChartDataBar();
-    chartOptionsBar.value = setChartOptions();
+  // Gráfico de Pizza
+  new Chart(document.getElementById('pieChart'), {
+    type: 'pie',
+    data: {
+      labels: ['TI', 'Manutenção', 'Outros'],
+      datasets: [{
+        data: [50, 30, 20],
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+      }]
+    }
+  });
+
+  // Gráfico de Barra
+  new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'],
+      datasets: [{
+        label: 'Chamados por Mês',
+        data: [20, 30, 40, 25, 35, 45],
+        backgroundColor: '#4BC0C0'
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+
+  // Gráfico de Linha
+  new Chart(document.getElementById('lineChart'), {
+    type: 'line',
+    data: {
+      labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'],
+      datasets: [{
+        label: 'Evolução dos Chamados',
+        data: [15, 25, 35, 45, 55, 65],
+        borderColor: '#36A2EB',
+        fill: false
+      }]
+    },
+    options: {
+      responsive: true
+    }
+  });
+
+  // Gráfico de Degrau
+  new Chart(document.getElementById('stepChart'), {
+    type: 'line',
+    data: {
+      labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'],
+      datasets: [{
+        label: 'Chamados em Degrau',
+        data: [10, 15, 20, 30, 40, 50],
+        borderColor: '#FF6384',
+        stepped: true,
+        fill: false
+      }]
+    },
+    options: {
+      responsive: true
+    }
+  });
 });
-
-const chartDataBar = ref();
-const chartOptionsBar = ref();
-
-// Função para dados e opções do gráfico de barras
-const setChartDataBar = () => {
-    return {
-        labels: ['Pendentes', 'Andamentos', 'Concluídos'],
-        datasets: [
-            {
-                label: 'Chamados',
-                data: [500, 300, 700],  // Valores para cada categoria
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',  // Cor para "Pendentes" (Vermelho)
-                    'rgba(54, 162, 235, 0.2)',  // Cor para "Andamentos" (Azul)
-                    'rgba(75, 192, 192, 0.2)'   // Cor para "Concluídos" (Verde)
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',   // Borda para "Pendentes"
-                    'rgba(54, 162, 235, 1)',   // Borda para "Andamentos"
-                    'rgba(75, 192, 192, 1)'    // Borda para "Concluídos"
-                ],
-                borderWidth: 1
-            }
-        ]
-    };
-};
-
-// Função para opções de estilo dos gráficos
-const setChartOptions = () => {
-    const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--p-text-color');
-    const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
-    const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
-
-    return {
-        plugins: {
-            legend: {
-                labels: {
-                    color: textColor
-                }
-            }
-        },
-        scales: {
-            x: {
-                ticks: {
-                    color: textColorSecondary
-                },
-                grid: {
-                    color: surfaceBorder
-                }
-            },
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    color: textColorSecondary
-                },
-                grid: {
-                    color: surfaceBorder
-                }
-            }
-        }
-    };
-};
 </script>
 
 <style scoped>
+
+
 /* Reset básico */
-body, html {
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  font-family: Arial, sans-serif;
   width: 100%;
   height: 100%;
-  font-family: Arial, sans-serif;
 }
 
 /* Cabeçalho */
@@ -138,7 +153,7 @@ body, html {
   padding: 10px 20px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 
 .header-content {
@@ -157,23 +172,29 @@ body, html {
   font-weight: bold;
 }
 
+/* Dashboard Container */
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+}
+
 /* Sidebar */
 .sidebar {
   width: 200px;
   background: linear-gradient(to bottom, #0575E6, #02298A, #021B79);
-  padding: 15px;
+  padding: 20px;
   height: 100vh;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  position: fixed;
-  top: 0;
-  left: 0;
-  overflow-y: auto;
+  color: #ffffff;
+}
+
+.sidebar h2 {
+  margin-bottom: 15px;
+  font-size: 18px;
 }
 
 .nav-list {
   list-style: none;
-  padding: 0;
-  margin: 0;
 }
 
 .nav-item {
@@ -183,7 +204,7 @@ body, html {
 .nav-link {
   text-decoration: none;
   color: #ffffff;
-  font-size: 18px;
+  font-size: 16px;
   display: block;
   padding: 10px;
   border-radius: 5px;
@@ -191,22 +212,61 @@ body, html {
 }
 
 .nav-link:hover {
-  background: #ddd;
+  background: #055cad;
 }
 
 /* Conteúdo Principal */
-.main-container {
-  margin-left: 200px;
+.content {
+  flex: 1;
   padding: 20px;
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
   overflow-y: auto;
 }
 
-.content {
-  margin-top: 20px;
+/* Cartões de Resumo */
+.dashboard-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
-/* Kanban Board */
+.summary-card {
+  background: #f0f0f0;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: calc(33.333% - 20px); /* Três cartões por linha */
+  text-align: center;
+}
+
+.summary-card h3 {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.summary-card p {
+  font-size: 24px;
+  font-weight: bold;
+  color: #0575E6;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+.header { width: 100%; background: #0575E6; color: #fff; padding: 10px 20px; display: flex; align-items: center; }
+.header-content { display: flex; align-items: center; }
+.header-image { height: 40px; width: auto; }
+.header-title { margin-left: 10px; font-size: 24px; font-weight: bold; }
+.dashboard-container { display: flex; height: 100vh; }
+.sidebar { width: 200px; background: linear-gradient(to bottom, #0575E6, #02298A); padding: 20px; color: #ffffff; }
+.nav-list { list-style: none; }
+.nav-link { color: #ffffff; display: block; padding: 10px; border-radius: 5px; transition: background 0.3s; }
+.nav-link:hover { background: #055cad; }
+.content { flex: 1; padding: 20px; }
+.dashboard-summary { display: flex; flex-wrap: wrap; gap: 20px; }
+.summary-card { background: #f0f0f0; padding: 20px; border-radius: 8px; width: calc(33.333% - 20px); text-align: center; }
+.summary-card h3 { font-size: 16px; color: #333; margin-bottom: 10px; }
+.summary-card p { font-size: 24px; font-weight: bold; color: #0575E6; }
+.charts-container { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px; }
+.chart-card { flex: 1; min-width: 300px; padding: 20px; background: #f9f9f9; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+.chart-card h3 { font-size: 18px; text-align: center; color: #333; margin-bottom: 10px; }
+
+
 </style>

@@ -11,7 +11,7 @@
         <h2>Menu</h2>
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link text-white" @click="home" href="#">Home </a>
+            <a class="nav-link text-white" @click="telaprincipal" href="#">Home </a>
           </li>
 
           <li class="nav-item">
@@ -49,8 +49,67 @@
         </ul>
       </div>
 
+
+
+      <div v-if="dashboard" class="dashboard-container">
+      <!-- Sidebar de navegação -->
+  
+
+      <!-- Conteúdo Principal com cartões resumo e gráficos -->
+      <div class="content">
+        <h2>Resumo Geral</h2>
+        <div class="dashboard-summary">
+          <div class="summary-card"><h3>Total de Chamados Abertos</h3><p>150</p></div>
+          <div class="summary-card"><h3>Total de Chamados Finalizados</h3><p>120</p></div>
+          <div class="summary-card"><h3>Total de Chamados Em Andamento</h3><p>30</p></div>
+          <div class="summary-card"><h3>Tempo Médio de Resolução</h3><p>4h 30m</p></div>
+          <div class="summary-card"><h3>Problemas Mais Recorrentes</h3><p>Impressoras, Rede</p></div>
+        </div>
+
+        <!-- Gráficos -->
+        <h2>Estatísticas Visuais</h2>
+        <div class="charts-container">
+          <!-- Gráfico de Pizza -->
+          <div class="chart-card">
+            <h3>Distribuição de Chamados por Categoria</h3>
+            <canvas id="pieChart"></canvas>
+          </div>
+
+          <!-- Gráfico de Barra -->
+          <div class="chart-card">
+            <h3>Chamados por Mês</h3>
+            <canvas id="barChart"></canvas>
+          </div>
+
+          <!-- Gráfico de Linha -->
+          <div class="chart-card">
+            <h3>Evolução dos Chamados</h3>
+            <canvas id="lineChart"></canvas>
+          </div>
+
+          <!-- Gráfico de Degrau -->
+          <div class="chart-card">
+            <h3>Chamados em Degrau</h3>
+            <canvas id="stepChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Formulário para cadastro de sala -->
       <div v-if="mostrarCadastrosala" class="table-container p-3">
-        <!-- Formulário para cadastro de sala -->
         <form @submit.prevent="adicionarSala" class="mb-4">
           <h2>Cadastrar Salas</h2>
           <div class="form-group">
@@ -261,67 +320,66 @@
   </form>
 </div>
 
+<!-- TABELAS DO KANBAN -->
 
-      <!-- TABELAS DO KANBAN-->
+<!-- Coluna Análise -->
 <div v-if="this.role === this.ROLES.NOA" class="kanban-column">
-  <div v-show="mostrarTodosChamados || categoriaVisivel === 'Analise'" id="Análise"
-    @drop="drop($event)" @dragover="allowDrop($event)">
+  <div v-show="mostrarTodosChamados || categoriaVisivel === 'Analise'" id="Análise" 
+       @drop="drop($event)" @dragover="allowDrop($event)">
     <h3 class="kanban-header bg-warning text-white p-2 text-center">
-      ANALISE
+      ANÁLISE
     </h3>
-    <!-- v-if="this.role === this.ROLES.NOA" -->
-    <div v-for="chamado in chamadosAnalise" :key="chamado.id" :id="chamado.id"
-      class="kanban-item bg-light p-3 my-2" draggable="true" @dragstart="drag($event, chamado)">
+    <div v-for="chamado in chamadosAnalise" :key="chamado.id" :id="chamado.id" 
+         class="kanban-item bg-light p-3 my-2" draggable="true" @dragstart="drag($event, chamado)">
       <p><strong>Gmail:</strong> {{ chamado.email }}</p>
       <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
       <p><em>Problema:</em> {{ chamado.problema }}</p>
       <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
       <p><em>Bloco:</em> {{ chamado.bloco }}</p>
       <p><em>Sala:</em> {{ chamado.sala }}</p>
-      <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join(", ") }}</p>
+      <p v-if="chamado.maquinas.length >= 1"><em>Máquina(s):</em> {{ chamado.maquinas.join(", ") }}</p>
       <button class="btn btn-danger btn-sm" @click="confirmarRemocao(chamado.id)">Remover</button>
-
       <div class="tags"></div>
     </div>
   </div>
 </div>
 
+<!-- Coluna Pendentes -->
+<div v-show="mostrarTodosChamados || categoriaVisivel === 'TI'" id="Pendentes" class="kanban-column" 
+     @drop="drop($event)" @dragover="allowDrop($event)">
+  <h3 class="kanban-header bg-danger text-white p-2 text-center">
+    TI
+  </h3>
+  <div v-for="chamado in chamadosPendentes" :key="chamado.id" class="kanban-item bg-light p-3 my-2" 
+       draggable="true" @dragstart="drag($event, chamado)">
+    <p><strong>Gmail:</strong> {{ chamado.email }}</p>
+    <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
+    <p><em>Problema:</em> {{ chamado.problema }}</p>
+    <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
+    <p><em>Bloco:</em> {{ chamado.bloco }}</p>
+    <p><em>Sala:</em> {{ chamado.sala }}</p>
+    <p v-if="chamado.maquinas.length >= 1"><em>Máquina(s):</em> {{ chamado.maquinas.join(", ") }}</p>
+  </div>
+</div>
 
-      <div v-show="mostrarTodosChamados || categoriaVisivel === 'TI'" id="Pendentes" class="kanban-column"
-        @drop="drop($event)" @dragover="allowDrop($event)">
-        <h3 class="kanban-header bg-danger text-white p-2 text-center">
-          TI
-        </h3>
-        <div v-for="chamado in chamadosPendentes" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
-          draggable="true" @dragstart="drag($event, chamado)">
-          <p><strong>Gmail:</strong> {{ chamado.email }}</p>
-          <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
-          <p><em>Problema:</em> {{ chamado.problema }}</p>
-          <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
-          <p><em>Bloco:</em> {{ chamado.bloco }}</p>
-          <p><em>Sala:</em> {{ chamado.sala }}</p>
-          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join(", ") }}</p>
+<!-- Coluna Em Andamento -->
+<div v-show="mostrarTodosChamados || categoriaVisivel === 'Andamento'" id="Em Andamento" class="kanban-column" 
+     @drop="drop($event)" @dragover="allowDrop($event)">
+  <h3 class="kanban-header bg-primary text-white p-2 text-center">
+    MANUTENÇÃO
+  </h3>
+  <div v-for="chamado in chamadosAndamento" :key="chamado.id" class="kanban-item bg-light p-3 my-2" 
+       draggable="true" @dragstart="drag($event, chamado)">
+    <p><strong>Gmail:</strong> {{ chamado.email }}</p>
+    <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
+    <p><em>Problema:</em> {{ chamado.problema }}</p>
+    <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
+    <p><em>Bloco:</em> {{ chamado.bloco }}</p>
+    <p><em>Sala:</em> {{ chamado.sala }}</p>
+    <p v-if="chamado.maquinas.length >= 1"><em>Máquina(s):</em> {{ chamado.maquinas.join(", ") }}</p>
+  </div>
+</div>
 
-        </div>
-      </div>
-
-      <div v-show="mostrarTodosChamados || categoriaVisivel === 'Andamento'" id="Em Andamento" class="kanban-column"
-        @drop="drop($event)" @dragover="allowDrop($event)">
-        <h3 class="kanban-header bg-primary text-white p-2 text-center">
-          MANUTENCAO
-        </h3>
-        <div v-for="chamado in chamadosAndamento" :key="chamado.id" class="kanban-item bg-light p-3 my-2"
-          draggable="true" @dragstart="drag($event, chamado)">
-          <p><strong>Gmail:</strong> {{ chamado.email }}</p>
-          <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
-          <p><em>Problema:</em> {{ chamado.problema }}</p>
-          <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
-          <p><em>Bloco:</em> {{ chamado.bloco }}</p>
-          <p><em>Sala:</em> {{ chamado.sala }}</p>
-          <p v-if="chamado.maquinas.length >= 1"><em>Maquina:</em> {{ chamado.maquinas.join(", ") }}</p>
-
-        </div>
-      </div>
 
 
     
@@ -336,10 +394,13 @@
 
 
 
-<script>
+<script >
 import axios from "axios";
 import Swal from "sweetalert2";
 import { ROLES } from "../util/roles";
+import { onMounted } from 'vue';
+import Chart from 'chart.js/auto';
+
 export default {
   data() {
     return {
@@ -353,12 +414,13 @@ export default {
       chamados: [],
       categoriaVisivel: null,
       home: false,
-      mostrarTodosChamados: true,
+      mostrarTodosChamados: false,
       mostrarFormulario: false,
       mostrarChamadosManutençao: false,
       mostrarTabelaExibida: false,
       mostrarCadastrosala: false,
       mostrarTabelasalas: false,
+      dashboard:true,
     
       novoAluno: {
         senha: "",
@@ -379,9 +441,77 @@ export default {
     this.carregarChamados();
     this.atualizarChamados();
     this.role = localStorage.getItem("role")
-  },
+    
+  // Gráfico de Pizza
+  new Chart(document.getElementById('pieChart'), {
+    type: 'pie',
+    data: {
+      labels: ['TI', 'Manutenção', 'Outros'],
+      datasets: [{
+        data: [50, 30, 20],
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+      }]
+    }
+  });
+
+  // Gráfico de Barra
+  new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'],
+      datasets: [{
+        label: 'Chamados por Mês',
+        data: [20, 30, 40, 25, 35, 45],
+        backgroundColor: '#4BC0C0'
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+
+  // Gráfico de Linha
+  new Chart(document.getElementById('lineChart'), {
+    type: 'line',
+    data: {
+      labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'],
+      datasets: [{
+        label: 'Evolução dos Chamados',
+        data: [15, 25, 35, 45, 55, 65],
+        borderColor: '#36A2EB',
+        fill: false
+      }]
+    },
+    options: {
+      responsive: true
+    }
+  });
+
+  // Gráfico de Degrau
+  new Chart(document.getElementById('stepChart'), {
+    type: 'line',
+    data: {
+      labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'],
+      datasets: [{
+        label: 'Chamados em Degrau',
+        data: [10, 15, 20, 30, 40, 50],
+        borderColor: '#FF6384',
+        stepped: true,
+        fill: false
+      }]
+    },
+    options: {
+      responsive: true
+    }
+  });
+
+},
 
   methods: {
+    
     formatarTelefone(event) {
     // Remove todos os caracteres não numéricos
     let telefone = this.novoAluno.telefone.replace(/\D/g, '');
@@ -487,6 +617,7 @@ submitForm() {
     this.mostrarChamadosManutençao = false;
     this.mostrarCadastrosala = false;
     this.mostrarTabelasalas = false;
+    this.dashboard = false;
   },
 
   chamadosManuntencao() {
@@ -497,6 +628,7 @@ submitForm() {
     this.mostrarTabelaExibida = false;
     this.mostrarCadastrosala = false;
     this.mostrarTabelasalas = false;
+    this.dashboard = false;
 
   },
 
@@ -508,6 +640,7 @@ submitForm() {
     this.mostrarChamadosManutençao = false;
     this.mostrarCadastrosala = false;
     this.mostrarTabelasalas = false;
+    this.dashboard = false;
 
   },
 
@@ -519,6 +652,7 @@ submitForm() {
     this.mostrarFormulario = false;
     this.mostrarCadastrosala = false;
     this.mostrarTabelasalas = false;
+    this.dashboard = false;
 
   },
   mostrarSala() {
@@ -530,6 +664,7 @@ submitForm() {
     this.mostrarTodosChamados = false;
     this.mostrarTabelaExibida = false;
     this.mostrarTabelasalas = false;
+    this.dashboard = false;
 
   },
   mostraTabelasalascadasatradas(){
@@ -541,9 +676,21 @@ submitForm() {
     this.mostrarTodosChamados = false;
     this.mostrarTabelaExibida = false;
     this.mostrarTabelasalas = true;
+    this.dashboard = false;
 
   },
+  telaprincipal(){
+    console.log("Clique em Adicionar Salas!"); // Debug: verifique no console
+    this.categoriaVisivel = null;
+    this.mostrarCadastrosala = false; // Definir como true para exibir a seção
+    this.mostrarFormulario = false;
+    this.mostrarChamadosManutençao = false;
+    this.mostrarTodosChamados = false;
+    this.mostrarTabelaExibida = false;
+    this.mostrarTabelasalas = false;
+    this.dashboard = true;
 
+  },
   editarAluno(id) {
     // Lógica para editar o aluno
     console.log("Editar aluno com ID:", id);
@@ -611,6 +758,8 @@ submitForm() {
     this.mostrarTabelaSala = false;
     this.mostrarCadastrosala = false;
     this.mostrarTabelasalas = false;
+    this.dashboard = false;
+
   },
   chamadosManuntencao() {
     this.categoriaVisivel = null;
@@ -620,6 +769,7 @@ submitForm() {
     this.mostrarTabelaSala = false;
     this.mostrarCadastrosala = false;
     this.mostrarTabelasalas = false;
+    this.dashboard = false;
 
   },
   mostrarCadastro() {
@@ -630,6 +780,8 @@ submitForm() {
     this.mostrarTabelaSala = false;
     this.mostrarCadastrosala = false;
     this.mostrarTabelasalas = false;
+    this.dashboard = false;
+
   },
 
   allowDrop(event) {
@@ -722,6 +874,7 @@ submitForm() {
   }
 },
   },
+  
 };
 
 </script>
@@ -740,7 +893,7 @@ header {
 /* Sidebar */
 .sidebar {
   background-color: #0d6efd;
-  width: 250px;
+  width: 400px;
   min-height: 100vh;
   color: white;
   padding: 1rem;
@@ -773,7 +926,7 @@ header {
 @media (max-width: 768px) {
   .sidebar {
     position: fixed;
-    left: -250px;
+    left: 400px;
     top: 0;
     height: 100%;
     z-index: 1000;
@@ -781,19 +934,35 @@ header {
   }
 
   .sidebar.active {
-    transform: translateX(250px);
+    transform: translateX(450px);
+  }
+
+  .hamburger {
+    display: block;
   }
 }
 
 /* Tabela e Formulário */
 .table-container {
-  flex: 1;
+  flex: 1; /* Ajuste a propriedade 'flex' para garantir que o conteúdo ocupe o espaço disponível */
   padding: 2rem;
+  box-shadow: 0 4px 12px rgba(33, 33, 33, 0.292);
+  border-radius: 12px;
+  margin-left: 200px;
+  margin-right: 200px;
+  margin-top: 30px;
+  margin-bottom: 30px; /* Ajuste a margem inferior para 30px, se necessário */
+  font-weight: bold;
+  
 }
+
 
 .table-container h2 {
   font-size: 1.6rem;
   color: #007bff;
+  font-weight: bold;
+
+  
 }
 
 .table-responsive {
@@ -804,21 +973,31 @@ header {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
+  font-weight: bold;
+ /* box-shadow: 0 4px 12px rgba(33, 33, 33, 0.292);
+  border-radius: 12px;
+  transition: transform 0.3s ease; 
+  transition: transform 0.3s ease; Adiciona uma transição suave */
 }
+
+/* Efeito hover na tabela */
 
 .table thead th {
   background-color: #007bff;
   color: white;
   text-align: center;
+  
 }
 
 .table tbody td {
   padding: 0.75rem;
   text-align: center;
+  
 }
 
 .table tbody tr:hover {
   background-color: #f1f1f1;
+  
 }
 
 /* Botões */
@@ -830,6 +1009,12 @@ header {
 /* Formulário de Cadastro */
 .form-container {
   padding: 2rem;
+  box-shadow: 0 4px 12px rgba(33, 33, 33, 0.292);
+  border-radius: 12px;
+  margin-left: 300px;
+  margin-right: 100px;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .form-container h2 {
@@ -849,6 +1034,7 @@ header {
   border-radius: 0.25rem;
   border: 1px solid #ced4da;
   width: 100%;
+  
 }
 
 .form-container button[type="submit"] {
@@ -861,68 +1047,117 @@ header {
   cursor: pointer;
   transition: background-color 0.3s;
   width: 100%;
+
 }
 
 .form-container button[type="submit"]:hover {
   background-color: #0056b3;
 }
 
-/* Kanban Board */
+/* Estilos Gerais 
 .kanban-column {
-  width: 30%;
+  width: 32%;
   margin: 0.5rem;
   display: inline-block;
   vertical-align: top;
+  min-height: 300px;
+  border-radius: 0.5rem;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
 }
-
+*/
 .kanban-header {
   padding: 0.75rem;
   border-radius: 0.25rem;
   text-align: center;
   font-weight: bold;
+  margin-bottom: 1rem;
 }
 
 .kanban-item {
-  background-color: #f8f9fa;
-  border-radius: 0.25rem;
-  margin: 0.5rem 0;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
   padding: 1rem;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   cursor: grab;
+  transition: transform 0.2s ease-in-out;
 }
 
-/* Layout principal */
-.d-flex {
-  display: flex;
+.kanban-item:hover {
+  transform: translateY(-5px);
 }
 
-/* Responsividade para o layout */
+.kanban-item p {
+  margin: 0.5rem 0;
+}
+
+.kanban-item button {
+  margin-top: 1rem;
+}
+
+/* Cores para cada categoria */
+.bg-warning {
+  background-color: #ffcc00 !important;
+}
+
+.bg-danger {
+  background-color: #f44336 !important;
+}
+
+.bg-primary {
+  background-color: #2196f3 !important;
+}
+
+/* Responsividade */
 @media (max-width: 1024px) {
   .kanban-column {
     width: 48%;
-    /* Ajusta para duas colunas em tablets */
   }
 }
 
 @media (max-width: 768px) {
-  .d-flex {
-    flex-direction: column;
-    /* Empilha os elementos em telas menores */
-  }
-
   .kanban-column {
     width: 100%;
-    /* Coluna única em dispositivos móveis */
+    margin: 0.5rem 0;
   }
 
-  .table-container {
-    padding: 1rem;
+  .kanban-header {
+    font-size: 1.25rem;
+    padding: 0.5rem;
   }
 
-  .form-container {
-    padding: 1rem;
+  .kanban-item {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .kanban-item p {
+    font-size: 0.9rem;
   }
 }
+
+/* Drag and Drop */
+.kanban-column {
+  position: relative;
+  padding-bottom: 2rem;
+}
+
+.
+
+.kanban-item[draggable="true"]:hover {
+  cursor: grabbing;
+}
+
+/* Outros ajustes */
+.tags {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
 
 /* Menu Hambúrguer */
 .hamburger {
@@ -942,10 +1177,10 @@ header {
   transition: 0.4s;
 }
 
-@media (max-width: 768px) {
-  .hamburger {
-    display: block;
-  }
+/* Menu Lateral com opções */
+.bg-dark {
+  --bs-bg-opacity: 1;
+  background-color: #0d6efd !important;
 }
 
 .bg-secondary {
@@ -971,12 +1206,6 @@ header {
   margin-right: 15px;
 }
 
-/* Menu Lateral com opçoes */
-.bg-dark {
-  --bs-bg-opacity: 1;
-  background-color: #0d6efd !important;
-}
-
 .form-select {
   --bs-form-select-bg-img: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e);
   display: block;
@@ -999,4 +1228,115 @@ header {
   transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
 
-</style>  
+/* Cartões de resumo */
+.dashboard-summary {
+  display: flex;  
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  margin-bottom: 40px;
+  margin-left: 90px;
+}
+
+.summary-card {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  
+  transition: transform 0.3s ease;
+}
+
+.summary-card:hover {
+  transform: translateY(-10px);
+}
+
+.summary-card h3 {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 10px;
+  
+}
+
+.summary-card p {
+  font-size: 32px;
+  font-weight: bold;
+  color: #0e85bd;
+}
+
+/* Gráficos */
+.charts-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-left: 95px;
+
+}
+
+.chart-card {
+  background-color: #fff;
+  padding: 20px;
+  width: calc(50% - 20px);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(33, 33, 33, 0.292);
+  transition: transform 0.3s ease;
+  
+}
+
+.chart-card:hover {
+  transform: translateY(-10px);
+}
+
+.chart-card h3 {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+/* Gráficos específicos */
+canvas {
+  width: 100%;
+  height: 200px;
+}
+
+/* Responsividade */
+@media (max-width: 1200px) {
+  .dashboard-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .chart-card {
+    width: calc(50% - 20px);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 400%;
+  }
+
+  .content {
+    margin-left: 0;
+  }
+
+  .dashboard-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-card {
+    width: 100%;
+  }
+}
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-bottom: 5px;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--bs-heading-color);
+}
+</style>
