@@ -134,7 +134,7 @@
           </div>
           <button type="submit" class="btn btn-primary">Adicionar Sala</button>
           <h2>Pesquisa de salas cadastradas</h2>
-          <input type="text" placeholder="Pesquisa por sala ou laboratorio cadastrado" class="form-control mb-3" />
+          <input type="text" placeholder="Pesquisar por salas ou laboratórios cadastrados" class="form-control mb-3" />
         </form>
 
 
@@ -328,8 +328,8 @@
 <!-- TABELAS DO KANBAN -->
 
 <!-- Coluna Análise -->
-<div  class="kanban-com">
-  <div v-show="mostrarTodosChamados || categoriaVisivel === 'Analise'" id="Análise" 
+
+  <div v-show="mostrarTodosChamados || categoriaVisivel === 'Analise'" id="Análise"class="kanban-column" 
        @drop="drop($event)" @dragover="allowDrop($event)">
     <h3 class="kanban-header bg-warning text-white p-2 text-center">
       ANÁLISE
@@ -347,7 +347,6 @@
       <div class="tags"></div>
     </div>
   </div>
-</div>
 
 <!-- Coluna Pendentes -->
 <div v-show="mostrarTodosChamados || categoriaVisivel === 'TI'" id="Pendentes" class="kanban-column" 
@@ -384,12 +383,6 @@
     <p v-if="chamado.maquinas.length >= 1"><em>Máquina(s):</em> {{ chamado.maquinas.join(", ") }}</p>
   </div>
 </div>
-
-
-
-    
-      
-
     </div>
   </div>
 
@@ -1051,7 +1044,7 @@ header {
   background-color: #0056b3;
 }
 
-.kanban-com {
+.kanban-column{
   width: 32%;
   margin: 0.5rem;
   display: inline-block;
