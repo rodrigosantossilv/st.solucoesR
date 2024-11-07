@@ -26,9 +26,7 @@
             </select>
           </li>
 
-          <li v-if="this.role === this.ROLES.NOA" class="nav-item">
-            <a class="nav-link text-white" @click="chamadosManuntencao" href="#">Chamados Manuntencao</a>
-          </li>
+         
 
           <li v-if="this.role === this.ROLES.NOA" class="nav-item">
             <a class="nav-link text-white" @click="mostrarCadastro" to="#">Novo Cadastro</a>
@@ -330,7 +328,7 @@
 <!-- TABELAS DO KANBAN -->
 
 <!-- Coluna Análise -->
-<div v-if="this.role === this.ROLES.NOA" class="kanban-column">
+<div  class="kanban-com">
   <div v-show="mostrarTodosChamados || categoriaVisivel === 'Analise'" id="Análise" 
        @drop="drop($event)" @dragover="allowDrop($event)">
     <h3 class="kanban-header bg-warning text-white p-2 text-center">
@@ -423,7 +421,6 @@ export default {
       home: false,
       mostrarTodosChamados: false,
       mostrarFormulario: false,
-      mostrarChamadosManutençao: false,
       mostrarTabelaExibida: false,
       mostrarCadastrosala: false,
       mostrarTabelasalas: false,
@@ -627,21 +624,9 @@ submitForm() {
     this.dashboard = false;
   },
 
-  chamadosManuntencao() {
-    this.categoriaVisivel = null;
-    this.mostrarTodosChamados = false;
-    this.mostrarChamadosManutençao = true;
-    this.mostrarFormulario = false;
-    this.mostrarTabelaExibida = false;
-    this.mostrarCadastrosala = false;
-    this.mostrarTabelasalas = false;
-    this.dashboard = false;
-
-  },
-
   mostrarCadastro() {
     this.mostrarFormulario = true;
-    this.categoriaVisivel = null;
+    this.categoriaVisivel = false;
     this.mostrarTodosChamados = false;
     this.mostrarTabelaExibida = false;
     this.mostrarChamadosManutençao = false;
@@ -986,7 +971,7 @@ header {
   border-collapse: separate;
   border-spacing: 0;
   font-weight: bold;
- /* box-shadow: 0 4px 12px rgba(33, 33, 33, 0.292);
+/* box-shadow: 0 4px 12px rgba(33, 33, 33, 0.292);
   border-radius: 12px;
   transition: transform 0.3s ease; 
   transition: transform 0.3s ease; Adiciona uma transição suave */
@@ -1066,8 +1051,7 @@ header {
   background-color: #0056b3;
 }
 
-/* Estilos Gerais 
-.kanban-column {
+.kanban-com {
   width: 32%;
   margin: 0.5rem;
   display: inline-block;
@@ -1079,7 +1063,7 @@ header {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
 }
-*/
+
 .kanban-header {
   padding: 0.75rem;
   border-radius: 0.25rem;
