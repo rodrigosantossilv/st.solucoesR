@@ -47,7 +47,14 @@
             </a>
           </li>
         </ul>
+        <!-- Botão de Logout -->
+        <div class="mt-4 pt-2 border-top">
+  <button @click="logout" class="btn btn-danger w-100 custom-logout-button">Sair</button>
+</div>
+
+
       </div>
+
 
 
 
@@ -331,12 +338,12 @@
     </h3>
     <div v-for="chamado in chamadosAnalise" :key="chamado.id" :id="chamado.id" 
          class="kanban-item bg-light p-3 my-2" draggable="true" @dragstart="drag($event, chamado)">
-      <p><strong>Gmail:</strong> {{ chamado.email }}</p>
-      <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
-      <p><em>Problema:</em> {{ chamado.problema }}</p>
-      <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
-      <p><em>Bloco:</em> {{ chamado.bloco }}</p>
-      <p><em>Sala:</em> {{ chamado.sala }}</p>
+      <p><strong>E-mail:</strong> {{ chamado.email }}</p>
+      <p><strong>Ocupação:</strong> {{ chamado.ocupacao }}</p>
+      <p><strong>Problema:</strong> {{ chamado.problema }}</p>
+      <p><strong>Descrição:</strong> {{ chamado.descricao_chamado }}</p>
+      <p><strong>Bloco:</strong> {{ chamado.bloco }}</p>
+      <p><strong>Sala:</strong> {{ chamado.sala }}</p>
       <p v-if="chamado.maquinas.length >= 1"><em>Máquina(s):</em> {{ chamado.maquinas.join(", ") }}</p>
       <button class="btn btn-danger btn-sm" @click="confirmarRemocao(chamado.id)">Remover</button>
       <div class="tags"></div>
@@ -346,36 +353,36 @@
 
 <!-- Coluna Pendentes -->
 <div v-show="mostrarTodosChamados || categoriaVisivel === 'TI'" id="Pendentes" class="kanban-column" 
-     @drop="drop($event)" @dragover="allowDrop($event)">
+    @drop="drop($event)" @dragover="allowDrop($event)">
   <h3 class="kanban-header bg-danger text-white p-2 text-center">
     TI
   </h3>
   <div v-for="chamado in chamadosPendentes" :key="chamado.id" class="kanban-item bg-light p-3 my-2" 
-       draggable="true" @dragstart="drag($event, chamado)">
-    <p><strong>Gmail:</strong> {{ chamado.email }}</p>
-    <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
-    <p><em>Problema:</em> {{ chamado.problema }}</p>
-    <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
-    <p><em>Bloco:</em> {{ chamado.bloco }}</p>
-    <p><em>Sala:</em> {{ chamado.sala }}</p>
+      draggable="true" @dragstart="drag($event, chamado)">
+    <p><strong>E-mail:</strong> {{ chamado.email }}</p>
+    <p><strong>Ocupação:</strong> {{ chamado.ocupacao }}</p>
+    <p><strong>Problema:</strong> {{ chamado.problema }}</p>
+    <p><strong>Descrição:</strong> {{ chamado.descricao_chamado }}</p>
+    <p><strong>Bloco:</strong> {{ chamado.bloco }}</p>
+    <p><strong>Sala:</strong> {{ chamado.sala }}</p>
     <p v-if="chamado.maquinas.length >= 1"><em>Máquina(s):</em> {{ chamado.maquinas.join(", ") }}</p>
   </div>
 </div>
 
 <!-- Coluna Em Andamento -->
 <div v-show="mostrarTodosChamados || categoriaVisivel === 'Andamento'" id="Em Andamento" class="kanban-column" 
-     @drop="drop($event)" @dragover="allowDrop($event)">
+    @drop="drop($event)" @dragover="allowDrop($event)">
   <h3 class="kanban-header bg-primary text-white p-2 text-center">
     MANUTENÇÃO
   </h3>
   <div v-for="chamado in chamadosAndamento" :key="chamado.id" class="kanban-item bg-light p-3 my-2" 
-       draggable="true" @dragstart="drag($event, chamado)">
-    <p><strong>Gmail:</strong> {{ chamado.email }}</p>
-    <p><em>Ocupação:</em> {{ chamado.ocupacao }}</p>
-    <p><em>Problema:</em> {{ chamado.problema }}</p>
-    <p><em>Descrição:</em> {{ chamado.descricao_chamado }}</p>
-    <p><em>Bloco:</em> {{ chamado.bloco }}</p>
-    <p><em>Sala:</em> {{ chamado.sala }}</p>
+    draggable="true" @dragstart="drag($event, chamado)">
+    <p><strong>E-mail:</strong> {{ chamado.email }}</p>
+    <p><strong>Ocupação:</strong> {{ chamado.ocupacao }}</p>
+    <p><strong>Problema:</strong> {{ chamado.problema }}</p>
+    <p><strong>Descrição:</strong> {{ chamado.descricao_chamado }}</p>
+    <p><strong>Bloco:</strong> {{ chamado.bloco }}</p>
+    <p><strong>Sala:</strong> {{ chamado.sala }}</p>
     <p v-if="chamado.maquinas.length >= 1"><em>Máquina(s):</em> {{ chamado.maquinas.join(", ") }}</p>
   </div>
 </div>
@@ -691,6 +698,11 @@ submitForm() {
     this.dashboard = true;
 
   },
+  logout() {
+      // Lógica para realizar o logout do usuário
+      alert('Você saiu da sua conta');
+      // Implementar redirecionamento ou outra ação de logout
+    },
   editarAluno(id) {
     // Lógica para editar o aluno
     console.log("Editar aluno com ID:", id);
@@ -1145,8 +1157,6 @@ header {
   padding-bottom: 2rem;
 }
 
-.
-
 .kanban-item[draggable="true"]:hover {
   cursor: grabbing;
 }
@@ -1339,4 +1349,14 @@ canvas {
     line-height: 1.2;
     color: var(--bs-heading-color);
 }
+.custom-logout-button {
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.custom-logout-button:hover {
+  background-color: #c82333; /* Cor mais escura ao passar o mouse */
+}
+
 </style>
