@@ -9,6 +9,7 @@
     </header>
 
     <!-- Estrutura principal com Sidebar e Conteúdo -->
+    
     <div class="dashboard-container">
       <!-- Sidebar de navegação -->
   
@@ -53,7 +54,9 @@
         </div>
       </div>
     </div>
+  
   </div>
+
 </template>
 
 <script setup>
