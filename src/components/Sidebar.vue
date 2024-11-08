@@ -26,9 +26,7 @@
             </select>
           </li>
 
-          <li v-if="this.role === this.ROLES.NOA" class="nav-item">
-            <a class="nav-link text-white" @click="chamadosManuntencao" href="#">Chamados Manuntencao</a>
-          </li>
+         
 
           <li v-if="this.role === this.ROLES.NOA" class="nav-item">
             <a class="nav-link text-white" @click="mostrarCadastro" to="#">Novo Cadastro</a>
@@ -86,7 +84,6 @@ export default {
       home: false,
       mostrarTodosChamados: false,
       mostrarFormulario: false,
-      mostrarChamadosManutençao: false,
       mostrarTabelaExibida: false,
       mostrarCadastrosala: false,
       mostrarTabelasalas: false,
@@ -290,21 +287,9 @@ submitForm() {
     this.dashboard = false;
   },
 
-  chamadosManuntencao() {
-    this.categoriaVisivel = null;
-    this.mostrarTodosChamados = false;
-    this.mostrarChamadosManutençao = true;
-    this.mostrarFormulario = false;
-    this.mostrarTabelaExibida = false;
-    this.mostrarCadastrosala = false;
-    this.mostrarTabelasalas = false;
-    this.dashboard = false;
-
-  },
-
   mostrarCadastro() {
     this.mostrarFormulario = true;
-    this.categoriaVisivel = null;
+    this.categoriaVisivel = false;
     this.mostrarTodosChamados = false;
     this.mostrarTabelaExibida = false;
     this.mostrarChamadosManutençao = false;
@@ -649,7 +634,7 @@ header {
   border-collapse: separate;
   border-spacing: 0;
   font-weight: bold;
- /* box-shadow: 0 4px 12px rgba(33, 33, 33, 0.292);
+/* box-shadow: 0 4px 12px rgba(33, 33, 33, 0.292);
   border-radius: 12px;
   transition: transform 0.3s ease; 
   transition: transform 0.3s ease; Adiciona uma transição suave */
@@ -729,8 +714,7 @@ header {
   background-color: #0056b3;
 }
 
-/* Estilos Gerais 
-.kanban-column {
+.kanban-column{
   width: 32%;
   margin: 0.5rem;
   display: inline-block;
@@ -742,7 +726,7 @@ header {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
 }
-*/
+
 .kanban-header {
   padding: 0.75rem;
   border-radius: 0.25rem;
@@ -1021,5 +1005,7 @@ canvas {
 .custom-logout-button:hover {
   background-color: #c82333; /* Cor mais escura ao passar o mouse */
 }
-
+.bg-primary[data-v-6dec5f19] {
+    background-color: #0d6efd !important;
+}
 </style>
